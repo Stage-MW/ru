@@ -55,6 +55,9 @@
             transition: color 0.3s, text-shadow 0.3s;
             white-space: nowrap;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .nav-bar a:hover, .nav-bar span.nav-link-btn:hover {
@@ -168,16 +171,6 @@
             97% { text-shadow: 0 0 20px #00f2fe; transform: skew(0deg); }
         }
 
-        @keyframes slowFlicker {
-            0%, 100% { text-shadow: 0 0 35px #00f2fe, 0 0 15px #00f2fe; opacity: 1; }
-            48% { text-shadow: 0 0 35px #00f2fe, 0 0 15px #00f2fe; opacity: 1; }
-            50% { text-shadow: none; opacity: 0.6; }
-            52% { text-shadow: 0 0 35px #00f2fe, 0 0 15px #00f2fe; opacity: 1; }
-            78% { text-shadow: 0 0 35px #00f2fe, 0 0 15px #00f2fe; opacity: 1; }
-            80% { text-shadow: 0 0 10px rgba(0,242,254,0.3); opacity: 0.8; }
-            82% { text-shadow: 0 0 35px #00f2fe, 0 0 15px #00f2fe; opacity: 1; }
-        }
-
         .welcome-desc-container {
             max-width: 700px;
             width: 100%;
@@ -274,13 +267,8 @@
             white-space: nowrap; 
             width: calc(100% - 30px);
         }
-        .player-card .name-wrapper span { 
-            display: inline-block; 
-            white-space: nowrap; 
-        }
-        .marquee-anim {
-            animation: marqueeText 5s linear infinite alternate;
-        }
+        .player-card .name-wrapper span { display: inline-block; white-space: nowrap; }
+        .marquee-anim { animation: marqueeText 5s linear infinite alternate; }
         @keyframes marqueeText {
             0%, 10% { transform: translateX(0); }
             90%, 100% { transform: translateX(calc(-100% + 100px)); }
@@ -290,27 +278,15 @@
         .player-card.leader { border-left-color: #00f2fe; background: rgba(15, 23, 42, 0.85); }
         .player-card .tag { font-size: 11px; font-family: 'Orbitron', sans-serif; text-transform: uppercase; padding: 2px 6px; border-radius: 3px; font-weight: 900; background: #00f2fe; color: #02050a; box-shadow: 0 0 10px #00f2fe; margin-left: 8px; flex-shrink: 0; }
 
-        .player-card.status-legend {
-            border-left-color: #a855f7 !important;
-            box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
-        }
+        .player-card.status-legend { border-left-color: #a855f7 !important; box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); }
         .player-card.status-legend:hover { box-shadow: 0 5px 20px rgba(168, 85, 247, 0.7); }
         .player-card.status-legend .name-wrapper span { color: #a855f7 !important; text-shadow: 0 0 8px rgba(168, 85, 247, 0.6); }
 
-        .player-card.status-hero {
-            border-left-color: #ff8c00 !important;
-            box-shadow: 0 0 15px rgba(255, 140, 0, 0.4);
-        }
+        .player-card.status-hero { border-left-color: #ff8c00 !important; box-shadow: 0 0 15px rgba(255, 140, 0, 0.4); }
         .player-card.status-hero:hover { box-shadow: 0 5px 20px rgba(255, 140, 0, 0.7); }
         .player-card.status-hero .name-wrapper span { color: #ff8c00 !important; text-shadow: 0 0 8px rgba(255, 140, 0, 0.6); }
 
-        .status-btn-group {
-            display: none;
-            gap: 8px;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px dashed rgba(0, 242, 254, 0.3);
-        }
+        .status-btn-group { display: none; gap: 8px; margin-top: 15px; padding-top: 15px; border-top: 1px dashed rgba(0, 242, 254, 0.3); }
         .btn-status {
             flex: 1; padding: 8px; border: none; border-radius: 4px; color: #fff;
             font-family: 'Orbitron', sans-serif; font-size: 11px; font-weight: 900; text-transform: uppercase;
@@ -336,27 +312,12 @@
         .btn-reset-auth:hover { color: #ff0055; }
 
         .btn-join-neon {
-            background: rgba(0, 136, 204, 0.1); 
-            border: 2px solid #0088cc; 
-            color: #ffffff; 
-            font-family: 'Orbitron', sans-serif; 
-            font-size: clamp(16px, 4vw, 22px); 
-            font-weight: 900; 
-            padding: 14px 35px; 
-            text-transform: uppercase; 
-            cursor: pointer; 
-            letter-spacing: 2px; 
-            box-shadow: 0 0 20px rgba(0, 136, 204, 0.3); 
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            width: 100%; 
-            max-width: 480px;
-            border-radius: 30px;
-            margin: 40px auto 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            outline: none;
+            background: rgba(0, 136, 204, 0.1); border: 2px solid #0088cc; color: #ffffff; 
+            font-family: 'Orbitron', sans-serif; font-size: clamp(16px, 4vw, 22px); font-weight: 900; 
+            padding: 14px 35px; text-transform: uppercase; cursor: pointer; letter-spacing: 2px; 
+            box-shadow: 0 0 20px rgba(0, 136, 204, 0.3); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            width: 100%; max-width: 480px; border-radius: 30px; margin: 40px auto 0;
+            display: flex; align-items: center; justify-content: center; gap: 12px; outline: none;
         }
         .btn-join-neon:hover { background: #0088cc; color: #02050a; box-shadow: 0 0 35px rgba(0, 136, 204, 0.8); transform: scale(1.03); }
 
@@ -381,8 +342,10 @@
         .btn-fullscreen-toggle:hover { background: #a855f7; color: #ffffff; box-shadow: 0 0 25px rgba(168, 85, 247, 0.6); transform: translateY(-2px); }
         .board-container { max-width: 1200px; width: 100%; height: 65vh; border: 2px solid #a855f7; border-radius: 8px; box-shadow: 0 0 30px rgba(168, 85, 247, 0.2); overflow: hidden; background: #121212; position: relative; transition: all 0.4s ease; }
         .board-container.drag-over { border-color: #00f2fe; box-shadow: 0 0 40px rgba(0, 242, 254, 0.4); }
-        .board-container.fullscreen-active { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; max-width: 100vw; z-index: 9999; border-radius: 0; border: none; }
         .board-frame { width: 100%; height: 100%; border: none; }
+        
+        /* Полноэкранный режим */
+        #boardActualContainer:fullscreen { background: #02050a; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 0; }
 
         .lock-overlay-box { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px; background: rgba(11, 18, 31, 0.85); border: 2px dashed #a855f7; border-radius: 8px; max-width: 500px; width: 100%; margin: 40px auto; box-shadow: 0 0 30px rgba(168, 85, 247, 0.15); backdrop-filter: blur(10px); }
         .lock-overlay-box i { font-size: 50px; color: #a855f7; margin-bottom: 20px; text-shadow: 0 0 15px rgba(168, 85, 247, 0.5); }
@@ -427,7 +390,7 @@
         .cabinet-avatar-container i { font-size: 55px; color: #a855f7; text-shadow: 0 0 10px rgba(168, 85, 247, 0.5); }
         
         .avatar-picker-title { font-size: 11px; text-transform: uppercase; color: #a855f7; letter-spacing: 1px; margin-top: 5px; text-align: center; width: 100%; }
-        .avatar-picker-grid { display: none; grid-template-columns: repeat(4, 1fr); gap: 8px; width: 100%; background: rgba(2, 5, 10, 0.4); padding: 12px; border-radius: 6px; border: 1px dashed rgba(168, 85, 247, 0.3); transition: all 0.3s ease; }
+        .avatar-picker-grid { display: none; grid-template-columns: repeat(6, 1fr); gap: 8px; width: 100%; background: rgba(2, 5, 10, 0.4); padding: 12px; border-radius: 6px; border: 1px dashed rgba(168, 85, 247, 0.3); transition: all 0.3s ease; max-height: 250px; overflow-y: auto; }
         .avatar-picker-grid.active { display: grid; }
         .avatar-picker-item { width: 100%; aspect-ratio: 1; border-radius: 50%; border: 2px solid transparent; background-size: cover; background-position: center; cursor: pointer; transition: all 0.2s ease; background-color: #02050a; }
         .avatar-picker-item:hover { transform: scale(1.1); border-color: #00f2fe; }
@@ -458,10 +421,10 @@
         .online-widget { position: fixed; bottom: 20px; right: 20px; background: rgba(5, 10, 20, 0.85); border: 1px solid rgba(34, 197, 94, 0.4); padding: 8px 12px; border-radius: 20px; z-index: 100; display: none; align-items: center; gap: 10px; backdrop-filter: blur(5px); box-shadow: 0 0 15px rgba(34, 197, 94, 0.2); font-family: 'Orbitron', sans-serif; transition: all 0.3s ease; cursor: default; }
         .online-widget:hover { border-color: #22c55e; box-shadow: 0 0 25px rgba(34, 197, 94, 0.4); }
         .online-dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; box-shadow: 0 0 8px #22c55e; animation: pulseDot 2s infinite; }
-        .online-users-container { display: flex; align-items: center; }
-        .online-avatar { width: 22px; height: 22px; border-radius: 50%; border: 1px solid #22c55e; background-size: cover; background-position: center; margin-left: -8px; background-color: #050b14; }
-        .online-avatar:first-child { margin-left: 0; }
-        .online-text { font-size: 10px; color: #22c55e; text-transform: uppercase; font-weight: bold; margin-right: 5px; }
+        .online-users-container { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .online-user-item { display: flex; align-items: center; gap: 5px; background: rgba(0,0,0,0.5); padding: 2px 6px; border-radius: 15px; border: 1px solid rgba(34, 197, 94, 0.3); }
+        .online-avatar { width: 18px; height: 18px; border-radius: 50%; border: 1px solid #22c55e; background-size: cover; background-position: center; background-color: #050b14; }
+        .online-user-nick { font-size: 10px; color: #fff; text-transform: none; letter-spacing: 0.5px; font-family: 'Oswald', sans-serif;}
 
         @keyframes pulseDot { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.2); } 100% { opacity: 1; transform: scale(1); } }
 
@@ -529,9 +492,7 @@
             outline: none;
             padding: 5px;
         }
-        .editable-id-input:focus {
-            border-bottom: 1px dashed #00f2fe;
-        }
+        .editable-id-input:focus { border-bottom: 1px dashed #00f2fe; }
 
         .law-box { background: rgba(2, 5, 10, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); padding: 10px; border-radius: 4px; margin-bottom: 15px; display: flex; gap: 10px; align-items: flex-start; }
         .law-box input { width: 18px; height: 18px; accent-color: #00f2fe; flex-shrink: 0; cursor: pointer; }
@@ -598,7 +559,7 @@
             .founders-grid { grid-template-columns: 1fr; }
             .welcome-desc-container { padding: 15px; margin-top: 15px; }
             .training-admin-block { position: static; margin-bottom: 15px; justify-content: center; width: 100%; }
-            .avatar-picker-grid { grid-template-columns: repeat(3, 1fr); max-height: 180px; overflow-y: auto; }
+            .avatar-picker-grid { grid-template-columns: repeat(4, 1fr); max-height: 180px; overflow-y: auto; }
             .modal-window { padding: 20px; }
             .online-widget { bottom: 60px; padding: 5px 8px; }
         }
@@ -613,25 +574,26 @@
     </div>
 
     <div class="online-widget" id="onlineWidget" title="Бойцы в сети">
-        <div class="online-text">В сети</div>
+        <div class="online-text lang-txt" data-ru="В сети" data-en="Online">В сети</div>
         <div class="online-dot"></div>
         <div class="online-users-container" id="onlineUsersContainer"></div>
     </div>
 
     <nav class="nav-bar">
         <div class="nav-links-left">
-            <a href="#welcome">Главная</a>
-            <a href="#roster">Состав</a>
-            <a href="#maps" id="navMapsLink">Карты</a>
-            <a href="#board" id="navBoardLink">Доска</a>
-            <a href="#chat">Чат</a>
-            <a href="#creators">Креаторы</a>
+            <a href="#welcome" class="lang-txt" data-ru="Главная" data-en="Home">Главная</a>
+            <a href="#roster" class="lang-txt" data-ru="Состав" data-en="Roster">Состав</a>
+            <a href="#maps" id="navMapsLink" class="lang-txt" data-ru="Карты" data-en="Maps">Карты</a>
+            <a href="#board" id="navBoardLink" class="lang-txt" data-ru="Доска" data-en="Board">Доска</a>
+            <a href="#chat" class="lang-txt" data-ru="Чат" data-en="Chat">Чат</a>
+            <a href="#creators" class="lang-txt" data-ru="Креаторы" data-en="Creators">Креаторы</a>
         </div>
         <div class="nav-links-right">
-            <span class="nav-link-btn" id="navLawBtn">Соглашение</span>
-            <span class="nav-link-btn" id="navStatsBtn"><i class="fa-solid fa-chart-simple"></i> Статистика</span>
+            <span class="nav-link-btn" id="navLangBtn" onclick="toggleLanguage()"><i class="fa-solid fa-globe"></i> <span id="currentLangLabel">RU</span></span>
+            <span class="nav-link-btn lang-txt" id="navLawBtn" data-ru="Соглашение" data-en="Terms">Соглашение</span>
+            <span class="nav-link-btn lang-txt" id="navStatsBtn" data-ru='<i class="fa-solid fa-chart-simple"></i> Статистика' data-en='<i class="fa-solid fa-chart-simple"></i> Stats'><i class="fa-solid fa-chart-simple"></i> Статистика</span>
             <div id="navCabinetBtn" title="Личный кабинет"><i class="fa-solid fa-user-shield" id="navCabinetDefaultIcon"></i></div>
-            <button class="btn-nav-login" id="navLoginBtn"><i class="fa-solid fa-lock"></i> Вход</button>
+            <button class="btn-nav-login lang-txt" id="navLoginBtn" data-ru='<i class="fa-solid fa-lock"></i> Вход' data-en='<i class="fa-solid fa-lock"></i> Login'><i class="fa-solid fa-lock"></i> Вход</button>
         </div>
     </nav>
 
@@ -640,47 +602,47 @@
         <h1>Stage</h1>
         
         <div class="welcome-desc-container">
-            <p class="welcome-desc-p">Добро пожаловать в клан STAGE</p>
-            <p class="welcome-desc-p">STAGE — играем среди лучших. Стань частью команды.</p>
+            <p class="welcome-desc-p lang-txt" data-ru="Добро пожаловать в клан STAGE" data-en="Welcome to the STAGE clan">Добро пожаловать в клан STAGE</p>
+            <p class="welcome-desc-p lang-txt" data-ru="STAGE — играем среди лучших. Стань частью команды." data-en="STAGE — playing among the best. Become part of the team.">STAGE — играем среди лучших. Стань частью команды.</p>
         </div>
     </section>
 
     <section id="roster" class="roster-screen">
         <div class="training-admin-block">
-            <button type="button" class="btn-training-trigger" id="btnTrainingTrigger"><i class="fa-solid fa-calendar-plus"></i> Тренировка</button>
+            <button type="button" class="btn-training-trigger lang-txt" id="btnTrainingTrigger" data-ru='<i class="fa-solid fa-calendar-plus"></i> Тренировка' data-en='<i class="fa-solid fa-calendar-plus"></i> Training'><i class="fa-solid fa-calendar-plus"></i> Тренировка</button>
         </div>
 
-        <h2 class="section-title">Состав клана</h2>
+        <h2 class="section-title lang-txt" data-ru="Состав клана" data-en="Clan Roster">Состав клана</h2>
         
-        <div id="adminBadge"><i class="fa-solid fa-shield-halved"></i> Режим Лидера Активирован</div>
+        <div id="adminBadge" class="lang-txt" data-ru='<i class="fa-solid fa-shield-halved"></i> Режим Лидера Активирован' data-en='<i class="fa-solid fa-shield-halved"></i> Leader Mode Activated'><i class="fa-solid fa-shield-halved"></i> Режим Лидера Активирован</div>
 
         <div class="training-countdown-widget" id="trainingCountdownWidget">
             <span class="close-timer-btn" id="btnCloseTimer" onclick="executeResetTrainingTimer()">&times;</span>
             
-            <div class="training-countdown-title">⚔️ До тактической тренировки флота:</div>
+            <div class="training-countdown-title lang-txt" data-ru="⚔️ До тактической тренировки флота:" data-en="⚔️ Time to tactical fleet training:">⚔️ До тактической тренировки флота:</div>
             <div class="training-timer-display">
-                <div class="timer-unit-box"><div class="num" id="timerDays">00</div><div class="label">Дн</div></div>
-                <div class="timer-unit-box"><div class="num" id="timerHours">00</div><div class="label">Чис</div></div>
-                <div class="timer-unit-box"><div class="num" id="timerMinutes">00</div><div class="label">Мин</div></div>
-                <div class="timer-unit-box"><div class="num" id="timerSeconds">00</div><div class="label">Сек</div></div>
+                <div class="timer-unit-box"><div class="num" id="timerDays">00</div><div class="lbl lang-txt" data-ru="Дн" data-en="D">Дн</div></div>
+                <div class="timer-unit-box"><div class="num" id="timerHours">00</div><div class="lbl lang-txt" data-ru="Час" data-en="H">Час</div></div>
+                <div class="timer-unit-box"><div class="num" id="timerMinutes">00</div><div class="lbl lang-txt" data-ru="Мин" data-en="M">Мин</div></div>
+                <div class="timer-unit-box"><div class="num" id="timerSeconds">00</div><div class="lbl lang-txt" data-ru="Сек" data-en="S">Сек</div></div>
             </div>
 
             <div class="website-vote-block" id="websiteVoteBlock">
-                <button type="button" class="btn-web-vote v-yes" onclick="registerWebsiteVote('yes')">⚓️ Прибуду в строй</button>
-                <button type="button" class="btn-web-vote v-no" onclick="registerWebsiteVote('no')">❌ Не смогу</button>
+                <button type="button" class="btn-web-vote v-yes lang-txt" onclick="registerWebsiteVote('yes')" data-ru="⚓️ Прибуду в строй" data-en="⚓️ Will Attend">⚓️ Прибуду в строй</button>
+                <button type="button" class="btn-web-vote v-no lang-txt" onclick="registerWebsiteVote('no')" data-ru="❌ Не смогу" data-en="❌ Cannot Attend">❌ Не смогу</button>
             </div>
 
             <div class="training-attendance-container">
                 <div class="attendance-column yes">
-                    <h4>⚓️ Прибудут в строй:</h4>
+                    <h4 class="lang-txt" data-ru="⚓️ Прибудут в строй:" data-en="⚓️ Attending:">⚓️ Прибудут в строй:</h4>
                     <div class="attendance-list" id="attendanceYesList">
-                        <div style="font-size:11px; color:rgba(255,255,255,0.2);">Списки пусты</div>
+                        <div style="font-size:11px; color:rgba(255,255,255,0.2);" class="lang-txt" data-ru="Списки пусты" data-en="Lists are empty">Списки пусты</div>
                     </div>
                 </div>
                 <div class="attendance-column no">
-                    <h4>❌ Не смогут:</h4>
+                    <h4 class="lang-txt" data-ru="❌ Не смогут:" data-en="❌ Not Attending:">❌ Не смогут:</h4>
                     <div class="attendance-list" id="attendanceNoList">
-                        <div style="font-size:11px; color:rgba(255,255,255,0.2);">Списки пусты</div>
+                        <div style="font-size:11px; color:rgba(255,255,255,0.2);" class="lang-txt" data-ru="Списки пусты" data-en="Lists are empty">Списки пусты</div>
                     </div>
                 </div>
             </div>
@@ -688,100 +650,93 @@
 
         <div class="roster-container">
             <div class="rank-section">
-                <div class="rank-title">Участники клана</div>
+                <div class="rank-title lang-txt" data-ru="Участники клана" data-en="Clan Members">Участники клана</div>
                 <div class="players-grid" id="playersGrid">
                     <div class="player-card leader" data-nick="Mitso" onclick="showPlayerInfo('Mitso')">
                         <div class="name-wrapper">
                             <div class="roster-avatar" style="background-image: none;"></div>
                             <span>Mitso<i class="fa-solid fa-chess-knight" title="Тактик" style="font-size: 14px; margin-left: 6px; color: #a855f7;"></i></span>
                         </div>
-                        <span class="tag">Глава</span>
+                        <span class="tag lang-txt" data-ru="Глава" data-en="Leader">Глава</span>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="secret-tg-box" id="secretTgBox">
-            <p>ДОСТУП РАЗРЕШЕН. ДОБРО ПОЖАЛОВАТЬ ВО ФЛОТ</p>
+            <p class="lang-txt" data-ru="ДОСТУП РАЗРЕШЕН. ДОБРО ПОЖАЛОВАТЬ ВО ФЛОТ" data-en="ACCESS GRANTED. WELCOME TO THE FLEET">ДОСТУП РАЗРЕШЕН. ДОБРО ПОЖАЛОВАТЬ ВО ФЛОТ</p>
             <a href="https://t.me/+0kNCkvxktdozZTYy" target="_blank" class="social-btn btn-telegram" style="margin: 0 auto; max-width: 300px;">
-                <i class="fa-solid fa-paper-plane"></i><span>Войти в чат клана</span>
+                <i class="fa-solid fa-paper-plane"></i><span class="lang-txt" data-ru="Войти в чат клана" data-en="Enter Clan Chat">Войти в чат клана</span>
             </a>
-            <button type="button" class="btn-reset-auth" onclick="resetUserAuth()">Выйти из аккаунта (Сбросить допуск)</button>
+            <button type="button" class="btn-reset-auth lang-txt" onclick="resetUserAuth()" data-ru="Выйти из аккаунта (Сбросить допуск)" data-en="Logout (Reset Access)">Выйти из аккаунта (Сбросить допуск)</button>
         </div>
 
         <div class="recruit-box" id="recruitBoxBtn">
-            <button class="btn-join-neon" id="openModalBtn"><i class="fa-solid fa-paper-plane"></i> Подать заявку / Верификация</button>
+            <button class="btn-join-neon lang-txt" id="openModalBtn" data-ru='<i class="fa-solid fa-paper-plane"></i> Подать заявку / Верификация' data-en='<i class="fa-solid fa-paper-plane"></i> Apply / Verify'><i class="fa-solid fa-paper-plane"></i> Подать заявку / Верификация</button>
         </div>
     </section>
 
     <section id="maps" class="maps-screen">
-        <h2 class="section-title">Карты</h2>
+        <h2 class="section-title lang-txt" data-ru="Карты" data-en="Maps">Карты</h2>
         <div class="lock-overlay-box" id="mapsLockBox">
             <i class="fa-solid fa-building-shield"></i>
-            <h3>Доступ Ограничен</h3>
-            <p>Тактические карты доступны исключительно действующим членам клана STAGE. Пожалуйста, авторизуйтесь через терминал "Вход" в верхнем меню.</p>
+            <h3 class="lang-txt" data-ru="Доступ Ограничен" data-en="Access Restricted">Доступ Ограничен</h3>
+            <p class="lang-txt" data-ru="Тактические карты доступны исключительно действующим членам клана STAGE. Пожалуйста, авторизуйтесь через терминал 'Вход' в верхнем меню." data-en="Tactical maps are available exclusively to active STAGE clan members. Please authorize via the 'Login' terminal in the top menu.">Тактические карты доступны исключительно действующим членам клана STAGE. Пожалуйста, авторизуйтесь через терминал "Вход" в верхнем меню.</p>
         </div>
         <div class="maps-grid collapsed" id="mapsActualGrid" style="display: none; width: 100%;"></div>
-        <button type="button" class="toggle-roster-btn" id="toggleMapsBtn" style="display: none; margin-top: 20px;">Показать все карты</button>
+        <button type="button" class="toggle-roster-btn lang-txt" id="toggleMapsBtn" data-ru="Показать все карты" data-en="Show all maps" style="display: none; margin-top: 20px;">Показать все карты</button>
     </section>
 
     <section id="board" class="board-screen">
-        <h2 class="section-title">Доска</h2>
+        <h2 class="section-title lang-txt" data-ru="Доска" data-en="Board">Доска</h2>
         <div class="lock-overlay-box" id="boardLockBox">
             <i class="fa-solid fa-user-lock"></i>
-            <h3>Терминал Заблокирован</h3>
-            <p>Интерактивный холст доступен исключительно исключительно членам клана STAGE.</p>
+            <h3 class="lang-txt" data-ru="Терминал Заблокирован" data-en="Terminal Locked">Терминал Заблокирован</h3>
+            <p class="lang-txt" data-ru="Интерактивный холст доступен исключительно членам клана STAGE." data-en="Interactive canvas is available exclusively to STAGE clan members.">Интерактивный холст доступен исключительно членам клана STAGE.</p>
         </div>
-        <div id="boardActualContainer" style="display: none; width: 100%; flex-direction: column; align-items: center;">
+        <div id="boardActualContainer" style="display: none; width: 100%; flex-direction: column; align-items: center; position: relative;">
             <button type="button" class="btn-fullscreen-toggle" id="toggleFullscreenBtn">
-                <i class="fa-solid fa-expand"></i> <span id="fullscreenBtnText">Развернуть во весь экран</span>
+                <i class="fa-solid fa-expand"></i> <span id="fullscreenBtnText" class="lang-txt" data-ru="Развернуть во весь экран" data-en="Expand Fullscreen">Развернуть во весь экран</span>
             </button>
             <div class="board-container" id="boardContainer">
-                <iframe data-src="https://excalidraw.com/" src="about:blank" class="board-frame" id="excalidrawFrame"></iframe>
+                <iframe data-src="https://excalidraw.com/" src="about:blank" class="board-frame" id="excalidrawFrame" allowfullscreen></iframe>
             </div>
         </div>
     </section>
 
     <section id="chat" class="chat-screen">
-        <h2 class="section-title">Наши чаты</h2>
+        <h2 class="section-title lang-txt" data-ru="Наши чаты" data-en="Our Chats">Наши чаты</h2>
         <div class="social-container">
             <a href="https://discord.gg/U3zekgCn7" target="_blank" class="social-btn btn-discord"><i class="fa-brands fa-discord"></i><span>Discord</span></a>
             
-            <div class="lock-overlay-box" id="tgChatLockBox" style="margin: 0; padding: 20px; max-width: 100%; width: 100%;">
-                <i class="fa-solid fa-user-lock" style="font-size: 30px; margin-bottom: 10px; color: #0088cc; text-shadow: 0 0 15px rgba(0,136,204,0.5);"></i>
-                <h3 style="font-size: 15px;">Чат Заблокирован</h3>
-                <p style="font-size: 12px;">Основной Telegram-чат клана доступен только верифицированным участникам клана STAGE.</p>
-            </div>
-            <a href="https://t.me/+0kNCkvxktdozZTYy" id="tgChatActualBtn" target="_blank" class="social-btn btn-telegram" style="display: none;"><i class="fa-solid fa-paper-plane"></i><span>Telegram чат</span></a>
-            
             <div class="lock-overlay-box" id="telemostLockBox" style="margin: 0; padding: 20px; max-width: 100%; width: 100%;">
                 <i class="fa-solid fa-microphone-lines" style="font-size: 30px; margin-bottom: 10px;"></i>
-                <h3 style="font-size: 15px;">Связь Заблокирована</h3>
-                <p style="font-size: 12px;">Голосовой канал Яндекс Телемост доступен только верифицированным участникам клана STAGE.</p>
+                <h3 style="font-size: 15px;" class="lang-txt" data-ru="Связь Заблокирована" data-en="Comms Locked">Связь Заблокирована</h3>
+                <p style="font-size: 12px;" class="lang-txt" data-ru="Голосовой канал Яндекс Телемост доступен только верифицированным участникам клана STAGE." data-en="Yandex Telemost voice channel is available only to verified STAGE clan members.">Голосовой канал Яндекс Телемост доступен только верифицированным участникам клана STAGE.</p>
             </div>
             <a href="https://telemost.yandex.ru/j/02002400708623" id="telemostActualBtn" target="_blank" class="social-btn btn-telemost" style="display: none;"><i class="fa-solid fa-headset"></i><span>Яндекс Телемост</span></a>
         </div>
     </section>
 
     <section id="creators" class="creators-screen">
-        <h2 class="section-title">Наши креаторы</h2>
+        <h2 class="section-title lang-txt" data-ru="Наши креаторы" data-en="Our Creators">Наши креаторы</h2>
         <div class="social-container">
             <a href="https://t.me/MwAbymitso" target="_blank" class="social-btn btn-creator"><i class="fa-solid fa-play"></i><span>MwAbymitso</span></a>
             <a href="https://t.me/anubis_MW" target="_blank" class="social-btn btn-creator"><i class="fa-solid fa-video"></i><span>Anubis MW</span></a>
             <a href="https://t.me/MWnewsMPT" target="_blank" class="social-btn btn-creator"><i class="fa-solid fa-newspaper"></i><span>MWnewsMPT</span></a>
-            <div class="sub-section-title">Полезно</div>
+            <div class="sub-section-title lang-txt" data-ru="Полезно" data-en="Useful">Полезно</div>
             <a href="https://wiki.modernwarships.com/ru" target="_blank" class="social-btn btn-wiki"><i class="fa-solid fa-book-open"></i><span>MW WiKi</span></a>
         </div>
     </section>
 
     <section id="founders" class="founders-screen">
-        <h2 class="section-title">Основатели</h2>
+        <h2 class="section-title lang-txt" data-ru="Основатели" data-en="Founders">Основатели</h2>
        <div class="founders-grid">
-            <div class="founder-link"><div class="founder-tile leader-tile"><i class="fa-solid fa-anchor"></i><h3>Mitso</h3><p>Основатель</p></div></div>
-            <div class="founder-link"><div class="founder-tile"><i class="fa-solid fa-crosshairs"></i><h3>Mr. JOKER</h3><p>Основатель</p></div></div>
-            <div class="founder-link"><div class="founder-tile"><i class="fa-solid fa-shield-halved"></i><h3>Dark Control</h3><p>Основатель</p></div></div>
-            <div class="founder-link"><div class="founder-tile"><i class="fa-solid fa-bolt"></i><h3>Mr. PROper</h3><p>Основатель</p></div></div>
-            <div class="founder-link"><div class="founder-tile"><i class="fa-solid fa-satellite-dish"></i><h3>Banan</h3><p>Основатель</p></div></div>
+            <div class="founder-link"><div class="founder-tile leader-tile"><i class="fa-solid fa-anchor"></i><h3>Mitso</h3><p class="lang-txt" data-ru="Основатель" data-en="Founder">Основатель</p></div></div>
+            <div class="founder-link"><div class="founder-tile"><i class="fa-solid fa-crosshairs"></i><h3>Mr. JOKER</h3><p class="lang-txt" data-ru="Основатель" data-en="Founder">Основатель</p></div></div>
+            <div class="founder-link"><div class="founder-tile"><i class="fa-solid fa-shield-halved"></i><h3>Dark Control</h3><p class="lang-txt" data-ru="Основатель" data-en="Founder">Основатель</p></div></div>
+            <div class="founder-link"><div class="founder-tile"><i class="fa-solid fa-bolt"></i><h3>Mr. PROper</h3><p class="lang-txt" data-ru="Основатель" data-en="Founder">Основатель</p></div></div>
+            <div class="founder-link"><div class="founder-tile"><i class="fa-solid fa-satellite-dish"></i><h3>Banan</h3><p class="lang-txt" data-ru="Основатель" data-en="Founder">Основатель</p></div></div>
         </div>
     </section>
 
@@ -790,44 +745,44 @@
             <span class="close-btn" id="closeModalBtn" onclick="document.getElementById('modalOverlay').classList.remove('active');">&times;</span>
             
             <form id="recruitForm">
-                <div class="modal-title">Подать заявку</div>
-                <div class="form-group"><label>Игровой ID</label><input type="text" id="gameId" placeholder="Например: 49284729" required></div>
-                <div class="form-group"><label>Никнейм в игре</label><input type="text" id="gameNick" placeholder="Твой ник" required></div>
-                <div class="form-group"><label>Ваш Telegram Тэг (Логин)</label><input type="text" id="tgLink" placeholder="Например: @vova" required></div>
+                <div class="modal-title lang-txt" data-ru="Подать заявку" data-en="Apply Now">Подать заявку</div>
+                <div class="form-group"><label class="lang-txt" data-ru="Игровой ID" data-en="Game ID">Игровой ID</label><input type="text" id="gameId" class="lang-txt" data-ru="Например: 49284729" data-en="Example: 49284729" placeholder="Например: 49284729" required></div>
+                <div class="form-group"><label class="lang-txt" data-ru="Никнейм в игре" data-en="In-game Nickname">Никнейм в игре</label><input type="text" id="gameNick" class="lang-txt" data-ru="Твой ник" data-en="Your nick" placeholder="Твой ник" required></div>
+                <div class="form-group"><label class="lang-txt" data-ru="Ваш Telegram Тэг (Логин)" data-en="Your Telegram Tag (Login)">Ваш Telegram Тэг (Логин)</label><input type="text" id="tgLink" class="lang-txt" data-ru="Например: @vova" data-en="Example: @vova" placeholder="Например: @vova" required></div>
                 
                 <div class="form-group">
-                    <label>Ваш цифровой Telegram ID</label>
-                    <button type="button" id="androidBotLink" class="btn-law-link" style="font-size: 14px; text-align: left; margin-bottom: 8px; display: block; font-weight: bold; color: #00f2fe;">
+                    <label class="lang-txt" data-ru="Ваш цифровой Telegram ID" data-en="Your Digital Telegram ID">Ваш цифровой Telegram ID</label>
+                    <button type="button" id="androidBotLink" class="btn-law-link lang-txt" data-ru="⚓️ Узнать свой ID в боте (Кликни сюда)" data-en="⚓️ Find your ID in the bot (Click here)" style="font-size: 14px; text-align: left; margin-bottom: 8px; display: block; font-weight: bold; color: #00f2fe;">
                         ⚓️ Узнать свой ID в боте (Кликни сюда)
                     </button>
-                    <input type="text" id="gameChatId" placeholder="Вставьте цифры, полученные от бота (например: 74928421)" required>
+                    <input type="text" id="gameChatId" class="lang-txt" data-ru="Вставьте цифры, полученные от бота (например: 74928421)" data-en="Paste the digits received from the bot (e.g. 74928421)" placeholder="Вставьте цифры, полученные от бота (например: 74928421)" required>
                 </div>
 
                 <div class="law-box">
                     <input type="checkbox" id="lawAgree">
-                    <div class="law-text">Я принимаю условия <button type="button" class="btn-law-link" id="openLawBtn">развлекательного сообщества</button> и даю согласие на обработку данных.</div>
+                    <div class="law-text"><span class="lang-txt" data-ru="Я принимаю условия" data-en="I accept the terms of the">Я принимаю условия</span> <button type="button" class="btn-law-link lang-txt" id="openLawBtn" data-ru="развлекательного сообщества" data-en="entertainment community">развлекательного сообщества</button> <span class="lang-txt" data-ru="и даю согласие на обработку данных." data-en="and consent to data processing.">и даю согласие на обработку данных.</span></div>
                 </div>
-                <button type="submit" class="btn-submit" id="submitBtn" disabled>Отправить заявку</button>
+                <button type="submit" class="btn-submit lang-txt" id="submitBtn" data-ru="Отправить заявку" data-en="Submit Application" disabled>Отправить заявку</button>
                 <div style="text-align: center; margin-top: 15px;">
-                    <span id="switchToVerify" style="color: #00f2fe; cursor: pointer; text-decoration: underline; font-size: 14px;">Уже одобрен главой? Проверить допуск</span>
+                    <span id="switchToVerify" class="lang-txt" data-ru="Уже одобрен главой? Проверить допуск" data-en="Already approved? Check access" style="color: #00f2fe; cursor: pointer; text-decoration: underline; font-size: 14px;">Уже одобрен главой? Проверить допуск</span>
                 </div>
             </form>
 
             <div id="verifyBlock" style="display: none;">
-                <div class="modal-title" style="color: #00f2fe;">Верификация допуска</div>
-                <p style="font-size: 13px; color: #94a3b8; text-align: center; margin-bottom: 15px;">Введите ваш Telegram-никнейм. Если глава клана перевел вас в статус «Одобрен», шлюз откроется.</p>
-                <div class="form-group"><label>Ваш Telegram-Ник</label><input type="text" id="verifyTgInput" placeholder="Например: @vova" required></div>
-                <button type="button" class="btn-submit" id="checkVerifyBtn">Проверить допуск</button>
+                <div class="modal-title lang-txt" style="color: #00f2fe;" data-ru="Верификация допуска" data-en="Access Verification">Верификация допуска</div>
+                <p style="font-size: 13px; color: #94a3b8; text-align: center; margin-bottom: 15px;" class="lang-txt" data-ru="Введите ваш Telegram-никнейм. Если глава клана перевел вас в статус «Одобрен», шлюз откроется." data-en="Enter your Telegram nickname. If the leader approved you, the gateway will open.">Введите ваш Telegram-никнейм. Если глава клана перевел вас в статус «Одобрен», шлюз откроется.</p>
+                <div class="form-group"><label class="lang-txt" data-ru="Ваш Telegram-Ник" data-en="Your Telegram Nick">Ваш Telegram-Ник</label><input type="text" id="verifyTgInput" class="lang-txt" data-ru="Например: @vova" data-en="Example: @vova" placeholder="Например: @vova" required></div>
+                <button type="button" class="btn-submit lang-txt" id="checkVerifyBtn" data-ru="Проверить допуск" data-en="Check Access">Проверить допуск</button>
                 <div style="text-align: center; margin-top: 15px;">
-                    <span id="switchToForm" style="color: #a855f7; cursor: pointer; text-decoration: underline; font-size: 14px;">Вернуться к подаче заявки</span>
+                    <span id="switchToForm" class="lang-txt" data-ru="Вернуться к подаче заявки" data-en="Return to application" style="color: #a855f7; cursor: pointer; text-decoration: underline; font-size: 14px;">Вернуться к подаче заявки</span>
                 </div>
             </div>
 
             <div class="success-result" id="successResult">
-                <div class="modal-title" style="color: #00f2fe;">Заявка в штабе</div>
-                <p style="text-align:center; margin-bottom:12px; color: #94a3b8; font-size: 14px;">Данные отправлены. Чтобы бот смог автоматически прислать вам **Логин и Пароль** после одобрения главой, обязательно запустите бота.</p>
-                <button type="button" id="androidBotSuccessLink" class="btn-submit" style="display:inline-block; margin-bottom:10px; background:#0088cc; color:#fff; text-align:center; padding:10px 0; width:100%; border-radius: 30px; border:none; font-family: 'Orbitron', sans-serif; font-weight:900;">1. Активировать бота в ТГ</button>
-                <button type="button" class="btn-submit" onclick="document.getElementById('modalOverlay').classList.remove('active');" style="background:#1e293b; color:#94a3b8;">2. Закрыть окно</button>
+                <div class="modal-title lang-txt" style="color: #00f2fe;" data-ru="Заявка в штабе" data-en="Application at HQ">Заявка в штабе</div>
+                <p style="text-align:center; margin-bottom:12px; color: #94a3b8; font-size: 14px;" class="lang-txt" data-ru="Данные отправлены. Чтобы бот смог автоматически прислать вам Логин и Пароль после одобрения главой, обязательно запустите бота." data-en="Data sent. To receive your Login/Password from the bot after approval, you must launch it.">Данные отправлены. Чтобы бот смог автоматически прислать вам **Логин и Пароль** после одобрения главой, обязательно запустите бота.</p>
+                <button type="button" id="androidBotSuccessLink" class="btn-submit lang-txt" data-ru="1. Активировать бота в ТГ" data-en="1. Activate TG bot" style="display:inline-block; margin-bottom:10px; background:#0088cc; color:#fff; text-align:center; padding:10px 0; width:100%; border-radius: 30px; border:none; font-family: 'Orbitron', sans-serif; font-weight:900;">1. Активировать бота в ТГ</button>
+                <button type="button" class="btn-submit lang-txt" data-ru="2. Закрыть окно" data-en="2. Close window" onclick="document.getElementById('modalOverlay').classList.remove('active');" style="background:#1e293b; color:#94a3b8;">2. Закрыть окно</button>
             </div>
         </div>
     </div>
@@ -838,16 +793,16 @@
             <div class="cabinet-avatar-container" id="infoAvatar" style="margin: 0 auto 15px; width: 80px; height: 80px; border-color: #00f2fe;"></div>
             
             <div style="background: rgba(2, 5, 10, 0.6); padding: 15px; border-radius: 6px; border: 1px dashed rgba(0, 242, 254, 0.3); margin-top: 15px;">
-                <div style="color: #00f2fe; font-size: 12px; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px;">Никнейм:</div>
+                <div style="color: #00f2fe; font-size: 12px; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px;" class="lang-txt" data-ru="Никнейм:" data-en="Nickname:">Никнейм:</div>
                 <div id="infoNick" style="font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 900; color: #fff; margin-bottom: 15px; text-shadow: 0 0 10px rgba(0,242,254,0.5);">-</div>
                 
-                <div style="color: #00f2fe; font-size: 12px; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px;">Игровой ID:</div>
+                <div style="color: #00f2fe; font-size: 12px; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px;" class="lang-txt" data-ru="Игровой ID:" data-en="Game ID:">Игровой ID:</div>
                 <div style="position: relative; width: 100%; margin-bottom: 15px;">
                     <input type="text" id="infoGameIdInput" class="editable-id-input" value="-" readonly>
                     <i class="fa-solid fa-pen" id="editIdIcon" style="display: none; position: absolute; right: 10px; top: 5px; color: #a855f7; font-size: 12px; cursor: pointer;"></i>
                 </div>
                 
-                <div style="color: #00f2fe; font-size: 12px; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px;">Специализация:</div>
+                <div style="color: #00f2fe; font-size: 12px; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px;" class="lang-txt" data-ru="Специализация:" data-en="Specialization:">Специализация:</div>
                 <div id="infoSpecText" style="font-family: 'Oswald', sans-serif; font-size: 15px; color: #fff; margin-bottom: 15px;">-</div>
                 
                 <div id="infoSpecEditWrapper" style="display: none; margin-bottom: 15px; position: relative;">
@@ -863,7 +818,7 @@
                     <i class="fa-solid fa-chevron-down" style="position: absolute; right: 10px; top: 10px; color: #00f2fe; pointer-events: none; font-size: 12px;"></i>
                 </div>
 
-                <div style="color: #a855f7; font-size: 12px; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px;">Морское Звание:</div>
+                <div style="color: #a855f7; font-size: 12px; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px;" class="lang-txt" data-ru="Морское Звание:" data-en="Naval Rank:">Морское Звание:</div>
                 
                 <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px;">
                     <div id="infoRankText" style="font-family: 'Oswald', sans-serif; font-size: 15px; color: #fff;">-</div>
@@ -872,15 +827,15 @@
                 
                 <div id="infoRankEditWrapper" style="display: none; margin-bottom: 15px; position: relative;">
                     <select id="infoRankSelect" style="background: #02050a; color: #00f2fe; border: 1px dashed #00f2fe; border-radius: 4px; padding: 5px; font-family: 'Oswald', sans-serif; font-size: 14px; width: 100%; outline: none; text-align: center; appearance: none; cursor: pointer;">
-                        <option value="">Автоматически (по выслуге)</option>
+                        <option value="" class="lang-txt" data-ru="Автоматически (по выслуге)" data-en="Auto (by service)">Автоматически (по выслуге)</option>
                     </select>
                     <i class="fa-solid fa-chevron-down" style="position: absolute; right: 10px; top: 10px; color: #00f2fe; pointer-events: none; font-size: 12px;"></i>
                 </div>
 
                 <div class="status-btn-group" id="adminStatusButtons">
-                    <button type="button" class="btn-status legend" onclick="assignPlayerStatus('legend')">Легенда</button>
-                    <button type="button" class="btn-status hero" onclick="assignPlayerStatus('hero')">Герой</button>
-                    <button type="button" class="btn-status reset" onclick="assignPlayerStatus('none')">Снять</button>
+                    <button type="button" class="btn-status legend lang-txt" onclick="assignPlayerStatus('legend')" data-ru="Легенда" data-en="Legend">Легенда</button>
+                    <button type="button" class="btn-status hero lang-txt" onclick="assignPlayerStatus('hero')" data-ru="Герой" data-en="Hero">Герой</button>
+                    <button type="button" class="btn-status reset lang-txt" onclick="assignPlayerStatus('none')" data-ru="Снять" data-en="Remove">Снять</button>
                 </div>
             </div>
         </div>
@@ -889,56 +844,44 @@
     <div class="modal-overlay" id="trainingModalOverlay" style="z-index: 150;">
         <div class="modal-window" style="max-width: 400px; border-color: #a855f7; box-shadow: 0 0 40px rgba(168, 85, 247, 0.4);">
             <span class="close-btn" id="closeTrainingModalBtn">&times;</span>
-            <div class="modal-title" style="color: #a855f7; border-bottom-color: rgba(168, 85, 247, 0.2);">Планирование тренировки</div>
+            <div class="modal-title lang-txt" style="color: #a855f7; border-bottom-color: rgba(168, 85, 247, 0.2);" data-ru="Планирование тренировки" data-en="Training Planning">Планирование тренировки</div>
             <div class="form-group">
-                <label>Выберите дату тренировки</label>
+                <label class="lang-txt" data-ru="Выберите дату тренировки" data-en="Select Training Date">Выберите дату тренировки</label>
                 <input type="date" id="inputTrainingDate" required style="border-color: #a855f7; font-family: 'Orbitron', sans-serif; background: #02050a; color: #fff; padding: 10px; border-radius: 4px; width: 100%;">
             </div>
             <div class="form-group">
-                <label>Укажите время начала</label>
-                <input type="text" id="inputTrainingTime" placeholder="Например: 18:00" required style="border-color: #a855f7; font-family: 'Orbitron', sans-serif; background: #02050a; color: #fff; padding: 10px; border-radius: 4px; width: 100%;">
+                <label class="lang-txt" data-ru="Укажите время начала" data-en="Specify start time">Укажите время начала</label>
+                <input type="text" id="inputTrainingTime" class="lang-txt" data-ru="Например: 18:00" data-en="Example: 18:00" placeholder="Например: 18:00" required style="border-color: #a855f7; font-family: 'Orbitron', sans-serif; background: #02050a; color: #fff; padding: 10px; border-radius: 4px; width: 100%;">
             </div>
-            <button type="button" class="btn-submit" id="btnSubmitTraining" style="background: #a855f7; color: #fff;">Готово</button>
+            <button type="button" class="btn-submit lang-txt" id="btnSubmitTraining" style="background: #a855f7; color: #fff;" data-ru="Готово" data-en="Done">Готово</button>
         </div>
     </div>
 
     <div class="modal-overlay" id="cabinetModalOverlay" style="z-index: 140;">
         <div class="modal-window" style="max-width: 420px; border-color: #a855f7; box-shadow: 0 0 40px rgba(168, 85, 247, 0.35);">
             <span class="close-btn" id="closeCabinetModalBtn">&times;</span>
-            <div class="modal-title" style="color: #a855f7; border-bottom-color: rgba(168, 85, 247, 0.2);">Личный Кабинет Бойца</div>
+            <div class="modal-title lang-txt" style="color: #a855f7; border-bottom-color: rgba(168, 85, 247, 0.2);" data-ru="Личный Кабинет Бойца" data-en="Fighter's Personal Cabinet">Личный Кабинет Бойца</div>
             
             <div class="cabinet-profile-box">
                 <div class="cabinet-avatar-container" id="cabAvatarMain" title="Кликните для выбора аватара">
                     <i class="fa-solid fa-user-shield" id="cabAvatarIconDefault"></i>
                 </div>
                 
-                <div class="avatar-picker-title">Выберите аватар профиля:</div>
+                <div class="avatar-picker-title lang-txt" data-ru="Выберите аватар профиля:" data-en="Choose profile avatar:">Выберите аватар профиля:</div>
                 <div class="avatar-picker-grid" id="avatarPickerGrid">
-                    <div class="avatar-picker-item" style="background-image: url('https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/avatars/avatar1.png?v=2');" onclick="selectProfileAvatar('https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/avatars/avatar1.png?v=2', this)"></div>
-                    <div class="avatar-picker-item" style="background-image: url('https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/avatars/avatar2.png?v=2');" onclick="selectProfileAvatar('https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/avatars/avatar2.png?v=2', this)"></div>
-                    <div class="avatar-picker-item" style="background-image: url('https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/avatars/avatar3.png?v=2');" onclick="selectProfileAvatar('https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/avatars/avatar3.png?v=2', this)"></div>
-                    <div class="avatar-picker-item" style="background-image: url('https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/avatars/avatar4.png?v=2');" onclick="selectProfileAvatar('https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/avatars/avatar4.png?v=2', this)"></div>
-                    <div class="avatar-picker-item" style="background-image: url('https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/avatars/avatar5.png?v=2');" onclick="selectProfileAvatar('https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/avatars/avatar5.png?v=2', this)"></div>
-                    <div class="avatar-picker-item" style="background-image: url('https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/avatars/avatar6.png?v=2');" onclick="selectProfileAvatar('https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/avatars/avatar6.png?v=2', this)"></div>
-                    <div class="avatar-picker-item" style="background-image: url('https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/avatars/avatar7.png?v=2');" onclick="selectProfileAvatar('https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/avatars/avatar7.png?v=2', this)"></div>
-                    <div class="avatar-picker-item" style="background-image: url('https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/avatars/avatar8.png?v=2');" onclick="selectProfileAvatar('https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/avatars/avatar8.png?v=2', this)"></div>
-                    <div class="avatar-picker-item" style="background-image: url('https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/avatars/avatar9.png?v=2');" onclick="selectProfileAvatar('https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/avatars/avatar9.png?v=2', this)"></div>
-                    <div class="avatar-picker-item" style="background-image: url('https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/avatars/avatar10.png?v=2');" onclick="selectProfileAvatar('https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/avatars/avatar10.png?v=2', this)"></div>
-                    <div class="avatar-picker-item" style="background-image: url('https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/avatars/avatar11.png?v=2');" onclick="selectProfileAvatar('https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/avatars/avatar11.png?v=2', this)"></div>
-                    <div class="avatar-picker-item" style="background-image: url('https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/avatars/avatar12.png?v=2');" onclick="selectProfileAvatar('https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/avatars/avatar12.png?v=2', this)"></div>
-                </div>
+                    </div>
                 
                 <div class="cabinet-info-list">
-                    <div class="cabinet-info-item"><span class="lbl">Ник:</span><span class="val" id="cabNick">-</span></div>
-                    <div class="cabinet-info-item"><span class="lbl">Игровой ID:</span><span class="val" id="cabGameId" style="color: #00f2fe;">-</span></div>
-                    <div class="cabinet-info-item"><span class="lbl">Профиль TG:</span><span class="val" id="cabTg">-</span></div>
-                    <div class="cabinet-info-item"><span class="lbl">Telegram ID:</span><span class="val" id="cabTgId">-</span></div>
-                    <div class="cabinet-info-item"><span class="lbl">Ранг Штаба:</span><span class="val" id="cabRank">-</span></div>
-                    <div class="cabinet-info-item"><span class="lbl">Дата призыва:</span><span class="val" id="cabDate">-</span></div>
-                    <div class="cabinet-info-item"><span class="lbl">Специализация:</span><span class="val" id="cabSpec" style="color: #a855f7;">-</span></div>
+                    <div class="cabinet-info-item"><span class="lbl lang-txt" data-ru="Ник:" data-en="Nick:">Ник:</span><span class="val" id="cabNick">-</span></div>
+                    <div class="cabinet-info-item"><span class="lbl lang-txt" data-ru="Игровой ID:" data-en="Game ID:">Игровой ID:</span><span class="val" id="cabGameId" style="color: #00f2fe;">-</span></div>
+                    <div class="cabinet-info-item"><span class="lbl lang-txt" data-ru="Профиль TG:" data-en="TG Profile:">Профиль TG:</span><span class="val" id="cabTg">-</span></div>
+                    <div class="cabinet-info-item"><span class="lbl lang-txt" data-ru="Telegram ID:" data-en="Telegram ID:">Telegram ID:</span><span class="val" id="cabTgId">-</span></div>
+                    <div class="cabinet-info-item"><span class="lbl lang-txt" data-ru="Ранг Штаба:" data-en="HQ Rank:">Ранг Штаба:</span><span class="val" id="cabRank">-</span></div>
+                    <div class="cabinet-info-item"><span class="lbl lang-txt" data-ru="Дата призыва:" data-en="Enlistment Date:">Дата призыва:</span><span class="val" id="cabDate">-</span></div>
+                    <div class="cabinet-info-item"><span class="lbl lang-txt" data-ru="Специализация:" data-en="Specialization:">Специализация:</span><span class="val" id="cabSpec" style="color: #a855f7;">-</span></div>
                     
                     <div class="cabinet-info-item" style="align-items: center;">
-                        <span class="lbl">Морское Звание:</span>
+                        <span class="lbl lang-txt" data-ru="Морское Звание:" data-en="Naval Rank:">Морское Звание:</span>
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <span class="val rank-highlight" id="cabRole">-</span>
                             <div id="cabRankInsigniaContainer"></div>
@@ -947,80 +890,62 @@
 
                 </div>
             </div>
-            <button type="button" class="btn-submit" onclick="resetUserAuth()" style="background:#ef4444; color:#fff; margin-top:15px; font-size:12px; padding:10px;">Покинуть мостик (Выйти)</button>
+            <button type="button" class="btn-submit lang-txt" onclick="resetUserAuth()" style="background:#ef4444; color:#fff; margin-top:15px; font-size:12px; padding:10px;" data-ru="Покинуть мостик (Выйти)" data-en="Leave the bridge (Logout)">Покинуть мостик (Выйти)</button>
         </div>
     </div>
 
     <div class="modal-overlay" id="lawModalOverlay" style="z-index: 110;">
         <div class="modal-window" style="max-width: 500px;">
             <span class="close-btn" id="closeLawModalBtn">&times;</span>
-            <div class="modal-title" style="color: #a855f7; border-bottom-color: rgba(168, 85, 247, 0.3);">Пользовательское Соглашение</div>
-            <div class="law-window-content">
+            <div class="modal-title lang-txt" style="color: #a855f7; border-bottom-color: rgba(168, 85, 247, 0.3);" data-ru="Пользовательское Соглашение" data-en="User Agreement">Пользовательское Соглашение</div>
+            <div class="law-window-content lang-txt" data-ru="<p>Клан STAGE является некоммерческим добровольным объединением игроков Modern Warships.</p><h4>1. Принцип добровольности</h4><p>Регистрируясь на сайте клана, пользователь добровольно предоставляет свои игровые данные. Данные не передаются третьим лицам.</p>" data-en="<p>STAGE clan is a non-commercial voluntary association of Modern Warships players.</p><h4>1. Principle of voluntariness</h4><p>By registering on the clan website, the user voluntarily provides their gaming data. Data is not transferred to third parties.</p>">
                 <p>Клан STAGE является некоммерческим добровольным объединением игроков Modern Warships.</p>
                 <h4>1. Принцип добровольности</h4>
-                <p>Регистрируясь на сайте клана, пользователь добровольно предоставляет следующие данные:
-
-Telegram username (тег Telegram);
-Telegram ID;
-игровой ID;
-игровой никнейм.
-
-Пользователь даёт согласие администрации сайта на хранение, обработку и использование указанных данных исключительно в целях:
-
-обработки заявок на вступление в клан;
-работы Telegram-бота;
-отправки уведомлений;
-отображения информации об участниках клана на сайте и в служебных Telegram-группах клана.
-
-Предоставленные данные не используются в коммерческих целях и не передаются третьим лицам, за исключением случаев, предусмотренных законодательством Российской Федерации.
-
-Пользователь вправе в любой момент запросить удаление своих данных через администрацию сайта.
-
-Продолжая регистрацию, пользователь подтверждает согласие с настоящими условиями.</p>
+                <p>Регистрируясь на сайте клана, пользователь добровольно предоставляет свои игровые данные. Данные не передаются третьим лицам.</p>
             </div>
-            <button type="button" class="btn-submit" id="acceptLawBtn" style="background: #a855f7; color: #fff; margin-top: 15px;">Ясно, вернуться</button>
+            <button type="button" class="btn-submit lang-txt" id="acceptLawBtn" style="background: #a855f7; color: #fff; margin-top: 15px;" data-ru="Ясно, вернуться" data-en="Understood, return">Ясно, вернуться</button>
         </div>
     </div>
 
     <div class="modal-overlay" id="loginModalOverlay" style="z-index: 120;">
         <div class="modal-window" style="max-width: 400px;">
             <span class="close-btn" id="closeLoginModalBtn">&times;</span>
-            <div class="modal-title" style="color: #00f2fe;">Вход для Членов Клана</div>
-            <div class="form-group"><label>Ваш Telegram Тэг (Логин)</label><input type="text" id="adminEmailInput" placeholder="Например: @vova" required></div>
-            <div class="form-group"><label>Пароль</label><input type="password" id="adminPasswordInput" placeholder="Введи выданный пароль" required></div>
-            <button type="button" class="btn-submit" id="submitAdminLoginBtn">Авторизоваться</button>
+            <div class="modal-title lang-txt" style="color: #00f2fe;" data-ru="Вход для Членов Клана" data-en="Login for Clan Members">Вход для Членов Клана</div>
+            <div class="form-group"><label class="lang-txt" data-ru="Ваш Telegram Тэг (Логин)" data-en="Your Telegram Tag (Login)">Ваш Telegram Тэг (Логин)</label><input type="text" id="adminEmailInput" class="lang-txt" data-ru="Например: @vova" data-en="Example: @vova" placeholder="Например: @vova" required></div>
+            <div class="form-group"><label class="lang-txt" data-ru="Пароль" data-en="Password">Пароль</label><input type="password" id="adminPasswordInput" class="lang-txt" data-ru="Введи выданный пароль" data-en="Enter the issued password" placeholder="Введи выданный пароль" required></div>
+            <button type="button" class="btn-submit lang-txt" id="submitAdminLoginBtn" data-ru="Авторизоваться" data-en="Authorize">Авторизоваться</button>
         </div>
     </div>
 
     <div class="modal-overlay" id="statsModalOverlay" style="z-index: 130;">
         <div class="modal-window" style="max-width: 440px; border-color: #a855f7; box-shadow: 0 0 40px rgba(168, 85, 247, 0.3);">
             <span class="close-btn" id="closeStatsModalBtn">&times;</span>
-            <div class="modal-title" style="color: #a855f7; border-bottom-color: rgba(168, 85, 247, 0.2);">Аналитика</div>
+            <div class="modal-title lang-txt" style="color: #a855f7; border-bottom-color: rgba(168, 85, 247, 0.2);" data-ru="Аналитика" data-en="Analytics">Аналитика</div>
             
             <div class="stats-grid">
-                <div class="stats-item"><div class="num" id="statTotalViews">0</div><div class="label">Всего просмотров</div></div>
-                <div class="stats-item"><div class="num" id="statUniqueVisits">0</div><div class="label">Уникальные люди</div></div>
-                <div class="stats-item"><div class="num" id="statTotalRequests">0</div><div class="label">Поданные заявки</div></div>
-                <div class="stats-item"><div class="num" id="statConversionRate">0%</div><div class="label">Конверсия штаба</div></div>
+                <div class="stats-item"><div class="num" id="statTotalViews">0</div><div class="label lang-txt" data-ru="Всего просмотров" data-en="Total Views">Всего просмотров</div></div>
+                <div class="stats-item"><div class="num" id="statUniqueVisits">0</div><div class="label lang-txt" data-ru="Уникальные люди" data-en="Unique Visitors">Уникальные люди</div></div>
+                <div class="stats-item"><div class="num" id="statTotalRequests">0</div><div class="label lang-txt" data-ru="Поданные заявки" data-en="Applications">Поданные заявки</div></div>
+                <div class="stats-item"><div class="num" id="statConversionRate">0%</div><div class="label lang-txt" data-ru="Конверсия штаба" data-en="HQ Conversion">Конверсия штаба</div></div>
             </div>
 
-            <button type="button" class="btn-submit" id="resetStatsBtn" style="background:#ef4444; color:#fff; margin-top:10px; font-size:11px;">Сбросить статистику</button>
+            <button type="button" class="btn-submit lang-txt" id="resetStatsBtn" style="background:#ef4444; color:#fff; margin-top:10px; font-size:11px;" data-ru="Сбросить статистику" data-en="Reset Stats">Сбросить статистику</button>
 
             <div style="border-top: 1px solid rgba(168, 85, 247, 0.2); margin-top: 15px; padding-top: 15px;">
-                <div class="rank-title" style="color:#00f2fe; font-size:14px; border:none; margin-bottom:5px; text-align:left;">Обработка запросов Telegram</div>
+                <div class="rank-title lang-txt" style="color:#00f2fe; font-size:14px; border:none; margin-bottom:5px; text-align:left;" data-ru="Обработка запросов Telegram" data-en="Process Telegram Requests">Обработка запросов Telegram</div>
                 <div class="form-group">
-                    <label>Вставьте скопированный текст заявки из чата ТГ:</label>
+                    <label class="lang-txt" data-ru="Вставьте скопированный текст заявки из чата ТГ:" data-en="Paste the copied application text from TG chat:">Вставьте скопированный текст заявки из чата ТГ:</label>
                     <textarea id="rawTelegramInput" rows="3" placeholder="⚓️ Новая заявка STAGE!&#10;👤 Ник: Vanya_STAGE&#10;✈️ TG: @vova&#10;🆔 CID: 74928421" style="resize:none; font-size:12px; border-color:rgba(0,242,254,0.2);"></textarea>
                 </div>
                 
                 <div class="terminal-box" id="terminalStatusBox" style="display:none;">
-                    <div>📝 <b>Боец:</b> <span id="parsedNickText" style="color:#00f2fe; font-weight:bold;">-</span></div>
-                    <div>🎮 <b>Игровой ID:</b> <span id="parsedGameIdText" style="color:#00f2fe;">-</span></div>
-                    <div>✈️ <b>Логин ТГ:</b> <span id="parsedTgText" style="color:#a855f7;">-</span></div>
-                    <div>🆔 <b>Цифровой ID:</b> <span id="parsedIdText" style="color:#eab308;">-</span></div>
+                    <div>📝 <b class="lang-txt" data-ru="Боец:" data-en="Fighter:">Боец:</b> <span id="parsedNickText" style="color:#00f2fe; font-weight:bold;">-</span></div>
+                    <div>🎮 <b class="lang-txt" data-ru="Игровой ID:" data-en="Game ID:">Игровой ID:</b> <span id="parsedGameIdText" style="color:#00f2fe;">-</span></div>
+                    <div>✈️ <b class="lang-txt" data-ru="Логин ТГ:" data-en="TG Login:">Логин ТГ:</b> <span id="parsedTgText" style="color:#a855f7;">-</span></div>
+                    <div>🆔 <b class="lang-txt" data-ru="Цифровой ID:" data-en="Digital ID:">Цифровой ID:</b> <span id="parsedIdText" style="color:#eab308;">-</span></div>
                     <div class="terminal-actions">
-                        <button type="button" class="btn-terminal-accept" id="terminalAcceptBtn" onclick="executeTerminalApprove()">Принять</button>
-                        <button type="button" class="btn-terminal-reject" onclick="executeTerminalReject()">Отклонить</button>
+                        <button type="button" class="btn-terminal-accept lang-txt" id="terminalAcceptBtn" onclick="executeTerminalApprove()" data-ru="Принять" data-en="Accept">Принять</button>
+                        <button type="button" class="btn-terminal-reject lang-txt" onclick="executeTerminalReject()" data-ru="Отклонить" data-en="Reject">Отклонить</button>
                     </div>
                 </div>
             </div>
@@ -1028,6 +953,40 @@ Telegram ID;
     </div>
 
     <script>
+        // ИНИЦИАЛИЗАЦИЯ ИНТЕРНАЦИОНАЛИЗАЦИИ
+        let currentLang = localStorage.getItem('stage_lang') || 'ru';
+        
+        function t(ruText, enText) {
+            return currentLang === 'en' ? enText : ruText;
+        }
+
+        function setLang(lang) {
+            currentLang = lang;
+            localStorage.setItem('stage_lang', lang);
+            document.getElementById('currentLangLabel').textContent = lang.toUpperCase();
+
+            document.querySelectorAll('.lang-txt').forEach(el => {
+                let txt = el.getAttribute('data-' + lang);
+                if (!txt) return;
+
+                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                    if (el.hasAttribute('placeholder')) el.placeholder = txt;
+                    if (el.type === 'button' || el.type === 'submit') el.value = txt;
+                } else {
+                    el.innerHTML = txt;
+                }
+            });
+            
+            // Если включен полноэкранный режим - обновить текст кнопки доски
+            if (document.fullscreenElement || document.webkitFullscreenElement) {
+                document.getElementById('fullscreenBtnText').textContent = t("Свернуть доску", "Collapse Board");
+            }
+        }
+
+        window.toggleLanguage = function() {
+            setLang(currentLang === 'ru' ? 'en' : 'ru');
+        };
+
         const TG_TOKEN = "8640087886:AAGj3tevg54WEW0Qyo-rrtBlT8fRE9RuCDM";
         const TG_CHAT_ID = "-1002619697984"; 
         const TG_THREAD_ID = 5264;          
@@ -1035,7 +994,6 @@ Telegram ID;
         const TRAINING_THREAD_ID = 1;
         const FOUNDATION_DATE = new Date("2026-05-26T00:00:00"); 
 
-        // --- НАСТРОЙКИ SUPABASE ---
         const SUPABASE_URL = "https://noxmicgoosxoqderhgdp.supabase.co/rest/v1/"; 
         const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5veG1pY2dvb3N4b3FkZXJoZ2RwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MzM0MjMsImV4cCI6MjA5NTMwOTQyM30.IT09ObziuiZtrLZLgwryCgRX7shN8B3nb9HWqjeGZRA";
 
@@ -1069,7 +1027,6 @@ Telegram ID;
             "Поддержка": '<i class="fa-solid fa-handshake-angle" title="Поддержка" style="font-size: 14px; margin-left: 6px; color: #22c55e;"></i>'
         };
 
-        // Генерация визуальных шевронов/звезд на основе индекса ранга (0-19)
         function getRankInsigniaHTML(index) {
             let html = '';
             if (index < 0) index = 0;
@@ -1149,6 +1106,8 @@ Telegram ID;
         const switchToForm = document.getElementById('switchToForm');
         const checkVerifyBtn = document.getElementById('checkVerifyBtn');
         const verifyTgInput = document.getElementById('verifyTgInput');
+        
+        const boardActualContainer = document.getElementById('boardActualContainer');
         const boardContainer = document.getElementById('boardContainer');
         const excalidrawFrame = document.getElementById('excalidrawFrame');
         const toggleFullscreenBtn = document.getElementById('toggleFullscreenBtn');
@@ -1213,8 +1172,19 @@ Telegram ID;
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            // Убираем принудительный редирект (чтобы страница загружалась там, где открыли)
-            
+            // Генерация 32 аватарок программно
+            const avatarPickerGrid = document.getElementById('avatarPickerGrid');
+            if(avatarPickerGrid) {
+                let avatarsHtml = '';
+                for(let i=1; i<=32; i++) {
+                    let avUrl = `https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/avatars/avatar${i}.png?v=2`;
+                    avatarsHtml += `<div class="avatar-picker-item" style="background-image: url('${avUrl}');" onclick="selectProfileAvatar('${avUrl}', this)"></div>`;
+                }
+                avatarPickerGrid.innerHTML = avatarsHtml;
+            }
+
+            setLang(currentLang); // Применение языка
+
             applyGlobalKickedFilters();
             renderLocalRecruits();
             generateTacticalMapsGrid();
@@ -1265,7 +1235,49 @@ Telegram ID;
             }, 60000);
         });
 
-        // Подгрузка iframe доски только по клику, чтобы избежать автофокуса
+        // Полноэкранный режим с использованием Fullscreen API
+        toggleFullscreenBtn.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                if (boardActualContainer.requestFullscreen) {
+                    boardActualContainer.requestFullscreen();
+                } else if (boardActualContainer.webkitRequestFullscreen) { /* Safari */
+                    boardActualContainer.webkitRequestFullscreen();
+                } else if (boardActualContainer.msRequestFullscreen) { /* IE11 */
+                    boardActualContainer.msRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        });
+
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+
+        function handleFullscreenChange() {
+            const btnSpan = document.getElementById('fullscreenBtnText');
+            if (document.fullscreenElement || document.webkitFullscreenElement) {
+                boardContainer.style.height = "100vh";
+                boardContainer.style.border = "none";
+                boardContainer.style.borderRadius = "0";
+                
+                toggleFullscreenBtn.innerHTML = `<i class="fa-solid fa-compress"></i> <span id="fullscreenBtnText" class="lang-txt" data-ru="Свернуть доску" data-en="Collapse Board">${t("Свернуть доску", "Collapse Board")}</span>`;
+                toggleFullscreenBtn.style.position = "absolute";
+                toggleFullscreenBtn.style.top = "15px";
+                toggleFullscreenBtn.style.right = "15px";
+                toggleFullscreenBtn.style.zIndex = "10000";
+            } else {
+                boardContainer.style.height = "65vh";
+                boardContainer.style.border = "2px solid #a855f7";
+                boardContainer.style.borderRadius = "8px";
+                
+                toggleFullscreenBtn.innerHTML = `<i class="fa-solid fa-expand"></i> <span id="fullscreenBtnText" class="lang-txt" data-ru="Развернуть во весь экран" data-en="Expand Fullscreen">${t("Развернуть во весь экран", "Expand Fullscreen")}</span>`;
+                toggleFullscreenBtn.style.position = "static";
+            }
+        }
+
+        // Подгрузка iframe доски
         navBoardLink.addEventListener('click', function() {
             if(!excalidrawFrame.src || excalidrawFrame.src === 'about:blank' || excalidrawFrame.src === window.location.href) {
                 excalidrawFrame.src = excalidrawFrame.getAttribute('data-src');
@@ -1331,9 +1343,13 @@ Telegram ID;
                 widget.style.display = 'flex';
                 let html = '';
                 activeUsers.slice(0, 5).forEach(u => {
-                    html += `<div class="online-avatar" title="${u.nick}" style="background-image: url('${u.avatar || ''}');"></div>`;
+                    html += `
+                    <div class="online-user-item" title="${u.nick}">
+                        <div class="online-avatar" style="background-image: url('${u.avatar || ''}');"></div>
+                        <span class="online-user-nick">${u.nick}</span>
+                    </div>`;
                 });
-                if(activeUsers.length > 5) html += `<div style="font-size: 10px; margin-left: 5px; color:#22c55e; font-weight:bold;">+${activeUsers.length - 5}</div>`;
+                if(activeUsers.length > 5) html += `<div style="font-size: 10px; color:#22c55e; font-weight:bold;">+${activeUsers.length - 5}</div>`;
                 container.innerHTML = html;
             } else {
                 widget.style.display = 'none';
@@ -1352,7 +1368,6 @@ Telegram ID;
                 if(defaultIcon) defaultIcon.style.display = 'inline-block';
             }
             
-            // Если мы залогинились, пингуем активность
             let myTg = localStorage.getItem('stage_user_registered_tg');
             if(myTg && cloudDatabase.metadata[myTg]) {
                 cloudDatabase.metadata[myTg].lastActive = Date.now();
@@ -1387,7 +1402,7 @@ Telegram ID;
         window.executeTerminalApprove = async function() {
             if(!isLeaderMode || !currentParsedData) return;
             const acceptBtn = document.getElementById('terminalAcceptBtn');
-            acceptBtn.textContent = "Синхронизация...";
+            acceptBtn.textContent = t("Синхронизация...", "Syncing...");
             acceptBtn.disabled = true;
 
             const registerTimestamp = Math.max(Date.now(), FOUNDATION_DATE.getTime());
@@ -1403,7 +1418,7 @@ Telegram ID;
                 gameId: currentParsedData.gameId,
                 chatId: currentParsedData.chatId,
                 joinDate: registerTimestamp,
-                rank: "Действующий боец",
+                rank: t("Действующий боец", "Active Fighter"),
                 avatar: "",
                 lastActive: Date.now()
             };
@@ -1420,18 +1435,18 @@ Telegram ID;
                 body: JSON.stringify({ chat_id: currentParsedData.chatId, text: personalMessage, parse_mode: 'html' })
             });
 
-            alert(`Игрок ${currentParsedData.nick} зачислен! Бот отправил секретные ключи авторизации в ЛС.`);
+            alert(t(`Игрок ${currentParsedData.nick} зачислен! Бот отправил секретные ключи авторизации в ЛС.`, `Player ${currentParsedData.nick} enlisted! Keys sent via PM.`));
             
             rawTelegramInput.value = "";
             terminalStatusBox.style.display = 'none';
             currentParsedData = null;
-            acceptBtn.textContent = "Принять";
+            acceptBtn.textContent = t("Принять", "Accept");
             acceptBtn.disabled = false;
             renderLocalRecruits();
         }
 
         window.executeTerminalReject = function() {
-            if(!confirm("Отклонить рапорт бойца?")) return;
+            if(!confirm(t("Отклонить рапорт бойца?", "Reject application?"))) return;
             rawTelegramInput.value = "";
             terminalStatusBox.style.display = 'none';
             currentParsedData = null;
@@ -1449,12 +1464,12 @@ Telegram ID;
         }
 
         window.resetUserAuth = function() {
-            if(confirm("Вы действительно хотите выйти из аккаунта клана? Карты и доска закроются.")) { forceAbsoluteLogout(); }
+            if(confirm(t("Вы действительно хотите выйти из аккаунта клана? Карты и доска закроются.", "Do you really want to log out? Maps and board will be locked."))) { forceAbsoluteLogout(); }
         }
 
         navLoginBtn.addEventListener('click', () => {
             if(isLeaderMode || localStorage.getItem('stage_team_logged') === 'true') {
-                if(confirm("Выйти из текущей учетной записи?")) { forceAbsoluteLogout(); }
+                if(confirm(t("Выйти из текущей учетной записи?", "Log out of current account?"))) { forceAbsoluteLogout(); }
             } else {
                 adminEmailInput.value = ""; adminPasswordInput.value = "";
                 loginModalOverlay.classList.add('active');
@@ -1494,21 +1509,21 @@ Telegram ID;
             let sessionTg = localStorage.getItem('stage_user_registered_tg') || "";
             let cleanTg = sessionTg.trim().toLowerCase();
             
-            let nick = localStorage.getItem('stage_cached_nick') || "Боец STAGE";
-            let tgId = "Не указан";
-            let gameId = "Не указан";
-            let joinDateStr = "С 26.05.2026 г.";
-            let rank = "Участник клана";
+            let nick = localStorage.getItem('stage_cached_nick') || t("Боец STAGE", "STAGE Fighter");
+            let tgId = t("Не указан", "Not specified");
+            let gameId = t("Не указан", "Not specified");
+            let joinDateStr = t("С 26.05.2026 г.", "Since 26.05.2026");
+            let rank = t("Участник клана", "Clan Member");
             let roleTitle = "Юнга"; 
-            let specialization = "Не назначена";
+            let specialization = t("Не назначена", "Not assigned");
             let diffMonths = 0;
             
             if (isLeaderMode || cleanTg === "@bymitso" || cleanTg.includes("admin")) {
                 nick = "Mitso";
-                rank = "Глава";
+                rank = t("Глава", "Leader");
                 roleTitle = "Адмирал флота";
-                specialization = "Тактик";
-                joinDateStr = "С 26.05.2026 г.";
+                specialization = t("Тактик", "Tactician");
+                joinDateStr = t("С 26.05.2026 г.", "Since 26.05.2026");
                 gameId = "22E9E4E8CABB7FCF";
                 diffMonths = 19;
             } else if (cleanTg && cloudDatabase.metadata[cleanTg]) {
@@ -1521,7 +1536,7 @@ Telegram ID;
                 if (meta.joinDate) {
                     let d = new Date(meta.joinDate);
                     if (d < FOUNDATION_DATE) d = FOUNDATION_DATE;
-                    joinDateStr = d.toLocaleDateString('ru-RU');
+                    joinDateStr = d.toLocaleDateString(currentLang === 'en' ? 'en-US' : 'ru-RU');
                     
                     let diffMs = Date.now() - meta.joinDate;
                     diffMonths = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 30.4375));
@@ -1542,18 +1557,18 @@ Telegram ID;
                 else if (cleanTg === "@banan4uks") nick = "Banan";
                 else nick = sessionTg;
 
-                rank = "Высший совет клана";
+                rank = t("Высший совет клана", "Supreme Council");
                 roleTitle = "Адмирал флота";
                 diffMonths = 19;
-                specialization = "Универсальный";
-                joinDateStr = "С 26.05.2026 г.";
+                specialization = t("Универсальный", "Universal");
+                joinDateStr = t("С 26.05.2026 г.", "Since 26.05.2026");
             } else if (localStorage.getItem('stage_team_logged') === 'true' && !sessionTg) {
-                nick = "Ветеран флота";
-                rank = "Почетный участник";
+                nick = t("Ветеран флота", "Fleet Veteran");
+                rank = t("Почетный участник", "Honorary Member");
                 roleTitle = "Адмирал флота";
                 diffMonths = 19;
-                specialization = "Универсальный";
-                joinDateStr = "С 26.05.2026 г.";
+                specialization = t("Универсальный", "Universal");
+                joinDateStr = t("С 26.05.2026 г.", "Since 26.05.2026");
             }
 
             document.getElementById('cabNick').textContent = nick;
@@ -1610,7 +1625,7 @@ Telegram ID;
         btnSubmitTraining.addEventListener('click', async () => {
             const dateVal = inputTrainingDate.value;
             const timeVal = inputTrainingTime.value.trim();
-            if(!dateVal || !timeVal) { alert("Пожалуйста, укажите дату и точное время тренировки!"); return; }
+            if(!dateVal || !timeVal) { alert(t("Пожалуйста, укажите дату и точное время тренировки!", "Please provide date and time!")); return; }
 
             const timeParts = timeVal.match(/(\d{1,2}):(\d{2})/);
             let hours = 18, minutes = 0;
@@ -1618,7 +1633,7 @@ Telegram ID;
                 hours = parseInt(timeParts[1], 10);
                 minutes = parseInt(timeParts[2], 10);
             } else {
-                alert("Введите время в правильном формате ЧЧ:ММ (например: 19:30)!");
+                alert(t("Введите время в правильном формате ЧЧ:ММ (например: 19:30)!", "Use correct time format HH:MM"));
                 return;
             }
 
@@ -1626,9 +1641,9 @@ Telegram ID;
             targetDate.setHours(hours, minutes, 0, 0);
             const targetTimestamp = targetDate.getTime();
 
-            if(targetTimestamp <= Date.now()) { alert("Тренировка не может быть назначена на прошедшее время!"); return; }
+            if(targetTimestamp <= Date.now()) { alert(t("Тренировка не может быть назначена на прошедшее время!", "Cannot schedule in the past!")); return; }
 
-            btnSubmitTraining.textContent = "Отправка в чат...";
+            btnSubmitTraining.textContent = t("Отправка в чат...", "Sending to chat...");
             btnSubmitTraining.disabled = true;
 
             const formattedDate = targetDate.toLocaleString('ru-RU', {
@@ -1682,11 +1697,11 @@ Telegram ID;
                 trainingModalOverlay.classList.remove('active');
                 initTrainingCountdown(); 
 
-                alert("Тренировка успешно зафиксирована на сайте и отправлена ботом в ТГ-чат флота!");
+                alert(t("Тренировка успешно зафиксирована на сайте и отправлена ботом в ТГ-чат флота!", "Training scheduled and sent to TG chat!"));
             } catch (err) {
-                alert("Ошибка связи с серверами Telegram: " + err.message);
+                alert("Ошибка связи: " + err.message);
             } finally {
-                btnSubmitTraining.textContent = "Готово";
+                btnSubmitTraining.textContent = t("Готово", "Done");
                 btnSubmitTraining.disabled = false;
             }
         });
@@ -1695,7 +1710,7 @@ Telegram ID;
             let sessionTg = localStorage.getItem('stage_user_registered_tg') || "";
             let cleanTg = sessionTg.trim().toLowerCase();
             
-            let userNick = "Боец STAGE";
+            let userNick = t("Боец STAGE", "STAGE Fighter");
             if (isLeaderMode || cleanTg === "@bymitso" || cleanTg.includes("admin")) {
                 userNick = "Mitso";
             } else if (cleanTg && cloudDatabase.metadata[cleanTg]) {
@@ -1719,7 +1734,7 @@ Telegram ID;
 
         window.executeResetTrainingTimer = async function() {
             if(!isLeaderMode) return;
-            if(confirm("Вы действительно хотите отменить текущую тренировку и полностью удалить таймер с сайта?")) {
+            if(confirm(t("Вы действительно хотите отменить текущую тренировку и полностью удалить таймер с сайта?", "Cancel training and remove timer?"))) {
                 cloudDatabase.trainingTime = null;
                 cloudDatabase.trainingYes = [];
                 cloudDatabase.trainingNo = [];
@@ -1727,7 +1742,7 @@ Telegram ID;
                 
                 if (countdownIntervalId) clearInterval(countdownIntervalId);
                 trainingCountdownWidget.style.display = 'none';
-                alert("Событие аннулировано. Таймер скрыт у всех участников.");
+                alert(t("Событие аннулировано. Таймер скрыт у всех участников.", "Event cancelled. Timer hidden."));
             }
         }
 
@@ -1736,16 +1751,16 @@ Telegram ID;
             const noListElement = document.getElementById('attendanceNoList');
 
             if(cloudDatabase.trainingYes.length === 0 && cloudDatabase.trainingNo.length === 0) {
-                yesListElement.innerHTML = `<div style="font-size:11px; color:rgba(255,255,255,0.2);">Списки пусты</div>`;
-                noListElement.innerHTML = `<div style="font-size:11px; color:rgba(255,255,255,0.2);">Списки пусты</div>`;
+                yesListElement.innerHTML = `<div style="font-size:11px; color:rgba(255,255,255,0.2);" class="lang-txt" data-ru="Списки пусты" data-en="Lists are empty">${t("Списки пусты", "Lists are empty")}</div>`;
+                noListElement.innerHTML = `<div style="font-size:11px; color:rgba(255,255,255,0.2);" class="lang-txt" data-ru="Списки пусты" data-en="Lists are empty">${t("Списки пусты", "Lists are empty")}</div>`;
                 return;
             }
 
             yesListElement.innerHTML = "";
             noListElement.innerHTML = "";
 
-            if(cloudDatabase.trainingYes.length === 0) yesListElement.innerHTML = `<div style="font-size:11px; color:rgba(255,255,255,0.1);">Никто не записался</div>`;
-            if(cloudDatabase.trainingNo.length === 0) noListElement.innerHTML = `<div style="font-size:11px; color:rgba(255,255,255,0.1);">Никто не записался</div>`;
+            if(cloudDatabase.trainingYes.length === 0) yesListElement.innerHTML = `<div style="font-size:11px; color:rgba(255,255,255,0.1);" class="lang-txt" data-ru="Никто не записался" data-en="No one enlisted">${t("Никто не записался", "No one enlisted")}</div>`;
+            if(cloudDatabase.trainingNo.length === 0) noListElement.innerHTML = `<div style="font-size:11px; color:rgba(255,255,255,0.1);" class="lang-txt" data-ru="Никто не записался" data-en="No one enlisted">${t("Никто не записался", "No one enlisted")}</div>`;
 
             cloudDatabase.trainingYes.forEach(userNick => {
                 let avaUrl = "";
@@ -1825,7 +1840,7 @@ Telegram ID;
             }
 
             if (cloudDatabase.banned && cloudDatabase.banned.includes(inputLogin)) {
-                alert("Данный аккаунт заблокирован решением штаба STAGE.");
+                alert(t("Данный аккаунт заблокирован решением штаба STAGE.", "This account is blocked by STAGE HQ."));
                 return;
             }
 
@@ -1837,7 +1852,7 @@ Telegram ID;
                 localStorage.setItem('stage_user_registered_tg', "@bymitso");
                 
                 if (!cloudDatabase.metadata["@bymitso"]) {
-                    cloudDatabase.metadata["@bymitso"] = { nick: "Mitso", gameId: "22E9E4E8CABB7FCF", joinDate: FOUNDATION_DATE.getTime(), rank: "Глава", avatar: "", lastActive: Date.now() };
+                    cloudDatabase.metadata["@bymitso"] = { nick: "Mitso", gameId: "22E9E4E8CABB7FCF", joinDate: FOUNDATION_DATE.getTime(), rank: t("Глава", "Leader"), avatar: "", lastActive: Date.now() };
                     saveToCloud();
                 }
             }
@@ -1869,9 +1884,9 @@ Telegram ID;
                 refreshMenuCabinetAvatar();
                 renderLocalRecruits();
                 initTrainingCountdown();
-                alert("Верификация пройдена успешно. Добро пожаловать в тактический штаб STAGE!");
+                alert(t("Верификация пройдена успешно. Добро пожаловать в тактический штаб STAGE!", "Verification successful. Welcome to STAGE Tactical HQ!"));
             } else {
-                alert("Ошибка доступа! Неверное сочетание Логина (ТГ) и Пароля.");
+                alert(t("Ошибка доступа! Неверное сочетание Логина (ТГ) и Пароля.", "Access Error! Invalid TG Login and Password combination."));
             }
         });
 
@@ -1886,7 +1901,6 @@ Telegram ID;
             document.getElementById('mapsLockBox').style.display = 'none';
             document.getElementById('boardLockBox').style.display = 'none';
             document.getElementById('telemostLockBox').style.display = 'none';
-            document.getElementById('tgChatLockBox').style.display = 'none'; 
             
             document.getElementById('mapsActualGrid').style.display = 'grid';
             
@@ -1894,23 +1908,24 @@ Telegram ID;
             
             document.getElementById('boardActualContainer').style.display = 'flex';
             document.getElementById('telemostActualBtn').style.display = 'flex';
-            document.getElementById('tgChatActualBtn').style.display = 'flex'; 
             
-            navLoginBtn.innerHTML = `<i class="fa-solid fa-user-check" style="color:#00f2fe;"></i> В команде`;
+            navLoginBtn.innerHTML = `<i class="fa-solid fa-user-check" style="color:#00f2fe;"></i> <span class="lang-txt" data-ru="В команде" data-en="Active">В команде</span>`;
             navLoginBtn.style.background = "rgba(0, 242, 254, 0.15)"; navLoginBtn.style.borderColor = "#00f2fe";
             
             secretTgBox.style.display = 'block'; 
             recruitBoxBtn.style.display = 'none';
+            setLang(currentLang);
         }
 
         function activateLeaderMode() {
             isLeaderMode = true; adminBadge.style.display = 'block'; navStatsBtn.style.display = 'block'; 
             btnTrainingTrigger.style.display = 'block'; 
             if(btnCloseTimer) btnCloseTimer.style.display = 'block'; 
-            navLoginBtn.innerHTML = `<i class="fa-solid fa-user-gear" style="color:#ff0055;"></i> Админ`;
+            navLoginBtn.innerHTML = `<i class="fa-solid fa-user-gear" style="color:#ff0055;"></i> <span class="lang-txt" data-ru="Админ" data-en="Admin">Админ</span>`;
             navLoginBtn.style.background = "rgba(255, 0, 85, 0.15)"; navLoginBtn.style.borderColor = "#ff0055";
             document.querySelectorAll('.kick-btn').forEach(btn => btn.style.display = 'inline-block');
             applyLeaderStatusColors();
+            setLang(currentLang);
         }
 
         navStatsBtn.addEventListener('click', () => {
@@ -1930,7 +1945,7 @@ Telegram ID;
         closeStatsModalBtn.addEventListener('click', () => statsModalOverlay.classList.remove('active'));
 
         resetStatsBtn.addEventListener('click', () => {
-            if (confirm("Сбросить статистику? Количество просмотров останется неизменным.")) {
+            if (confirm(t("Сбросить статистику? Количество просмотров останется неизменным.", "Reset stats? View count will remain."))) {
                 localStorage.removeItem('stage_uniques');
                 localStorage.removeItem('stage_requests_count');
                 uniqueVisits = 1; 
@@ -1938,7 +1953,7 @@ Telegram ID;
                 document.getElementById('statUniqueVisits').textContent = uniqueVisits;
                 document.getElementById('statTotalRequests').textContent = totalRequests;
                 document.getElementById('statConversionRate').textContent = "0%";
-                alert("Статистика успешно сброшена.");
+                alert(t("Статистика успешно сброшена.", "Stats reset successfully."));
             }
         });
 
@@ -1950,13 +1965,14 @@ Telegram ID;
                 card.className = 'map-card'; card.setAttribute('draggable', 'true');
                 card.innerHTML = `
                     <div class="map-img-holder" style="background-image: url('map${i}.png');"></div>
-                    <div class="map-info"><div class="map-name">КАРТА №${i}</div></div>
-                    <a href="map${i}.png" download="STAGE_Map_${i}.png" class="btn-map-download"><i class="fa-solid fa-cloud-arrow-down"></i> Скачать карту</a>
-                    <button type="button" class="btn-map-copy" onclick="sendMapToBoard('map${i}.png', this)"><i class="fa-solid fa-chalkboard"></i> На доску</button>
+                    <div class="map-info"><div class="map-name lang-txt" data-ru="КАРТА №${i}" data-en="MAP #${i}">КАРТА №${i}</div></div>
+                    <a href="map${i}.png" download="STAGE_Map_${i}.png" class="btn-map-download lang-txt" data-ru="<i class='fa-solid fa-cloud-arrow-down'></i> Скачать карту" data-en="<i class='fa-solid fa-cloud-arrow-down'></i> Download Map"><i class="fa-solid fa-cloud-arrow-down"></i> Скачать карту</a>
+                    <button type="button" class="btn-map-copy lang-txt" onclick="sendMapToBoard('map${i}.png', this)" data-ru="<i class='fa-solid fa-chalkboard'></i> На доску" data-en="<i class='fa-solid fa-chalkboard'></i> To Board"><i class="fa-solid fa-chalkboard"></i> На доску</button>
                 `;
                 card.addEventListener('dragstart', (e) => { e.dataTransfer.setData('text/plain', `map${i}.png`); });
                 container.appendChild(card);
             }
+            setLang(currentLang);
         }
 
         const toggleMapsBtn = document.getElementById('toggleMapsBtn');
@@ -1966,10 +1982,10 @@ Telegram ID;
             const grid = document.getElementById('mapsActualGrid');
             if (isMapsExpanded) {
                 grid.classList.remove('collapsed');
-                toggleMapsBtn.textContent = "Скрыть карты";
+                toggleMapsBtn.textContent = t("Скрыть карты", "Hide maps");
             } else {
                 grid.classList.add('collapsed');
-                toggleMapsBtn.textContent = "Показать все карты";
+                toggleMapsBtn.textContent = t("Показать все карты", "Show all maps");
             }
         });
 
@@ -1982,7 +1998,7 @@ Telegram ID;
                 if (mapFileName && mapFileName.includes('.png')) {
                     const fullMapUrl = window.location.origin + '/' + mapFileName;
                     excalidrawFrame.contentWindow.postMessage({ type: "excalidraw-load-image", url: fullMapUrl }, "*");
-                    alert("Тактическая Карта развернута на холсте!");
+                    alert(t("Тактическая Карта развернута на холсте!", "Tactical Map deployed on canvas!"));
                 }
             });
         }
@@ -1991,7 +2007,7 @@ Telegram ID;
             let inputNick = verifyTgInput.value.trim().toLowerCase();
             if(!inputNick.startsWith('@')) { inputNick = '@' + inputNick; }
             
-            if(cloudDatabase.banned && cloudDatabase.banned.includes(inputNick)) { alert("Доступ заблокирован штабом клана."); return; }
+            if(cloudDatabase.banned && cloudDatabase.banned.includes(inputNick)) { alert(t("Доступ заблокирован штабом клана.", "Access blocked by HQ.")); return; }
 
             localStorage.setItem('stage_authorized', 'true');
             localStorage.setItem('stage_user_registered_tg', inputNick); 
@@ -2002,7 +2018,7 @@ Telegram ID;
             refreshMenuCabinetAvatar();
             document.getElementById('modalOverlay').classList.remove('active');
             unlockTeamFeatures();
-            alert("Верификация пройдена успешно! Доступ открыт.");
+            alert(t("Верификация пройдена успешно! Доступ открыт.", "Verification successful! Access granted."));
         });
 
         window.showPlayerInfo = function(nick) {
@@ -2037,13 +2053,13 @@ Telegram ID;
 
             if (nick === 'Mitso') {
                 idInput.value = "22E9E4E8CABB7FCF";
-                rankText.textContent = "Адмирал флота (Глава)";
+                rankText.textContent = t("Адмирал флота (Глава)", "Fleet Admiral (Leader)");
                 rankInsigniaContainer.innerHTML = getRankInsigniaHTML(19);
                 rankText.style.display = 'block';
                 rankInsigniaContainer.style.display = 'block';
                 rankEditWrapper.style.display = 'none';
 
-                specText.textContent = "Тактик";
+                specText.textContent = t("Тактик", "Tactician");
                 specText.style.display = 'block';
                 specEditWrapper.style.display = 'none';
                 
@@ -2054,7 +2070,7 @@ Telegram ID;
                 document.getElementById('infoAvatar').style.backgroundImage = ava;
             } else {
                 if (playerMeta) {
-                    idInput.value = playerMeta.gameId || "Не указан";
+                    idInput.value = playerMeta.gameId || t("Не указан", "Not specified");
                     
                     let currentRank = playerMeta.manualRank || NAVAL_RANKS[diffMonths];
                     rankText.textContent = currentRank;
@@ -2063,7 +2079,7 @@ Telegram ID;
                     if(currentRankIdx === -1) currentRankIdx = 0;
                     rankInsigniaContainer.innerHTML = getRankInsigniaHTML(currentRankIdx);
 
-                    let currentSpec = playerMeta.specialization || "Не назначена";
+                    let currentSpec = playerMeta.specialization || t("Не назначена", "Not assigned");
                     specText.textContent = currentSpec;
 
                     if (isLeaderMode) {
@@ -2107,14 +2123,14 @@ Telegram ID;
                     const ava = playerMeta.avatar || ''; 
                     document.getElementById('infoAvatar').style.backgroundImage = ava ? `url('${ava}')` : 'none';
                 } else {
-                    idInput.value = "Скрыт";
+                    idInput.value = t("Скрыт", "Hidden");
                     rankText.textContent = "Юнга";
                     rankInsigniaContainer.innerHTML = getRankInsigniaHTML(0);
                     rankText.style.display = 'block';
                     rankInsigniaContainer.style.display = 'block';
                     rankEditWrapper.style.display = 'none';
 
-                    specText.textContent = "Не назначена";
+                    specText.textContent = t("Не назначена", "Not assigned");
                     specText.style.display = 'block';
                     specEditWrapper.style.display = 'none';
 
@@ -2132,7 +2148,7 @@ Telegram ID;
                     if(newId) {
                         playerMeta.gameId = newId;
                         await saveToCloud();
-                        alert(`Игровой ID бойца ${nick} успешно обновлен в облаке!`);
+                        alert(t(`Игровой ID бойца ${nick} успешно обновлен в облаке!`, `Game ID for ${nick} successfully updated!`));
                     }
                 };
             } else {
@@ -2166,13 +2182,13 @@ Telegram ID;
             }
 
             if (!tgKeyToUpdate) {
-                alert("Ошибка: Боец еще не полностью зачислен в базу (нет metadata).");
+                alert(t("Ошибка: Боец еще не полностью зачислен в базу (нет metadata).", "Error: Fighter is not fully registered in DB."));
                 return;
             }
 
             const btnGroup = document.getElementById('adminStatusButtons');
             const originalHtml = btnGroup.innerHTML;
-            btnGroup.innerHTML = "<div style='color:#00f2fe; font-size:12px; width:100%; text-align:center;'>Запись в Штаб...</div>";
+            btnGroup.innerHTML = `<div style='color:#00f2fe; font-size:12px; width:100%; text-align:center;'>${t("Запись в Штаб...", "Writing to HQ...")}</div>`;
 
             if (!cloudDatabase.metadata[tgKeyToUpdate]) cloudDatabase.metadata[tgKeyToUpdate] = {};
             
@@ -2223,6 +2239,7 @@ Telegram ID;
             }
 
             for (let nick in cloudDatabase.recruits) {
+                // Исключаем тестового пользователя в соответствии с вашими командами
                 if (nick.toLowerCase() === 'test' || nick.toLowerCase() === 'тест') {
                     delete cloudDatabase.recruits[nick];
                     continue;
@@ -2260,7 +2277,7 @@ Telegram ID;
                 }
                 
                 const specIconHtml = SPEC_ICONS[userSpec] || '';
-                const tagHtml = (now - approveTime < tenMinutesInMs) ? `<span class="tag">Новобранец</span>` : '';
+                const tagHtml = (now - approveTime < tenMinutesInMs) ? `<span class="tag lang-txt" data-ru="Новобранец" data-en="Recruit">${t("Новобранец", "Recruit")}</span>` : '';
                 
                 card.className = `player-card new-recruit-dynamic ${customStatusClass}`;
                 card.innerHTML = `
@@ -2298,7 +2315,7 @@ Telegram ID;
 
         window.kickPlayer = async function(element, nick, isStatic = true) {
             if (!isLeaderMode) return;
-            if (confirm(`Удалить игрока ${nick} из состава? Его данные будут стерты, и он сможет подать заявку заново.`)) {
+            if (confirm(t(`Удалить игрока ${nick} из состава? Его данные будут стерты, и он сможет подать заявку заново.`, `Remove player ${nick}? Data will be erased.`))) {
                 
                 delete cloudDatabase.recruits[nick];
                 
@@ -2320,7 +2337,7 @@ Telegram ID;
 
                 await saveToCloud();
                 element.parentElement.remove(); 
-                alert(`Данные игрока ${nick} полностью удалены с сервера и сайта.`);
+                alert(t(`Данные игрока ${nick} полностью удалены с сервера и сайта.`, `Player ${nick} removed from server.`));
             }
         }
 
@@ -2339,24 +2356,8 @@ Telegram ID;
         closeLawModalBtn.addEventListener('click', closeLawModal); 
         acceptLawBtn.addEventListener('click', closeLawModal);
 
-        toggleFullscreenBtn.addEventListener('click', () => {
-            const isCurrentlyFullscreen = boardContainer.classList.contains('fullscreen-active');
-            if (!isCurrentlyFullscreen) {
-                boardContainer.classList.add('fullscreen-active');
-                toggleFullscreenBtn.style.position = "fixed";
-                toggleFullscreenBtn.style.top = "15px";
-                toggleFullscreenBtn.style.right = "15px";
-                toggleFullscreenBtn.style.zIndex = "10000";
-                toggleFullscreenBtn.innerHTML = `<i class="fa-solid fa-compress"></i> Свернуть доску`;
-            } else {
-                boardContainer.classList.remove('fullscreen-active');
-                toggleFullscreenBtn.style.position = "static";
-                toggleFullscreenBtn.innerHTML = `<i class="fa-solid fa-expand"></i> Развернуть во весь экран`;
-            }
-        });
-
         recruitForm.addEventListener('submit', function(e) {
-            e.preventDefault(); submitBtn.textContent = "Передача...";
+            e.preventDefault(); submitBtn.textContent = t("Передача...", "Transferring...");
             const gameNick = document.getElementById('gameNick').value.trim();
             const gameId = document.getElementById('gameId').value.trim();
             const gameChatId = document.getElementById('gameChatId').value.trim();
@@ -2372,8 +2373,8 @@ Telegram ID;
                 if (response.ok) { 
                     recruitForm.style.display = 'none'; document.getElementById('successResult').style.display = 'block'; 
                     totalRequests++; localStorage.setItem('stage_requests_count', totalRequests.toString());
-                } else { alert("Ошибка отправки заявки!"); }
-                submitBtn.textContent = "Отправить заявку";
+                } else { alert(t("Ошибка отправки заявки!", "Error sending application!")); }
+                submitBtn.textContent = t("Отправить заявку", "Submit Application");
             });
         });
 
@@ -2383,16 +2384,18 @@ Telegram ID;
             if (iframe && iframe.contentWindow) {
                 iframe.contentWindow.postMessage({ type: "excalidraw-load-image", url: fullMapUrl }, "*");
                 const originalText = buttonElement.innerHTML;
-                buttonElement.innerHTML = `<i class="fa-solid fa-circle-check"></i> На доске!`;
+                buttonElement.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span class="lang-txt" data-ru="На доске!" data-en="On Board!">На доске!</span>`;
                 buttonElement.style.borderColor = "#22c55e";
                 buttonElement.style.color = "#22c55e";
                 document.getElementById('board').scrollIntoView({ behavior: 'smooth' });
+                setLang(currentLang); // Refresh lang tags on button
                 setTimeout(() => {
                     buttonElement.innerHTML = originalText;
                     buttonElement.style.borderColor = "#a855f7";
                     buttonElement.style.color = "#a855f7";
+                    setLang(currentLang);
                 }, 2000);
-            } else { alert("Ошибка: Не удалось найти тактическую доску на странице."); }
+            } else { alert(t("Ошибка: Не удалось найти тактическую доску на странице.", "Error: Tactical board not found.")); }
         }
 
         const infoRankSelect = document.getElementById('infoRankSelect');
