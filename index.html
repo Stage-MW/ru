@@ -726,11 +726,6 @@
             <a href="https://t.me/MWnewsMPT" target="_blank" class="social-btn btn-creator"><i class="fa-solid fa-newspaper"></i><span>MWnewsMPT</span></a>
             <div class="sub-section-title lang-txt" data-ru="Полезно" data-en="Useful">Полезно</div>
             <a href="https://wiki.modernwarships.com/ru" target="_blank" class="social-btn btn-wiki"><i class="fa-solid fa-book-open"></i><span>MW WiKi</span></a>
-            
-            <div class="sub-section-title lang-txt" data-ru="Лента Новостей" data-en="News Feed">Лента Новостей</div>
-            <div style="width: 100%; max-width: 500px; height: 450px; border-radius: 8px; border: 1px solid rgba(0, 242, 254, 0.3); background: rgba(2, 5, 10, 0.6); overflow: hidden; box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);">
-                <iframe src="https://t.me/s/MWnewsMPT?embed=1&dark=1" width="100%" height="100%" frameborder="0" scrolling="auto" style="border: none;"></iframe>
-            </div>
         </div>
     </section>
 
@@ -880,7 +875,6 @@
                     <div class="cabinet-info-item"><span class="lbl lang-txt" data-ru="Ник:" data-en="Nick:">Ник:</span><span class="val" id="cabNick">-</span></div>
                     <div class="cabinet-info-item"><span class="lbl lang-txt" data-ru="Игровой ID:" data-en="Game ID:">Игровой ID:</span><span class="val" id="cabGameId" style="color: #00f2fe;">-</span></div>
                     <div class="cabinet-info-item"><span class="lbl lang-txt" data-ru="Профиль TG:" data-en="TG Profile:">Профиль TG:</span><span class="val" id="cabTg">-</span></div>
-                    <div class="cabinet-info-item"><span class="lbl lang-txt" data-ru="Баланс STAGE Coins:" data-en="Balance STAGE Coins:">Баланс STAGE Coins:</span><span class="val" id="cabCoins" style="color: #eab308; text-shadow: 0 0 8px rgba(234, 179, 8, 0.6);">0 <i class="fa-solid fa-coins" style="font-size: 11px;"></i></span></div>
                     <div class="cabinet-info-item"><span class="lbl lang-txt" data-ru="Telegram ID:" data-en="Telegram ID:">Telegram ID:</span><span class="val" id="cabTgId">-</span></div>
                     <div class="cabinet-info-item"><span class="lbl lang-txt" data-ru="Ранг Штаба:" data-en="HQ Rank:">Ранг Штаба:</span><span class="val" id="cabRank">-</span></div>
                     <div class="cabinet-info-item"><span class="lbl lang-txt" data-ru="Дата призыва:" data-en="Enlistment Date:">Дата призыва:</span><span class="val" id="cabDate">-</span></div>
@@ -904,7 +898,44 @@
         <div class="modal-window" style="max-width: 500px;">
             <span class="close-btn" id="closeLawModalBtn">&times;</span>
             <div class="modal-title lang-txt" style="color: #a855f7; border-bottom-color: rgba(168, 85, 247, 0.3);" data-ru="Пользовательское Соглашение" data-en="User Agreement">Пользовательское Соглашение</div>
-            <div class="law-window-content lang-txt" data-ru="<p>Клан STAGE является некоммерческим добровольным объединением игроков Modern Warships.</p><h4>1. Принцип добровольности</h4><p>Регистрируясь на сайте клана, пользователь добровольно предоставляет свои игровые данные. Данные не передаются третьим лицам.</p>" data-en="<p>STAGE clan is a non-commercial voluntary association of Modern Warships players.</p><h4>1. Principle of voluntariness</h4><p>By registering on the clan website, the user voluntarily provides their gaming data. Data is not transferred to third parties.</p>">
+            <div class="law-window-content lang-txt" data-ru="<p>Клан STAGE является некоммерческим добровольным объединением игроков Modern Warships.</p><h4>Регистрируясь на сайте клана, пользователь добровольно предоставляет следующие данные:
+
+Telegram username (тег Telegram);
+Telegram ID;
+игровой ID;
+игровой никнейм.
+
+Пользователь даёт согласие администрации сайта на хранение, обработку и использование указанных данных исключительно в целях:
+
+обработки заявок на вступление в клан;
+работы Telegram-бота;
+отправки уведомлений;
+отображения информации об участниках клана на сайте и в служебных Telegram-группах клана.
+
+Предоставленные данные не используются в коммерческих целях и не передаются третьим лицам, за исключением случаев, предусмотренных законодательством Российской Федерации.
+
+Пользователь вправе в любой момент запросить удаление своих данных через администрацию сайта.
+
+Продолжая регистрацию, пользователь подтверждает согласие с настоящими условиями.</p>" data-en="<p>STAGE clan is a non-commercial voluntary association of Modern Warships players.</p><h4>By registering on the clan website, the user voluntarily provides the following information:
+
+* Telegram username (Telegram tag);
+* Telegram ID;
+* Game ID;
+* In-game nickname.
+
+The user grants the website administration permission to store, process, and use the provided data solely for the following purposes:
+
+* Processing clan membership applications;
+* Operating the Telegram bot;
+* Sending notifications;
+* Displaying information about clan members on the website and in the clan's official Telegram groups.
+
+The provided data is not used for commercial purposes and is not shared with third parties, except where required by the legislation of the Russian Federation.
+
+The user has the right to request the deletion of their data at any time by contacting the website administration.
+
+By continuing the registration process, the user confirms their agreement with these terms and conditions.
+</p>">
                 <p>Клан STAGE является некоммерческим добровольным объединением игроков Modern Warships.</p>
                 <h4>1. Принцип добровольности</h4>
                 <p>Регистрируясь на сайте клана, пользователь добровольно предоставляет следующие данные:
@@ -1444,7 +1475,6 @@ Telegram ID;
                 joinDate: registerTimestamp,
                 rank: t("Действующий боец", "Active Fighter"),
                 avatar: "",
-                coins: 0,
                 lastActive: Date.now()
             };
             
@@ -1542,7 +1572,6 @@ Telegram ID;
             let roleTitle = "Юнга"; 
             let specialization = t("Не назначена", "Not assigned");
             let diffMonths = 0;
-            let coins = 0; 
             
             if (isLeaderMode || cleanTg === "@bymitso" || cleanTg.includes("admin")) {
                 nick = "Mitso";
@@ -1552,7 +1581,6 @@ Telegram ID;
                 joinDateStr = t("С 26.05.2026 г.", "Since 26.05.2026");
                 gameId = "22E9E4E8CABB7FCF";
                 diffMonths = 19;
-                coins = cloudDatabase.metadata['@bymitso']?.coins || 0;
             } else if (cleanTg && cloudDatabase.metadata[cleanTg]) {
                 let meta = cloudDatabase.metadata[cleanTg];
                 nick = meta.nick || nick;
@@ -1577,7 +1605,6 @@ Telegram ID;
                     diffMonths = NAVAL_RANKS.indexOf(meta.manualRank);
                     if(diffMonths === -1) diffMonths = 0;
                 }
-                coins = meta.coins || 0; 
             } else if (APPROVED_TELEGRAMS.map(t => t.toLowerCase()).includes(cleanTg)) {
                 if (cleanTg === "@mr_joker017") nick = "Mr. JOKER";
                 else if (cleanTg === "@dark_controi") nick = "Dark Control";
@@ -1607,7 +1634,6 @@ Telegram ID;
             document.getElementById('cabDate').textContent = joinDateStr;
             document.getElementById('cabSpec').textContent = specialization;
             document.getElementById('cabRole').textContent = roleTitle;
-            document.getElementById('cabCoins').innerHTML = `${coins} <i class="fa-solid fa-coins" style="font-size: 11px;"></i>`;
 
             // Вывод шеврона и анимация повышения
             document.getElementById('cabRankInsigniaContainer').innerHTML = getRankInsigniaHTML(diffMonths);
@@ -1740,40 +1766,21 @@ Telegram ID;
             let cleanTg = sessionTg.trim().toLowerCase();
             
             let userNick = t("Боец STAGE", "STAGE Fighter");
-            // Принудительно используем правильный ключ для Главы
             if (isLeaderMode || cleanTg === "@bymitso" || cleanTg.includes("admin")) {
                 userNick = "Mitso";
-                cleanTg = "@bymitso"; 
             } else if (cleanTg && cloudDatabase.metadata[cleanTg]) {
                 userNick = cloudDatabase.metadata[cleanTg].nick || userNick;
             } else if (cleanTg) {
                 userNick = sessionTg;
             }
 
-            // Проверяем, голосовал ли боец уже "Да" на эту конкретную тренировку
-            const alreadyYes = cloudDatabase.trainingYes.includes(userNick);
-
             cloudDatabase.trainingYes = cloudDatabase.trainingYes.filter(n => n !== userNick);
             cloudDatabase.trainingNo = cloudDatabase.trainingNo.filter(n => n !== userNick);
 
-            // Инициализируем монеты, если их еще не было
-            if (!cloudDatabase.metadata[cleanTg]) { cloudDatabase.metadata[cleanTg] = {}; }
-            if (typeof cloudDatabase.metadata[cleanTg].coins === 'undefined') { cloudDatabase.metadata[cleanTg].coins = 0; }
-
             if(type === 'yes') {
                 cloudDatabase.trainingYes.push(userNick);
-                // Если он нажал "Прибуду" первый раз за эту тренировку — начисляем 10 STAGE Coins
-                if (!alreadyYes) {
-                    cloudDatabase.metadata[cleanTg].coins += 10;
-                    alert(t("Вы записались на тренировку! Начислено +10 STAGE Coins.", "Enlisted for training! +10 STAGE Coins awarded."));
-                }
             } else {
                 cloudDatabase.trainingNo.push(userNick);
-                // Если он передумал и нажал "Не смогу", списываем ранее начисленные 10 монет
-                if (alreadyYes) {
-                    cloudDatabase.metadata[cleanTg].coins = Math.max(0, cloudDatabase.metadata[cleanTg].coins - 10);
-                    alert(t("Запись отменена. -10 STAGE Coins.", "Enlistment canceled. -10 STAGE Coins."));
-                }
             }
 
             renderAttendanceListsOnSite();
@@ -1900,7 +1907,7 @@ Telegram ID;
                 localStorage.setItem('stage_user_registered_tg', "@bymitso");
                 
                 if (!cloudDatabase.metadata["@bymitso"]) {
-                    cloudDatabase.metadata["@bymitso"] = { nick: "Mitso", gameId: "22E9E4E8CABB7FCF", joinDate: FOUNDATION_DATE.getTime(), rank: t("Глава", "Leader"), avatar: "", lastActive: Date.now(), coins: 0 };
+                    cloudDatabase.metadata["@bymitso"] = { nick: "Mitso", gameId: "22E9E4E8CABB7FCF", joinDate: FOUNDATION_DATE.getTime(), rank: t("Глава", "Leader"), avatar: "", lastActive: Date.now() };
                     saveToCloud();
                 }
             }
