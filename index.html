@@ -650,7 +650,7 @@
         <div class="training-countdown-widget" id="trainingCountdownWidget">
             <span class="close-timer-btn" id="btnCloseTimer" onclick="executeResetTrainingTimer()">&times;</span>
             
-            <div class="training-countdown-title lang-txt" data-ru="⚔️ До тактической тренировки флота:" data-en="⚔️ Time to tactical fleet training:">⚔️ До тактической тренировки флота:</div>
+            <div class="training-countdown-title lang-txt" data-ru="⚔️ До начала тренировки:" data-en="⚔️ Time to tactical fleet training:">⚔️ До начала тренировки флота:</div>
             <div class="training-timer-display">
                 <div class="timer-unit-box"><div class="num" id="timerDays">00</div><div class="lbl lang-txt" data-ru="Дн" data-en="D">Дн</div></div>
                 <div class="timer-unit-box"><div class="num" id="timerHours">00</div><div class="lbl lang-txt" data-ru="Час" data-en="H">Час</div></div>
@@ -659,7 +659,7 @@
             </div>
 
             <div class="website-vote-block" id="websiteVoteBlock">
-                <button type="button" class="btn-web-vote v-yes lang-txt" onclick="registerWebsiteVote('yes')" data-ru="⚓️ Прибуду в строй" data-en="⚓️ Will Attend">⚓️ Прибуду в строй</button>
+                <button type="button" class="btn-web-vote v-yes lang-txt" onclick="registerWebsiteVote('yes')" data-ru="⚓️ Буду" data-en="⚓️ Will Attend">⚓️ Буду</button>
                 <button type="button" class="btn-web-vote v-no lang-txt" onclick="registerWebsiteVote('no')" data-ru="❌ Не смогу" data-en="❌ Cannot Attend">❌ Не смогу</button>
             </div>
 
@@ -1879,7 +1879,7 @@ Telegram ID;
                 day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
             });
 
-            const messageText = `⚔️ <b>ВНИМАНИЕ, ФЛОТ STAGE! Назначена тренировка!</b>\n\n⚓️ <b>Событие:</b> Тактическая командная тренировка\n📅 <b>Время сбора:</b> ${formattedDate}\n\nВсем участникам быть в полной боевой готовности на тактической доске сайта! Прямая связь в Яндекс Телемост. 🚢🔥`;
+            const messageText = `⚔️ <b>ВНИМАНИЕ! Назначена тренировка!</b>\n\n⚓️ <b>Событие:</b> Тренировка\n📅 <b>Время сбора:</b> ${formattedDate}\n\nВсем участникам быть ! Прямая связь в Яндекс Телемост или Discord. 🚢🔥`;
 
             const replyMarkupButtons = {
                 inline_keyboard: [
@@ -2045,7 +2045,7 @@ Telegram ID;
             
             await saveToCloud();
 
-            const messageText = `⚔️ <b>ВНИМАНИЕ, ФЛОТ STAGE!</b>\n\n🔥 <b>КЛАНОВЫЕ БОИ НАЧАЛИСЬ!</b> 🔥\n\nВсем доступным бойцам немедленно прибыть в строй на тактической доске сайта и подключиться к голосовому шлюзу Яндекс Телемост! 🚢💥`;
+            const messageText = `⚔️ <b>ВНИМАНИЕ, ФЛОТ STAGE!</b>\n\n🔥 <b>КЛАНОВЫЕ БОИ НАЧАЛИСЬ!</b> 🔥\n\nНе пропустите! 🚢💥`;
 
             try {
                 const response = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
