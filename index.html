@@ -228,6 +228,9 @@
         .btn-training-trigger { display: none; background: rgba(168, 85, 247, 0.15); border: 1px solid #a855f7; color: #fff; padding: 6px 14px; border-radius: 4px; font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: bold; text-transform: uppercase; cursor: pointer; transition: all 0.3s; box-shadow: 0 0 10px rgba(168, 85, 247, 0.3); }
         .btn-training-trigger:hover { background: #a855f7; box-shadow: 0 0 20px rgba(168, 85, 247, 0.7); }
 
+        .btn-cw-trigger { display: none; background: rgba(255, 0, 85, 0.15); border: 1px solid #ff0055; color: #fff; padding: 6px 14px; border-radius: 4px; font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: bold; text-transform: uppercase; cursor: pointer; transition: all 0.3s; box-shadow: 0 0 10px rgba(255, 0, 85, 0.3); }
+        .btn-cw-trigger:hover { background: #ff0055; box-shadow: 0 0 20px rgba(255, 0, 85, 0.7); }
+
         .training-countdown-widget { display: none; width: 100%; max-width: 500px; background: rgba(2, 5, 10, 0.9); border: 2px solid #00f2fe; box-shadow: 0 0 25px rgba(0, 242, 254, 0.35); padding: 20px; border-radius: 8px; margin: 0 auto 25px; text-align: center; font-family: 'Orbitron', sans-serif; position: relative; }
         .close-timer-btn { display: none; position: absolute; top: 8px; right: 14px; color: rgba(255, 255, 255, 0.3); font-size: 20px; cursor: pointer; transition: color 0.2s; font-family: sans-serif; font-weight: bold; }
         .close-timer-btn:hover { color: #ff0055; }
@@ -237,6 +240,13 @@
         .timer-unit-box { background: rgba(15, 23, 42, 0.9); padding: 6px 10px; border-radius: 4px; min-width: 60px; border: 1px solid rgba(0, 242, 254, 0.2); }
         .timer-unit-box .num { font-size: 20px; color: #fff; font-weight: 900; text-shadow: 0 0 10px #00f2fe; }
         .timer-unit-box .lbl { font-size: 9px; color: #94a3b8; text-transform: uppercase; margin-top: 2px; font-family: 'Oswald', sans-serif; }
+
+        .cw-countdown-widget { display: none; width: 100%; max-width: 500px; background: rgba(2, 5, 10, 0.9); border: 2px solid #ff0055; box-shadow: 0 0 25px rgba(255, 0, 85, 0.35); padding: 20px; border-radius: 8px; margin: 0 auto 25px; text-align: center; font-family: 'Orbitron', sans-serif; position: relative; }
+        .cw-countdown-title { font-size: 13px; color: #ff0055; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; font-weight: 900; }
+        .cw-timer-display { display: flex; justify-content: center; gap: 15px; margin-top: 5px; }
+        .cw-unit-box { background: rgba(15, 23, 42, 0.9); padding: 6px 10px; border-radius: 4px; min-width: 60px; border: 1px solid rgba(255, 0, 85, 0.2); }
+        .cw-unit-box .num { font-size: 20px; color: #fff; font-weight: 900; text-shadow: 0 0 10px #ff0055; }
+        .cw-unit-box .lbl { font-size: 9px; color: #94a3b8; text-transform: uppercase; margin-top: 2px; font-family: 'Oswald', sans-serif; }
 
         .training-attendance-container { display: flex; gap: 15px; margin-top: 15px; padding-top: 15px; border-top: 1px dashed rgba(255,255,255,0.1); font-family: 'Oswald', sans-serif; text-align: left; }
         .attendance-column { flex: 1; background: rgba(2, 5, 10, 0.5); padding: 10px; border-radius: 4px; font-size: 13px; }
@@ -396,6 +406,10 @@
         .avatar-picker-item:hover { transform: scale(1.1); border-color: #00f2fe; }
         .avatar-picker-item.selected { border-color: #a855f7; box-shadow: 0 0 10px rgba(168, 85, 247, 0.6); }
 
+        .bg-picker-item { width: 100%; height: 40px; border-radius: 4px; border: 2px solid transparent; background-size: cover; background-position: center; cursor: pointer; transition: all 0.2s ease; background-color: #02050a; }
+        .bg-picker-item:hover { transform: scale(1.05); border-color: #00f2fe; }
+        .bg-picker-item.selected { border-color: #a855f7; box-shadow: 0 0 10px rgba(168, 85, 247, 0.6); }
+
         .cabinet-info-list { width: 100%; display: flex; flex-direction: column; gap: 10px; background: rgba(2, 5, 10, 0.6); padding: 15px; border-radius: 6px; border: 1px solid rgba(168, 85, 247, 0.2); }
         .cabinet-info-item { display: flex; justify-content: space-between; font-size: 14px; border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 6px; }
         .cabinet-info-item:last-child { border: none; padding: 0; }
@@ -443,6 +457,7 @@
             position: relative; 
             max-height: 90vh; 
             overflow-y: auto; 
+            transition: background 0.3s;
         }
         .modal-window::-webkit-scrollbar { width: 6px; }
         .modal-window::-webkit-scrollbar-track { background: rgba(2, 5, 10, 0.5); border-radius: 4px; }
@@ -605,16 +620,32 @@
             <p class="welcome-desc-p lang-txt" data-ru="Добро пожаловать в клан STAGE" data-en="Welcome to the STAGE clan">Добро пожаловать в клан STAGE</p>
             <p class="welcome-desc-p lang-txt" data-ru="STAGE — играем среди лучших. Стань частью команды." data-en="STAGE — playing among the best. Become part of the team.">STAGE — играем среди лучших. Стань частью команды.</p>
         </div>
+
+        <div style="margin-top: 30px;">
+            <button class="btn-join-neon lang-txt" id="openCwProposalBtn" style="border-color: #ff8c00; background: rgba(255, 140, 0, 0.1);" data-ru='<i class="fa-solid fa-handshake-angle"></i> Предложить Клан Вар' data-en='<i class="fa-solid fa-handshake-angle"></i> Propose Clan War'><i class="fa-solid fa-handshake-angle"></i> Предложить Клан Вар</button>
+        </div>
     </section>
 
     <section id="roster" class="roster-screen">
         <div class="training-admin-block">
             <button type="button" class="btn-training-trigger lang-txt" id="btnTrainingTrigger" data-ru='<i class="fa-solid fa-calendar-plus"></i> Тренировка' data-en='<i class="fa-solid fa-calendar-plus"></i> Training'><i class="fa-solid fa-calendar-plus"></i> Тренировка</button>
+            <button type="button" class="btn-cw-trigger lang-txt" id="btnCwTrigger" data-ru='<i class="fa-solid fa-crosshairs"></i> Клан Вар' data-en='<i class="fa-solid fa-crosshairs"></i> Clan War'><i class="fa-solid fa-crosshairs"></i> Клан Вар</button>
         </div>
 
         <h2 class="section-title lang-txt" data-ru="Состав клана" data-en="Clan Roster">Состав клана</h2>
         
         <div id="adminBadge" class="lang-txt" data-ru='<i class="fa-solid fa-shield-halved"></i> Режим Лидера Активирован' data-en='<i class="fa-solid fa-shield-halved"></i> Leader Mode Activated'><i class="fa-solid fa-shield-halved"></i> Режим Лидера Активирован</div>
+
+        <div class="cw-countdown-widget" id="cwCountdownWidget">
+            <span class="close-timer-btn" id="btnCloseCwTimer" onclick="executeResetCwTimer()">&times;</span>
+            <div class="cw-countdown-title lang-txt" data-ru="🔥 До начала Клановых Боёв:" data-en="🔥 Time to Clan Wars:">🔥 До начала Клановых Боёв:</div>
+            <div class="cw-timer-display">
+                <div class="cw-unit-box"><div class="num" id="cwTimerDays">00</div><div class="lbl lang-txt" data-ru="Дн" data-en="D">Дн</div></div>
+                <div class="cw-unit-box"><div class="num" id="cwTimerHours">00</div><div class="lbl lang-txt" data-ru="Час" data-en="H">Час</div></div>
+                <div class="cw-unit-box"><div class="num" id="cwTimerMinutes">00</div><div class="lbl lang-txt" data-ru="Мин" data-en="M">Мин</div></div>
+                <div class="cw-unit-box"><div class="num" id="cwTimerSeconds">00</div><div class="lbl lang-txt" data-ru="Сек" data-en="S">Сек</div></div>
+            </div>
+        </div>
 
         <div class="training-countdown-widget" id="trainingCountdownWidget">
             <span class="close-timer-btn" id="btnCloseTimer" onclick="executeResetTrainingTimer()">&times;</span>
@@ -787,6 +818,34 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="cwProposalModalOverlay" style="z-index: 160;">
+        <div class="modal-window" style="max-width: 450px; border-color: #ff8c00; box-shadow: 0 0 40px rgba(255, 140, 0, 0.3);">
+            <span class="close-btn" id="closeCwProposalModalBtn" onclick="document.getElementById('cwProposalModalOverlay').classList.remove('active');">&times;</span>
+            <div class="modal-title lang-txt" style="color: #ff8c00; border-bottom-color: rgba(255, 140, 0, 0.2);" data-ru="Предложение Кланового Боя" data-en="Clan War Proposal">Предложение Кланового Боя</div>
+            
+            <form id="cwProposalForm">
+                <div class="form-group">
+                    <label class="lang-txt" data-ru="Название вашего Клана" data-en="Your Clan Name">Название вашего Клана</label>
+                    <input type="text" id="propClanName" class="lang-txt" data-ru="Например: STAGE" data-en="Example: STAGE" placeholder="Например: STAGE" required>
+                </div>
+                <div class="form-group">
+                    <label class="lang-txt" data-ru="Контакт (ТГ или Discord)" data-en="Contact (TG or Discord)">Контакт (ТГ или Discord)</label>
+                    <input type="text" id="propContact" class="lang-txt" data-ru="Например: @nickname" data-en="Example: @nickname" placeholder="Например: @nickname" required>
+                </div>
+                <div class="form-group">
+                    <label class="lang-txt" data-ru="Желаемая Дата" data-en="Desired Date">Желаемая Дата</label>
+                    <input type="date" id="propDate" required style="background: #02050a; color: #fff; padding: 10px; border-radius: 4px; border: 1px solid rgba(0, 242, 254, 0.3); width: 100%; font-family: 'Oswald', sans-serif;">
+                </div>
+                <div class="form-group">
+                    <label id="propTimeLabel" class="lang-txt" data-ru="Время (МСК)" data-en="Time (UTC)">Время (МСК)</label>
+                    <input type="time" id="propTime" required style="background: #02050a; color: #fff; padding: 10px; border-radius: 4px; border: 1px solid rgba(0, 242, 254, 0.3); width: 100%; font-family: 'Oswald', sans-serif;">
+                </div>
+                
+                <button type="submit" class="btn-submit lang-txt" id="propSubmitBtn" style="background: #ff8c00; color: #000; margin-top: 10px;" data-ru="Отправить вызов" data-en="Send Challenge">Отправить вызов</button>
+            </form>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="playerInfoModalOverlay" style="z-index: 145;">
         <div class="modal-window" style="max-width: 350px; border-color: #00f2fe; box-shadow: 0 0 40px rgba(0, 242, 254, 0.3); text-align: center; padding: 30px 20px;">
             <span class="close-btn" id="closePlayerInfoBtn">&times;</span>
@@ -841,6 +900,22 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="cwModalOverlay" style="z-index: 151;">
+        <div class="modal-window" style="max-width: 400px; border-color: #ff0055; box-shadow: 0 0 40px rgba(255, 0, 85, 0.4);">
+            <span class="close-btn" id="closeCwModalBtn">&times;</span>
+            <div class="modal-title lang-txt" style="color: #ff0055; border-bottom-color: rgba(255, 0, 85, 0.2);" data-ru="Планирование Клановых Боёв" data-en="Clan War Planning">Планирование Клановых Боёв</div>
+            <div class="form-group">
+                <label class="lang-txt" data-ru="Выберите дату" data-en="Select Date">Выберите дату</label>
+                <input type="date" id="inputCwDate" required style="border-color: #ff0055; font-family: 'Orbitron', sans-serif; background: #02050a; color: #fff; padding: 10px; border-radius: 4px; width: 100%;">
+            </div>
+            <div class="form-group">
+                <label class="lang-txt" data-ru="Укажите время начала" data-en="Specify start time">Укажите время начала</label>
+                <input type="text" id="inputCwTime" class="lang-txt" data-ru="Например: 20:00" data-en="Example: 20:00" placeholder="Например: 20:00" required style="border-color: #ff0055; font-family: 'Orbitron', sans-serif; background: #02050a; color: #fff; padding: 10px; border-radius: 4px; width: 100%;">
+            </div>
+            <button type="button" class="btn-submit lang-txt" id="btnSubmitCw" style="background: #ff0055; color: #fff;" data-ru="Запустить таймер" data-en="Start Timer">Запустить таймер</button>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="trainingModalOverlay" style="z-index: 150;">
         <div class="modal-window" style="max-width: 400px; border-color: #a855f7; box-shadow: 0 0 40px rgba(168, 85, 247, 0.4);">
             <span class="close-btn" id="closeTrainingModalBtn">&times;</span>
@@ -858,7 +933,7 @@
     </div>
 
     <div class="modal-overlay" id="cabinetModalOverlay" style="z-index: 140;">
-        <div class="modal-window" style="max-width: 420px; border-color: #a855f7; box-shadow: 0 0 40px rgba(168, 85, 247, 0.35);">
+        <div class="modal-window" id="cabinetModalWindow" style="max-width: 420px; border-color: #a855f7; box-shadow: 0 0 40px rgba(168, 85, 247, 0.35);">
             <span class="close-btn" id="closeCabinetModalBtn">&times;</span>
             <div class="modal-title lang-txt" style="color: #a855f7; border-bottom-color: rgba(168, 85, 247, 0.2);" data-ru="Личный Кабинет Бойца" data-en="Fighter's Personal Cabinet">Личный Кабинет Бойца</div>
             
@@ -868,9 +943,12 @@
                 </div>
                 
                 <div class="avatar-picker-title lang-txt" data-ru="Выберите аватар профиля:" data-en="Choose profile avatar:">Выберите аватар профиля:</div>
-                <div class="avatar-picker-grid" id="avatarPickerGrid">
-                    </div>
+                <div class="avatar-picker-grid" id="avatarPickerGrid"></div>
                 
+                <div class="avatar-picker-title lang-txt" data-ru="Стиль кабинета (Фон):" data-en="Cabinet Style (Bg):" style="margin-top: 10px;">Стиль кабинета (Фон):</div>
+                <div class="avatar-picker-grid" id="bgPickerGrid" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 15px; border-color: rgba(0, 242, 254, 0.3);">
+                </div>
+
                 <div class="cabinet-info-list">
                     <div class="cabinet-info-item"><span class="lbl lang-txt" data-ru="Ник:" data-en="Nick:">Ник:</span><span class="val" id="cabNick">-</span></div>
                     <div class="cabinet-info-item"><span class="lbl lang-txt" data-ru="Игровой ID:" data-en="Game ID:">Игровой ID:</span><span class="val" id="cabGameId" style="color: #00f2fe;">-</span></div>
@@ -1032,7 +1110,6 @@ Telegram ID;
                 }
             });
             
-            // Если включен полноэкранный режим - обновить текст кнопки доски
             if (document.fullscreenElement || document.webkitFullscreenElement) {
                 document.getElementById('fullscreenBtnText').textContent = t("Свернуть доску", "Collapse Board");
             }
@@ -1144,6 +1221,7 @@ Telegram ID;
         const statsModalOverlay = document.getElementById('statsModalOverlay');
         const cabinetModalOverlay = document.getElementById('cabinetModalOverlay');
         const trainingModalOverlay = document.getElementById('trainingModalOverlay');
+        const cwModalOverlay = document.getElementById('cwModalOverlay');
         const playerInfoModalOverlay = document.getElementById('playerInfoModalOverlay');
 
         const closeLawModalBtn = document.getElementById('closeLawModalBtn');
@@ -1151,6 +1229,7 @@ Telegram ID;
         const closeStatsModalBtn = document.getElementById('closeStatsModalBtn');
         const closeCabinetModalBtn = document.getElementById('closeCabinetModalBtn');
         const closeTrainingModalBtn = document.getElementById('closeTrainingModalBtn');
+        const closeCwModalBtn = document.getElementById('closeCwModalBtn');
         const closePlayerInfoBtn = document.getElementById('closePlayerInfoBtn');
 
         const submitAdminLoginBtn = document.getElementById('submitAdminLoginBtn');
@@ -1175,6 +1254,13 @@ Telegram ID;
         const websiteVoteBlock = document.getElementById('websiteVoteBlock');
         const btnCloseTimer = document.getElementById('btnCloseTimer');
 
+        const btnCwTrigger = document.getElementById('btnCwTrigger');
+        const btnSubmitCw = document.getElementById('btnSubmitCw');
+        const inputCwDate = document.getElementById('inputCwDate');
+        const inputCwTime = document.getElementById('inputCwTime');
+        const cwCountdownWidget = document.getElementById('cwCountdownWidget');
+        const btnCloseCwTimer = document.getElementById('btnCloseCwTimer');
+
         const rawTelegramInput = document.getElementById('rawTelegramInput');
         const terminalStatusBox = document.getElementById('terminalStatusBox');
         const parsedNickText = document.getElementById('parsedNickText');
@@ -1187,9 +1273,14 @@ Telegram ID;
         let isLeaderMode = false;
         let currentParsedData = null;
         let countdownIntervalId = null;
+        let cwCountdownIntervalId = null;
         let currentSelectedPlayerNick = "";
         
-        let cloudDatabase = { recruits: {}, banned: [], kickedNicks: [], metadata: {}, trainingTime: null, trainingYes: [], trainingNo: [] };
+        let cloudDatabase = { 
+            recruits: {}, banned: [], kickedNicks: [], metadata: {}, 
+            trainingTime: null, trainingYes: [], trainingNo: [],
+            cwTime: null, cwNotified: false 
+        };
         let isCloudSynced = false; 
 
         function getClanPassword(tgLogin) {
@@ -1227,7 +1318,6 @@ Telegram ID;
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            // Генерация 32 аватарок программно
             const avatarPickerGrid = document.getElementById('avatarPickerGrid');
             if(avatarPickerGrid) {
                 let avatarsHtml = '';
@@ -1238,12 +1328,32 @@ Telegram ID;
                 avatarPickerGrid.innerHTML = avatarsHtml;
             }
 
-            setLang(currentLang); // Применение языка
+            // Инициализация фонов кабинета
+            const bgPickerGrid = document.getElementById('bgPickerGrid');
+            if(bgPickerGrid) {
+                const bgOptions = [
+                    { val: 'none', col: '#0b121f' },
+                    { val: 'url("bg.png")', img: 'bg.png' },
+                    { val: 'url("roster_bg.png")', img: 'roster_bg.png' },
+                    { val: 'url("maps_bg.png")', img: 'maps_bg.png' },
+                    { val: 'url("chat_bg.png")', img: 'chat_bg.png' }
+                ];
+                let bgHtml = '';
+                bgOptions.forEach((opt, index) => {
+                    let styleStr = opt.img ? `background-image: url('${opt.img}');` : `background-color: ${opt.col};`;
+                    bgHtml += `<div class="bg-picker-item" style="${styleStr}" onclick="setCabinetBg(${index}, this)"></div>`;
+                });
+                bgPickerGrid.innerHTML = bgHtml;
+            }
+
+            setLang(currentLang); 
 
             applyGlobalKickedFilters();
             renderLocalRecruits();
             generateTacticalMapsGrid();
             initTrainingCountdown(); 
+            initCwCountdown();
+            initCabinetBg();
             
             if (localStorage.getItem('stage_team_logged') === 'true' || localStorage.getItem('stage_authorized') === 'true') { 
                 unlockTeamFeatures(); 
@@ -1267,6 +1377,7 @@ Telegram ID;
                 renderLocalRecruits();
                 applyLeaderStatusColors();
                 initTrainingCountdown();
+                initCwCountdown();
             });
 
             setInterval(() => {
@@ -1276,10 +1387,10 @@ Telegram ID;
                     renderLocalRecruits();
                     applyLeaderStatusColors();
                     renderAttendanceListsOnSite();
+                    initCwCountdown(); 
                 });
             }, 30000);
 
-            // Пинг активности для онлайна раз в минуту
             setInterval(async () => {
                 let myTg = localStorage.getItem('stage_user_registered_tg');
                 if(myTg && cloudDatabase.metadata[myTg]) {
@@ -1290,14 +1401,78 @@ Telegram ID;
             }, 60000);
         });
 
-        // Полноэкранный режим с использованием Fullscreen API
+        // --- ЛОГИКА ФОНА КАБИНЕТА ---
+        function initCabinetBg() {
+            const savedIndex = localStorage.getItem('stage_cab_bg') || '0';
+            const items = document.querySelectorAll('.bg-picker-item');
+            if(items[savedIndex]) {
+                setCabinetBg(parseInt(savedIndex), items[savedIndex], false);
+            }
+        }
+
+        window.setCabinetBg = function(index, element, saveToCloudFlag = true) {
+            document.querySelectorAll('.bg-picker-item').forEach(el => el.classList.remove('selected'));
+            if(element) element.classList.add('selected');
+            
+            const bgOptions = ['none', 'url("bg.png")', 'url("roster_bg.png")', 'url("maps_bg.png")', 'url("chat_bg.png")'];
+            const val = bgOptions[index];
+            const cabWindow = document.getElementById('cabinetModalWindow');
+            
+            if (val === 'none') {
+                cabWindow.style.backgroundImage = 'none';
+                cabWindow.style.backgroundColor = '#0b121f';
+            } else {
+                cabWindow.style.backgroundImage = `linear-gradient(rgba(11, 18, 31, 0.85), rgba(11, 18, 31, 0.95)), ${val}`;
+                cabWindow.style.backgroundSize = 'cover';
+                cabWindow.style.backgroundPosition = 'center';
+            }
+            
+            localStorage.setItem('stage_cab_bg', index.toString());
+        };
+
+        // --- ЛОГИКА ФОРМЫ ПРЕДЛОЖЕНИЯ КВ ---
+        document.getElementById('openCwProposalBtn').addEventListener('click', () => {
+            document.getElementById('cwProposalModalOverlay').classList.add('active');
+        });
+
+        document.getElementById('cwProposalForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('propSubmitBtn');
+            btn.disabled = true;
+            btn.textContent = t("Отправка...", "Sending...");
+            
+            const clan = document.getElementById('propClanName').value.trim();
+            const contact = document.getElementById('propContact').value.trim();
+            const date = document.getElementById('propDate').value;
+            const time = document.getElementById('propTime').value;
+            const timeZone = currentLang === 'en' ? 'UTC' : 'МСК';
+
+            const msg = `⚔️ <b>ВЫЗОВ НА КЛАНОВЫЙ БОЙ!</b>\n\n🛡 <b>Клан:</b> ${clan}\n✈️ <b>Связь:</b> ${contact}\n📅 <b>Дата:</b> ${date}\n⏰ <b>Время:</b> ${time} (${timeZone})`;
+
+            fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: TG_CHAT_ID, text: msg, parse_mode: 'html' })
+            }).then(r => {
+                alert(t("Ваш вызов успешно отправлен в штаб STAGE!", "Your challenge has been sent to STAGE HQ!"));
+                document.getElementById('cwProposalModalOverlay').classList.remove('active');
+                btn.disabled = false;
+                btn.textContent = t("Отправить вызов", "Send Challenge");
+                this.reset();
+            }).catch(e => {
+                alert(t("Ошибка отправки! Попробуйте позже.", "Send error! Try again later."));
+                btn.disabled = false;
+                btn.textContent = t("Отправить вызов", "Send Challenge");
+            });
+        });
+        // ------------------------------------
+
         toggleFullscreenBtn.addEventListener('click', () => {
             if (!document.fullscreenElement) {
                 if (boardActualContainer.requestFullscreen) {
                     boardActualContainer.requestFullscreen();
-                } else if (boardActualContainer.webkitRequestFullscreen) { /* Safari */
+                } else if (boardActualContainer.webkitRequestFullscreen) { 
                     boardActualContainer.webkitRequestFullscreen();
-                } else if (boardActualContainer.msRequestFullscreen) { /* IE11 */
+                } else if (boardActualContainer.msRequestFullscreen) { 
                     boardActualContainer.msRequestFullscreen();
                 }
             } else {
@@ -1332,7 +1507,6 @@ Telegram ID;
             }
         }
 
-        // Подгрузка iframe доски
         navBoardLink.addEventListener('click', function() {
             if(!excalidrawFrame.src || excalidrawFrame.src === 'about:blank' || excalidrawFrame.src === window.location.href) {
                 excalidrawFrame.src = excalidrawFrame.getAttribute('data-src');
@@ -1356,6 +1530,8 @@ Telegram ID;
                         cloudDatabase.trainingTime = db.trainingTime || null;
                         cloudDatabase.trainingYes = db.trainingYes || [];
                         cloudDatabase.trainingNo = db.trainingNo || [];
+                        cloudDatabase.cwTime = db.cwTime || null;
+                        cloudDatabase.cwNotified = db.cwNotified || false;
                     }
                     isCloudSynced = true; 
                     updateOnlineWidget();
@@ -1382,7 +1558,6 @@ Telegram ID;
             } catch (err) { console.error("Ошибка сохранения:", err); }
         }
 
-        // --- ЛОГИКА ОНЛАЙН ИНДИКАТОРА ---
         function updateOnlineWidget() {
             const now = Date.now();
             const activeUsers = [];
@@ -1635,7 +1810,6 @@ Telegram ID;
             document.getElementById('cabSpec').textContent = specialization;
             document.getElementById('cabRole').textContent = roleTitle;
 
-            // Вывод шеврона и анимация повышения
             document.getElementById('cabRankInsigniaContainer').innerHTML = getRankInsigniaHTML(diffMonths);
             
             let savedRank = parseInt(localStorage.getItem('stage_saved_rank_idx') || '-1');
@@ -1760,6 +1934,147 @@ Telegram ID;
                 btnSubmitTraining.disabled = false;
             }
         });
+
+        // --- ЛОГИКА ТАЙМЕРА И УВЕДОМЛЕНИЙ КЛАН ВАРА ---
+        btnCwTrigger.addEventListener('click', () => {
+            if(!isLeaderMode) return;
+            const todayStr = new Date().toISOString().split('T')[0];
+            inputCwDate.value = todayStr;
+            inputCwTime.value = "";
+            cwModalOverlay.classList.add('active');
+        });
+        closeCwModalBtn.addEventListener('click', () => cwModalOverlay.classList.remove('active'));
+
+        btnSubmitCw.addEventListener('click', async () => {
+            const dateVal = inputCwDate.value;
+            const timeVal = inputCwTime.value.trim();
+            if(!dateVal || !timeVal) { alert(t("Пожалуйста, укажите дату и точное время!", "Please provide date and time!")); return; }
+
+            const timeParts = timeVal.match(/(\d{1,2}):(\d{2})/);
+            let hours = 20, minutes = 0;
+            if (timeParts) {
+                hours = parseInt(timeParts[1], 10);
+                minutes = parseInt(timeParts[2], 10);
+            } else {
+                alert(t("Введите время в правильном формате ЧЧ:ММ!", "Use correct time format HH:MM!"));
+                return;
+            }
+
+            const targetDate = new Date(dateVal);
+            targetDate.setHours(hours, minutes, 0, 0);
+            const targetTimestamp = targetDate.getTime();
+
+            if(targetTimestamp <= Date.now()) { alert(t("Время не может быть в прошлом!", "Time cannot be in the past!")); return; }
+
+            btnSubmitCw.textContent = t("Запуск...", "Starting...");
+            btnSubmitCw.disabled = true;
+
+            cloudDatabase.cwTime = targetTimestamp;
+            cloudDatabase.cwNotified = false;
+            await saveToCloud();
+
+            cwModalOverlay.classList.remove('active');
+            initCwCountdown(); 
+
+            alert(t("Таймер Клановых Боёв успешно запущен!", "Clan War timer successfully started!"));
+            
+            btnSubmitCw.textContent = t("Запустить таймер", "Start Timer");
+            btnSubmitCw.disabled = false;
+        });
+
+        window.executeResetCwTimer = async function() {
+            if(!isLeaderMode) return;
+            if(confirm(t("Вы действительно хотите отменить таймер Клан Вара?", "Cancel Clan War timer?"))) {
+                cloudDatabase.cwTime = null;
+                cloudDatabase.cwNotified = false;
+                await saveToCloud();
+                
+                if (cwCountdownIntervalId) clearInterval(cwCountdownIntervalId);
+                cwCountdownWidget.style.display = 'none';
+            }
+        }
+
+        function initCwCountdown() {
+            if (cwCountdownIntervalId) clearInterval(cwCountdownIntervalId);
+
+            if (!cloudDatabase.cwTime) {
+                cwCountdownWidget.style.display = 'none';
+                return;
+            }
+
+            if (cloudDatabase.cwTime <= Date.now()) {
+                if (!cloudDatabase.cwNotified) {
+                    triggerCwNotification();
+                }
+                cwCountdownWidget.style.display = 'none';
+                return;
+            }
+
+            cwCountdownWidget.style.display = 'block';
+            if(isLeaderMode) { btnCloseCwTimer.style.display = 'block'; }
+
+            function updateCwTimer() {
+                const diff = cloudDatabase.cwTime - Date.now();
+                if (diff <= 0) {
+                    cwCountdownWidget.style.display = 'none';
+                    clearInterval(cwCountdownIntervalId);
+                    if (!cloudDatabase.cwNotified) {
+                        triggerCwNotification();
+                    }
+                    return;
+                }
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                document.getElementById('cwTimerDays').textContent = days.toString().padStart(2, '0');
+                document.getElementById('cwTimerHours').textContent = hours.toString().padStart(2, '0');
+                document.getElementById('cwTimerMinutes').textContent = minutes.toString().padStart(2, '0');
+                document.getElementById('cwTimerSeconds').textContent = seconds.toString().padStart(2, '0');
+            }
+
+            updateCwTimer();
+            cwCountdownIntervalId = setInterval(updateCwTimer, 1000);
+        }
+
+        async function triggerCwNotification() {
+            cloudDatabase.cwNotified = true;
+            cwCountdownWidget.style.display = 'none';
+            
+            await saveToCloud();
+
+            const messageText = `⚔️ <b>ВНИМАНИЕ, ФЛОТ STAGE!</b>\n\n🔥 <b>КЛАНОВЫЕ БОИ НАЧАЛИСЬ!</b> 🔥\n\nВсем доступным бойцам немедленно прибыть в строй на тактической доске сайта и подключиться к голосовому шлюзу Яндекс Телемост! 🚢💥`;
+
+            try {
+                const response = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        chat_id: TG_CHAT_ID, 
+                        message_thread_id: TRAINING_THREAD_ID, 
+                        text: messageText, 
+                        parse_mode: 'html' 
+                    })
+                });
+
+                if (!response.ok) {
+                    await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            chat_id: TG_CHAT_ID, 
+                            text: messageText, 
+                            parse_mode: 'html' 
+                        })
+                    });
+                }
+            } catch (err) {
+                console.error("Ошибка отправки уведомления о КВ:", err);
+            }
+        }
+        // -------------------------------------------------------------
 
         window.registerWebsiteVote = async function(type) {
             let sessionTg = localStorage.getItem('stage_user_registered_tg') || "";
@@ -1939,6 +2254,7 @@ Telegram ID;
                 refreshMenuCabinetAvatar();
                 renderLocalRecruits();
                 initTrainingCountdown();
+                initCwCountdown();
                 alert(t("Верификация пройдена успешно. Добро пожаловать в тактический штаб STAGE!", "Verification successful. Welcome to STAGE Tactical HQ!"));
             } else {
                 alert(t("Ошибка доступа! Неверное сочетание Логина (ТГ) и Пароля.", "Access Error! Invalid TG Login and Password combination."));
@@ -1975,7 +2291,9 @@ Telegram ID;
         function activateLeaderMode() {
             isLeaderMode = true; adminBadge.style.display = 'block'; navStatsBtn.style.display = 'block'; 
             btnTrainingTrigger.style.display = 'block'; 
+            btnCwTrigger.style.display = 'block';
             if(btnCloseTimer) btnCloseTimer.style.display = 'block'; 
+            if(btnCloseCwTimer) btnCloseCwTimer.style.display = 'block';
             navLoginBtn.innerHTML = `<i class="fa-solid fa-user-gear" style="color:#ff0055;"></i> <span class="lang-txt" data-ru="Админ" data-en="Admin">Админ</span>`;
             navLoginBtn.style.background = "rgba(255, 0, 85, 0.15)"; navLoginBtn.style.borderColor = "#ff0055";
             document.querySelectorAll('.kick-btn').forEach(btn => btn.style.display = 'inline-block');
@@ -2294,7 +2612,6 @@ Telegram ID;
             }
 
             for (let nick in cloudDatabase.recruits) {
-                // Исключаем тестового пользователя в соответствии с вашими командами
                 if (nick.toLowerCase() === 'test' || nick.toLowerCase() === 'тест') {
                     delete cloudDatabase.recruits[nick];
                     continue;
@@ -2443,7 +2760,7 @@ Telegram ID;
                 buttonElement.style.borderColor = "#22c55e";
                 buttonElement.style.color = "#22c55e";
                 document.getElementById('board').scrollIntoView({ behavior: 'smooth' });
-                setLang(currentLang); // Refresh lang tags on button
+                setLang(currentLang);
                 setTimeout(() => {
                     buttonElement.innerHTML = originalText;
                     buttonElement.style.borderColor = "#a855f7";
