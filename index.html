@@ -946,7 +946,7 @@
                 <div class="avatar-picker-grid" id="avatarPickerGrid"></div>
                 
                 <div class="avatar-picker-title lang-txt" data-ru="Стиль кабинета (Фон):" data-en="Cabinet Style (Bg):" style="margin-top: 10px;">Стиль кабинета (Фон):</div>
-                <div class="avatar-picker-grid" id="bgPickerGrid" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 15px; border-color: rgba(0, 242, 254, 0.3);">
+                <div class="avatar-picker-grid" id="bgPickerGrid" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 15px; border-color: rgba(0, 242, 254, 0.3); max-height: 140px; overflow-y: auto; padding-right: 5px;">
                 </div>
 
                 <div class="cabinet-info-list">
@@ -1159,6 +1159,26 @@ Telegram ID;
             "Поддержка": '<i class="fa-solid fa-handshake-angle" title="Поддержка" style="font-size: 14px; margin-left: 6px; color: #22c55e;"></i>'
         };
 
+        const CABINET_BG_OPTIONS = [
+            { val: 'none', col: '#0b121f', img: '' },
+            { val: 'url("bg.png")', img: 'bg.png' },
+            { val: 'url("roster_bg.png")', img: 'roster_bg.png' },
+            { val: 'url("maps_bg.png")', img: 'maps_bg.png' },
+            { val: 'url("chat_bg.png")', img: 'chat_bg.png' },
+            { val: 'url("https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/backgrounds/bg1.webp")', img: 'https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/backgrounds/bg1.webp' },
+            { val: 'url("https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/backgrounds/bg2.webp")', img: 'https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/backgrounds/bg2.webp' },
+            { val: 'url("https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/backgrounds/bg3.webp")', img: 'https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/backgrounds/bg3.webp' },
+            { val: 'url("https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/backgrounds/bg4.webp")', img: 'https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/backgrounds/bg4.webp' },
+            { val: 'url("https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/backgrounds/bg5.webp")', img: 'https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/backgrounds/bg5.webp' },
+            { val: 'url("https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/backgrounds/bg6.webp")', img: 'https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/backgrounds/bg6.webp' },
+            { val: 'url("https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/backgrounds/bg7.webp")', img: 'https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/backgrounds/bg7.webp' },
+            { val: 'url("https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/backgrounds/bg8.webp")', img: 'https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/backgrounds/bg8.webp' },
+            { val: 'url("https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/backgrounds/bg9.webp")', img: 'https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/backgrounds/bg9.webp' },
+            { val: 'url("https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/backgrounds/bg10.webp")', img: 'https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/backgrounds/bg10.webp' },
+            { val: 'url("https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/backgrounds/bg11.webp")', img: 'https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/backgrounds/bg11.webp' },
+            { val: 'url("https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/backgrounds/bg12.webp")', img: 'https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/backgrounds/bg12.webp' }
+        ];
+
         function getRankInsigniaHTML(index) {
             let html = '';
             if (index < 0) index = 0;
@@ -1331,15 +1351,8 @@ Telegram ID;
             // Инициализация фонов кабинета
             const bgPickerGrid = document.getElementById('bgPickerGrid');
             if(bgPickerGrid) {
-                const bgOptions = [
-                    { val: 'none', col: '#0b121f' },
-                    { val: 'url("bg.png")', img: 'bg.png' },
-                    { val: 'url("roster_bg.png")', img: 'roster_bg.png' },
-                    { val: 'url("maps_bg.png")', img: 'maps_bg.png' },
-                    { val: 'url("chat_bg.png")', img: 'chat_bg.png' }
-                ];
                 let bgHtml = '';
-                bgOptions.forEach((opt, index) => {
+                CABINET_BG_OPTIONS.forEach((opt, index) => {
                     let styleStr = opt.img ? `background-image: url('${opt.img}');` : `background-color: ${opt.col};`;
                     bgHtml += `<div class="bg-picker-item" style="${styleStr}" onclick="setCabinetBg(${index}, this)"></div>`;
                 });
@@ -1414,8 +1427,7 @@ Telegram ID;
             document.querySelectorAll('.bg-picker-item').forEach(el => el.classList.remove('selected'));
             if(element) element.classList.add('selected');
             
-            const bgOptions = ['none', 'url("bg.png")', 'url("roster_bg.png")', 'url("maps_bg.png")', 'url("chat_bg.png")'];
-            const val = bgOptions[index];
+            const val = CABINET_BG_OPTIONS[index].val;
             const cabWindow = document.getElementById('cabinetModalWindow');
             
             if (val === 'none') {
