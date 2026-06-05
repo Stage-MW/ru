@@ -143,15 +143,15 @@
         .close-timer-btn:hover { color: #ff0055; }
         
         .training-countdown-title { font-size: 13px; color: #a855f7; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; font-weight: 900; }
-        .cw-countdown-title { font-size: 13px; color: #ff0055; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; font-weight: 900; transition: color 0.3s; }
+        .cw-countdown-title { font-size: 13px; color: #ff0055; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; font-weight: 900; }
         
         .timer-unit-box, .cw-unit-box { background: rgba(15, 23, 42, 0.9); padding: 6px 10px; border-radius: 4px; min-width: 60px; }
         .training-timer-display, .cw-timer-display { display: flex; justify-content: center; gap: 15px; margin-top: 5px; }
         .timer-unit-box { border: 1px solid rgba(0, 242, 254, 0.2); }
-        .cw-unit-box { border: 1px solid rgba(255, 0, 85, 0.2); transition: border-color 0.3s; }
+        .cw-unit-box { border: 1px solid rgba(255, 0, 85, 0.2); }
         .timer-unit-box .num, .cw-unit-box .num { font-size: 20px; color: #fff; font-weight: 900; }
         .timer-unit-box .num { text-shadow: 0 0 10px #00f2fe; }
-        .cw-unit-box .num { text-shadow: 0 0 10px #ff0055; transition: text-shadow 0.3s; }
+        .cw-unit-box .num { text-shadow: 0 0 10px #ff0055; }
         .timer-unit-box .lbl, .cw-unit-box .lbl { font-size: 9px; color: #94a3b8; text-transform: uppercase; margin-top: 2px; font-family: 'Oswald', sans-serif; }
 
         .training-attendance-container { display: flex; gap: 15px; margin-top: 15px; padding-top: 15px; border-top: 1px dashed rgba(255,255,255,0.1); font-family: 'Oswald', sans-serif; text-align: left; }
@@ -415,28 +415,14 @@
 
         /* --- ЭКРАН ЗАГРУЗКИ (BOOT SEQUENCE) --- */
         #bootScreen {
-            position: fixed; inset: 0; background-color: #02050a; z-index: 99999;
-            display: flex; justify-content: center; align-items: center;
-            transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.8s;
+            position: fixed; inset: 0; background-color: #02050a; z-index: 99999; display: flex; flex-direction: column; justify-content: flex-end; padding: 50px 30px; font-family: 'Orbitron', monospace; color: #22c55e; text-shadow: 0 0 8px #22c55e; transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.6s;
         }
         #bootScreen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-
-        .stage-assemble-loader { display: flex; gap: clamp(8px, 1.5vw, 25px); font-family: 'Orbitron', sans-serif; font-size: clamp(45px, 9vw, 100px); font-weight: 900; text-transform: uppercase; color: #ffffff; }
-        .boot-letter { display: inline-block; opacity: 0; animation: flyInWord 1.2s cubic-bezier(0.075, 0.82, 0.165, 1) forwards; }
-        .boot-letter.left { transform: translateX(-120vw) scale(0.4) skewX(20deg); }
-        .boot-letter.center { transform: translateY(-120vh) scale(0); }
-        .boot-letter.right { transform: translateX(120vw) scale(0.4) skewX(-20deg); }
-        .boot-letter:nth-child(1) { animation-delay: 0.1s; }
-        .boot-letter:nth-child(2) { animation-delay: 0.25s; }
-        .boot-letter:nth-child(5) { animation-delay: 0.15s; }
-        .boot-letter:nth-child(4) { animation-delay: 0.3s; }
-        .boot-letter:nth-child(3) { animation-delay: 0.45s; }
-
-        @keyframes flyInWord {
-            0% { opacity: 0; }
-            65% { opacity: 1; transform: translate(0, 0) scale(1.2) skewX(0deg); color: #00f2fe; text-shadow: 0 0 40px #00f2fe, 0 0 70px #a855f7; }
-            100% { opacity: 1; transform: translate(0, 0) scale(1) skewX(0deg); color: #ffffff; text-shadow: 0 0 20px #00f2fe; }
-        }
+        .terminal-line { font-size: clamp(14px, 3vw, 18px); margin-bottom: 10px; opacity: 0; animation: typeLine 0.1s forwards; letter-spacing: 1px; text-transform: uppercase; }
+        .terminal-line.granted { color: #00f2fe; text-shadow: 0 0 15px #00f2fe; font-size: clamp(22px, 5vw, 30px); font-weight: 900; margin-top: 25px; animation: pulseText 1s infinite alternate, typeLine 0.1s forwards; }
+        
+        @keyframes typeLine { to { opacity: 1; } }
+        @keyframes pulseText { from { text-shadow: 0 0 10px #00f2fe; } to { text-shadow: 0 0 25px #00f2fe, 0 0 10px #00f2fe; } }
 
         @media (max-width: 768px) {
             .nav-bar { 
@@ -470,14 +456,8 @@
             .avatar-picker-grid { grid-template-columns: repeat(4, 1fr); max-height: 180px; overflow-y: auto; }
             .modal-window { padding: 20px; }
             .online-widget { bottom: 60px; padding: 5px 8px; }
-
-            /* Мобильная адаптация чата */
-            .chat-system-wrapper { height: calc(100vh - 140px); margin-top: 10px; border-radius: 0; border-left: none; border-right: none; }
-            .chat-input-area { padding: 10px; background: rgba(2, 5, 10, 0.95); flex-wrap: nowrap; }
-            .chat-input-area input { font-size: 16px; padding: 10px 12px; border-radius: 6px; }
-            .chat-input-area button { padding: 0 20px; }
-            .chat-msg { padding: 10px 12px; font-size: 13px; }
-            .chat-msg .text { padding-bottom: 15px; }
+            .chat-system-wrapper { height: 70vh; margin-top: 20px; }
+            .chat-msg .text { padding-right: 10px; padding-bottom: 25px; }
             .chat-msg .chat-actions { right: 10px; bottom: 5px; }
         }
     </style>
@@ -487,13 +467,7 @@
     <canvas id="sparksCanvas"></canvas>
 
     <div id="bootScreen">
-        <div class="stage-assemble-loader">
-            <span class="boot-letter left">S</span>
-            <span class="boot-letter left">T</span>
-            <span class="boot-letter center">A</span>
-            <span class="boot-letter right">G</span>
-            <span class="boot-letter right">E</span>
-        </div>
+        <div class="terminal-content" id="terminalContent"></div>
     </div>
 
     <div class="online-widget glassmorphism" id="onlineWidget" title="Бойцы в сети">
@@ -1268,6 +1242,84 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             return false;
         }
 
+        window.addEventListener('DOMContentLoaded', () => {
+            const avatarPickerGrid = document.getElementById('avatarPickerGrid');
+            if(avatarPickerGrid) {
+                let avatarsHtml = '';
+                for(let i=1; i<=32; i++) {
+                    let avUrl = `https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/avatars/avatar${i}.png?v=2`;
+                    avatarsHtml += `<div class="avatar-picker-item" style="background-image: url('${avUrl}');" onclick="selectProfileAvatar('${avUrl}', this)"></div>`;
+                }
+                avatarPickerGrid.innerHTML = avatarsHtml;
+            }
+
+            const bgPickerGrid = document.getElementById('bgPickerGrid');
+            if(bgPickerGrid) {
+                let bgHtml = '';
+                CABINET_BG_OPTIONS.forEach((opt, index) => {
+                    let styleStr = opt.img ? `background-image: url('${opt.img}');` : `background-color: ${opt.col};`;
+                    bgHtml += `<div class="bg-picker-item" style="${styleStr}" onclick="setCabinetBg(${index}, this)"></div>`;
+                });
+                bgPickerGrid.innerHTML = bgHtml;
+            }
+
+            setLang(currentLang); 
+
+            applyGlobalKickedFilters();
+            renderLocalRecruits();
+            generateTacticalMapsGrid();
+            initTrainingCountdown(); 
+            initCwCountdown();
+            initCabinetBg();
+            
+            if (localStorage.getItem('stage_team_logged') === 'true' || localStorage.getItem('stage_authorized') === 'true') { 
+                unlockTeamFeatures(); 
+                refreshMenuCabinetAvatar();
+                secretTgBox.style.display = 'block'; 
+                recruitBoxBtn.style.display = 'none';
+            }
+            if (localStorage.getItem('stage_leader_session') === 'true') { activateLeaderMode(); }
+            
+            setupDragAndDrop();
+
+            const sections = document.querySelectorAll('section');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('section-active'); });
+            }, { threshold: 0.1 });
+            sections.forEach(s => observer.observe(s));
+
+            syncWithCloud().then(() => {
+                if (checkBanAndLogout()) return;
+                applyGlobalKickedFilters();
+                renderLocalRecruits();
+                applyLeaderStatusColors();
+                initTrainingCountdown();
+                initCwCountdown();
+                renderChat();
+            });
+
+            setInterval(() => {
+                syncWithCloud().then(() => {
+                    if (checkBanAndLogout()) return;
+                    applyGlobalKickedFilters();
+                    renderLocalRecruits();
+                    applyLeaderStatusColors();
+                    renderAttendanceListsOnSite();
+                    initCwCountdown(); 
+                    renderChat();
+                });
+            }, 30000);
+
+            setInterval(async () => {
+                let myTg = localStorage.getItem('stage_user_registered_tg');
+                if(myTg && cloudDatabase.metadata[myTg]) {
+                    cloudDatabase.metadata[myTg].lastActive = Date.now();
+                    await saveToCloud();
+                    updateOnlineWidget();
+                }
+            }, 60000);
+        });
+
         // --- ЛОГИКА ФОНА КАБИНЕТА ---
         function initCabinetBg() {
             const savedIndex = localStorage.getItem('stage_cab_bg') || '0';
@@ -1287,6 +1339,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             if (val === 'none') {
                 cabWindow.style.setProperty('background', 'rgba(15, 23, 42, 0.85)', 'important');
             } else {
+                // Измененный градиент для видимости картинки (opacity 0.65 - 0.85)
                 cabWindow.style.setProperty('background', `linear-gradient(rgba(2, 5, 10, 0.65), rgba(2, 5, 10, 0.85)), ${val}`, 'important');
                 cabWindow.style.setProperty('background-size', 'cover', 'important');
                 cabWindow.style.setProperty('background-position', 'center', 'important');
@@ -2002,41 +2055,32 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 return;
             }
 
-            const CW_DURATION = 2 * 60 * 60 * 1000; 
+            if (cloudDatabase.cwTime <= Date.now()) {
+                if (!cloudDatabase.cwNotified) {
+                    triggerCwNotification();
+                }
+                cwCountdownWidget.style.display = 'none';
+                return;
+            }
 
             cwCountdownWidget.style.display = 'block';
             if(isLeaderMode) { btnCloseCwTimer.style.display = 'block'; }
 
             function updateCwTimer() {
-                const now = Date.now();
-                const timeToStart = cloudDatabase.cwTime - now;
-                const timeToEnd = (cloudDatabase.cwTime + CW_DURATION) - now;
-
-                const titleEl = document.querySelector('.cw-countdown-title');
-                let targetDiff = 0;
-
-                if (timeToStart > 0) {
-                    titleEl.innerHTML = "🔥 До начала Клановых Боёв:";
-                    titleEl.style.color = "#ff0055";
-                    cwCountdownWidget.style.borderColor = "#ff0055";
-                    targetDiff = timeToStart;
-                } else if (timeToEnd > 0) {
-                    titleEl.innerHTML = "⚔️ БОЙ АКТИВЕН! Окончание через:";
-                    titleEl.style.color = "#00f2fe"; 
-                    cwCountdownWidget.style.borderColor = "#00f2fe";
-                    targetDiff = timeToEnd;
-                    
-                    if (!cloudDatabase.cwNotified) { triggerCwNotification(); }
-                } else {
+                const diff = cloudDatabase.cwTime - Date.now();
+                if (diff <= 0) {
                     cwCountdownWidget.style.display = 'none';
                     clearInterval(cwCountdownIntervalId);
+                    if (!cloudDatabase.cwNotified) {
+                        triggerCwNotification();
+                    }
                     return;
                 }
 
-                const days = Math.floor(targetDiff / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((targetDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((targetDiff % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((targetDiff % (1000 * 60)) / 1000);
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
                 document.getElementById('cwTimerDays').textContent = days.toString().padStart(2, '0');
                 document.getElementById('cwTimerHours').textContent = hours.toString().padStart(2, '0');
@@ -2250,7 +2294,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 initCwCountdown();
                 alert(t("Верификация пройдена успешно. Добро пожаловать в тактический штаб STAGE!", "Verification successful. Welcome to STAGE Tactical HQ!", "验证成功。欢迎来到 STAGE 战术指挥部！"));
             } else {
-                alert(t("Ошибка доступа! Неверное сочетание Логина (ТГ) и Пароля.", "Access Error! Invalid TG Login and Password combination.", "访问错误！无效的 TG 登录名 и 密码组合。"));
+                alert(t("Ошибка доступа! Неверное сочетание Логина (ТГ) и Пароля.", "Access Error! Invalid TG Login and Password combination.", "访问错误！无效的 TG 登录名和密码组合。"));
             }
         });
 
@@ -2826,6 +2870,18 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
         }
         animateSparks();
 
+        // --- ЭКРАН ЗАГРУЗКИ ТЕРМИНАЛА (BOOT SEQUENCE) ---
+        const bootScreen = document.getElementById('bootScreen');
+        const termContent = document.getElementById('terminalContent');
+        const bootLines = [
+            "Инициализация системы STAGE_OS v2.0...",
+            "Установка защищенного соединения...",
+            "Проверка протоколов безопасности...",
+            "Загрузка тактических карт флота...",
+            "Синхронизация с серверами авторизации...",
+            "ДОСТУП РАЗРЕШЕН"
+        ];
+
         function playTerminalSound() {
             try {
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -2845,83 +2901,30 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             } catch(e) { console.warn("Аудио заблокировано браузером"); }
         }
 
-        // Логика заставки сборки названия клана
-        function runAssembleBootSequence() {
-            const bootScreen = document.getElementById('bootScreen');
-            
-            // Включаем фирменный звуковой сигнал в пик анимации (через 0.7 сек после старта)
-            setTimeout(() => {
-                playTerminalSound();
-            }, 700);
-
-            // Даем анимации полностью отыграть, зафиксировать слово и плавно гасим экран
-            setTimeout(() => {
-                if (bootScreen) {
-                    bootScreen.classList.add('hidden');
+        let bootLineIndex = 0;
+        function showNextBootLine() {
+            if (bootLineIndex < bootLines.length) {
+                const p = document.createElement('div');
+                p.className = 'terminal-line';
+                if (bootLineIndex === bootLines.length - 1) {
+                    p.classList.add('granted');
+                    playTerminalSound(); 
                 }
-            }, 2300); // Оптимальное время удержания заставки на экране
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            applyGlobalKickedFilters();
-            renderLocalRecruits();
-            generateTacticalMapsGrid();
-            initTrainingCountdown(); 
-            initCwCountdown();
-            initCabinetBg();
-            
-            if (localStorage.getItem('stage_team_logged') === 'true' || localStorage.getItem('stage_authorized') === 'true') { 
-                unlockTeamFeatures(); 
-                refreshMenuCabinetAvatar();
-                secretTgBox.style.display = 'block'; 
-                recruitBoxBtn.style.display = 'none';
+                p.textContent = bootLines[bootLineIndex];
+                termContent.appendChild(p);
+                bootLineIndex++;
+                
+                if (bootLineIndex === bootLines.length) {
+                    setTimeout(() => { bootScreen.classList.add('hidden'); }, 1200);
+                } else {
+                    setTimeout(showNextBootLine, Math.random() * 300 + 150);
+                }
             }
-            if (localStorage.getItem('stage_leader_session') === 'true') { activateLeaderMode(); }
-            
-            setupDragAndDrop();
-
-            const sections = document.querySelectorAll('section');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('section-active'); });
-            }, { threshold: 0.1 });
-            sections.forEach(s => observer.observe(s));
-
-            // Запуск нашей новой анимации заставки
-            runAssembleBootSequence();
-
-            // Облачная синхронизация
-            syncWithCloud().then(() => {
-                if (checkBanAndLogout()) return;
-                applyGlobalKickedFilters();
-                renderLocalRecruits();
-                applyLeaderStatusColors();
-                initTrainingCountdown();
-                initCwCountdown();
-                renderChat();
-            });
-
-            setInterval(() => {
-                syncWithCloud().then(() => {
-                    if (checkBanAndLogout()) return;
-                    applyGlobalKickedFilters();
-                    renderLocalRecruits();
-                    applyLeaderStatusColors();
-                    renderAttendanceListsOnSite();
-                    initCwCountdown(); 
-                    renderChat();
-                });
-            }, 30000);
-
-            setInterval(async () => {
-                let myTg = localStorage.getItem('stage_user_registered_tg');
-                if(myTg && cloudDatabase.metadata[myTg]) {
-                    cloudDatabase.metadata[myTg].lastActive = Date.now();
-                    await saveToCloud();
-                    updateOnlineWidget();
-                }
-            }, 60000);
+        }
+        
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(showNextBootLine, 300);
         });
-
     </script>
 </body>
 </html>
