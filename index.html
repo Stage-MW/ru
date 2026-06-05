@@ -66,7 +66,7 @@
             border: 1px solid rgba(0, 242, 254, 0.3); border-radius: 8px; overflow: hidden;
             z-index: 100; box-shadow: 0 5px 20px rgba(0,0,0,0.6); flex-direction: column; min-width: 130px;
         }
-        .lang-dropdown:hover .lang-dropdown-content, .lang-dropdown:focus-within .lang-dropdown-content { display: flex; }
+        .lang-dropdown:hover .lang-dropdown-content, .lang-dropdown-content.show { display: flex; }
         .lang-dropdown-item {
             padding: 12px 15px; color: #fff; cursor: pointer; font-family: 'Oswald', sans-serif; font-size: 13px;
             transition: background 0.3s, color 0.3s; display: flex; gap: 8px; align-items: center; white-space: nowrap;
@@ -266,8 +266,8 @@
         .lock-overlay-box p { color: #94a3b8; font-size: 14px; line-height: 1.4; }
 
         /* ВСТРОЕННЫЙ ЧАТ НА САЙТЕ */
-        .chat-system-wrapper { width: 100%; max-width: 800px; display: flex; flex-direction: column; height: 500px; max-height: 65vh; border-radius: 12px; overflow: hidden; position: relative; margin-top: 15px;}
-        .chat-messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+        .chat-system-wrapper { width: 100%; max-width: 800px; display: flex; flex-direction: column; height: auto; border-radius: 12px; overflow: hidden; position: relative; margin-top: 15px;}
+        .chat-messages { flex: 1; height: 360px; max-height: 360px; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
         .chat-messages::-webkit-scrollbar { width: 6px; }
         .chat-messages::-webkit-scrollbar-track { background: rgba(2, 5, 10, 0.5); }
         .chat-messages::-webkit-scrollbar-thumb { background: #00f2fe; border-radius: 4px; }
@@ -303,6 +303,10 @@
         .btn-creator:hover { background: #00f2fe; }
         .btn-wiki { border: 2px solid #a855f7; background: rgba(168, 85, 247, 0.15); box-shadow: 0 0 15px rgba(168, 85, 247, 0.2); }
         .btn-wiki:hover { background: #a855f7; box-shadow: 0 0 35px rgba(168, 85, 247, 0.6); color: #ffffff !important; }
+        
+        /* Кнопка MW Stats */
+        .btn-mwstats { border: 2px solid #00f2fe; background: rgba(0, 242, 254, 0.15); box-shadow: 0 0 15px rgba(0, 242, 254, 0.2); }
+        .btn-mwstats:hover { background: #00f2fe; box-shadow: 0 0 35px rgba(0, 242, 254, 0.6); color: #02050a !important; }
 
         .chat-screen { background-image: linear-gradient(rgba(2, 5, 10, 0.75), rgba(2, 5, 10, 0.95)), url('chat_bg.png'); }
         .creators-screen { background-image: linear-gradient(rgba(2, 5, 10, 0.75), rgba(2, 5, 10, 0.95)), url('creators_bg.png'); }
@@ -436,7 +440,7 @@
         }
         #bootScreen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
         .boot-container {
-            display: flex; gap: 5px;
+            display: flex; gap: 5px; align-items: center; justify-content: center;
         }
         .boot-letter {
             font-family: 'Orbitron', sans-serif;
@@ -447,7 +451,7 @@
         }
         .boot-left { animation: flyInLeft 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
         .boot-right { animation: flyInRight 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-        .boot-center { animation: flyInCenter 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .boot-center-impact { animation: flyInCenterImpact 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
 
         @keyframes flyInLeft {
             0% { transform: translateX(-100vw) rotate(-45deg); opacity: 0; }
@@ -457,9 +461,10 @@
             0% { transform: translateX(100vw) rotate(45deg); opacity: 0; }
             100% { transform: translateX(0) rotate(0deg); opacity: 1; }
         }
-        @keyframes flyInCenter {
-            0% { transform: translateY(-100vh) scale(0); opacity: 0; }
-            100% { transform: translateY(0) scale(1); opacity: 1; }
+        @keyframes flyInCenterImpact {
+            0% { transform: translateY(-100vh) scale(3) rotate(180deg); opacity: 0; filter: blur(10px); }
+            40% { transform: translateY(20px) scale(0.8) rotate(-10deg); opacity: 1; filter: blur(0px); text-shadow: 0 0 25px #00f2fe; }
+            100% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; text-shadow: 0 0 50px #fff, 0 0 20px #00f2fe, 0 0 40px #ff0055; }
         }
 
         @media (max-width: 768px) {
@@ -496,14 +501,14 @@
             .online-widget { bottom: 60px; padding: 5px 8px; }
             
             /* Адаптация чата */
-            .chat-system-wrapper { height: auto; max-height: 65vh; margin-top: 15px; width: 100%; border-radius: 8px;}
-            .chat-messages { padding: 15px; }
+            .chat-system-wrapper { height: auto; max-height: none; margin-top: 15px; width: 100%; border-radius: 8px;}
+            .chat-messages { padding: 15px; max-height: 350px; height: 350px; }
             .chat-input-area { padding: 10px; gap: 8px; flex-direction: row; }
-            .chat-input-area input { padding: 10px; font-size: 13px; }
+            .chat-input-area input { padding: 12px 10px; font-size: 16px !important; } /* Убираем зум на iPhone */
             .chat-input-area button { padding: 0 15px; font-size: 15px; }
             .chat-msg .text { padding-right: 40px; padding-bottom: 20px; font-size: 13px;}
             .chat-msg .chat-actions { right: 8px; bottom: 5px; }
-            .lang-dropdown-content { bottom: 100%; top: auto; margin-bottom: 10px; } /* Для телефона открывается вверх */
+            .lang-dropdown-content { bottom: 100%; top: auto; margin-bottom: 10px; }
         }
     </style>
 </head>
@@ -515,7 +520,7 @@
         <div class="boot-container">
             <span class="boot-letter boot-left" style="animation-delay: 0s">S</span>
             <span class="boot-letter boot-left" style="animation-delay: 0.2s">T</span>
-            <span class="boot-letter boot-center" style="animation-delay: 0.4s">A</span>
+            <span class="boot-letter boot-center-impact" style="animation-delay: 0.8s">A</span>
             <span class="boot-letter boot-right" style="animation-delay: 0.2s">G</span>
             <span class="boot-letter boot-right" style="animation-delay: 0s">E</span>
         </div>
@@ -540,9 +545,9 @@
             <div class="lang-dropdown" id="langDropdown" tabindex="0">
                 <span class="nav-link-btn" id="navLangBtn"><i class="fa-solid fa-globe"></i> <span id="currentLangLabel">🇷🇺 RU</span> <i class="fa-solid fa-chevron-down" style="font-size: 10px; margin-left: 3px;"></i></span>
                 <div class="lang-dropdown-content">
-                    <div class="lang-dropdown-item" onclick="selectLang('ru')">🇷🇺 Русский</div>
-                    <div class="lang-dropdown-item" onclick="selectLang('en')">🇬🇧 English</div>
-                    <div class="lang-dropdown-item" onclick="selectLang('zh')">🇨🇳 中文</div>
+                    <div class="lang-dropdown-item" onclick="selectLang('ru'); event.stopPropagation();">🇷🇺 Русский</div>
+                    <div class="lang-dropdown-item" onclick="selectLang('en'); event.stopPropagation();">🇬🇧 English</div>
+                    <div class="lang-dropdown-item" onclick="selectLang('zh'); event.stopPropagation();">🇨🇳 中文</div>
                 </div>
             </div>
             
@@ -707,8 +712,11 @@
             <a href="https://t.me/MwAbymitso" target="_blank" class="social-btn btn-creator"><i class="fa-solid fa-play"></i><span>MwAbymitso</span></a>
             <a href="https://t.me/anubis_MW" target="_blank" class="social-btn btn-creator"><i class="fa-solid fa-video"></i><span>Anubis MW</span></a>
             <a href="https://t.me/MWnewsMPT" target="_blank" class="social-btn btn-creator"><i class="fa-solid fa-newspaper"></i><span>MWnewsMPT</span></a>
-            <div class="sub-section-title lang-txt" data-ru="Полезно" data-en="Useful" data-zh="有用信息">Полезно</div>
+        </div>
+        <div class="sub-section-title lang-txt" data-ru="Полезно" data-en="Useful" data-zh="有用信息">Полезно</div>
+        <div class="social-container">
             <a href="https://wiki.modernwarships.com/ru" target="_blank" class="social-btn btn-wiki"><i class="fa-solid fa-book-open"></i><span>MW WiKi</span></a>
+            <a href="https://mwstats.info/ships?lang=ru" target="_blank" class="social-btn btn-mwstats"><i class="fa-solid fa-ship"></i><span>MW Stats</span></a>
         </div>
     </section>
 
@@ -1087,9 +1095,24 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
 
         window.selectLang = function(lang) {
             setLang(lang);
-            // Убираем фокус с dropdown, чтобы он закрылся на мобильных
-            document.getElementById('langDropdown').blur();
+            // Убираем класс отображения для скрытия меню на телефонах
+            document.querySelector('.lang-dropdown-content').classList.remove('show');
         };
+        
+        // Логика клика для меню языков на телефонах
+        const langDropdown = document.getElementById('langDropdown');
+        const langDropdownContent = document.querySelector('.lang-dropdown-content');
+        
+        langDropdown.addEventListener('click', function(e) {
+            e.stopPropagation();
+            langDropdownContent.classList.toggle('show');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!langDropdown.contains(e.target)) {
+                langDropdownContent.classList.remove('show');
+            }
+        });
 
         const TG_TOKEN = "8640087886:AAGj3tevg54WEW0Qyo-rrtBlT8fRE9RuCDM";
         const TG_CHAT_ID = "-1002619697984"; 
@@ -1382,7 +1405,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             setTimeout(() => {
                 bootScreen.classList.add('hidden');
                 playTerminalSound();
-            }, 2000);
+            }, 2800); // Увеличено время для эффекта буквы A
         });
 
         // --- ЛОГИКА ФОНА КАБИНЕТА ---
@@ -1691,10 +1714,24 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 widget.style.display = 'flex';
                 let html = '';
                 activeUsers.slice(0, 5).forEach(u => {
+                    let displayNick = u.nick;
+                    
+                    // Переименовываем Test в Mitso для админа, или пропускаем других
+                    if(displayNick.toLowerCase() === 'test' || displayNick.toLowerCase() === 'тест') {
+                        if (u.chatId === "22E9E4E8CABB7FCF" || u.rank === t("Глава", "Leader", "队长")) {
+                            displayNick = "Mitso";
+                        } else {
+                            return; // Пропускаем левых тестовых юзеров
+                        }
+                    }
+                    if (u === cloudDatabase.metadata["@bymitso"]) {
+                        displayNick = "Mitso";
+                    }
+
                     html += `
-                    <div class="online-user-item" title="${u.nick}">
+                    <div class="online-user-item" title="${displayNick}">
                         <div class="online-avatar" style="background-image: url('${u.avatar || ''}');"></div>
-                        <span class="online-user-nick">${u.nick}</span>
+                        <span class="online-user-nick">${displayNick}</span>
                     </div>`;
                 });
                 if(activeUsers.length > 5) html += `<div style="font-size: 10px; color:#22c55e; font-weight:bold;">+${activeUsers.length - 5}</div>`;
@@ -2399,6 +2436,13 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             navLoginBtn.innerHTML = `<i class="fa-solid fa-user-gear" style="color:#ff0055;"></i> <span class="lang-txt" data-ru="Админ" data-en="Admin" data-zh="管理员">Админ</span>`;
             navLoginBtn.style.background = "rgba(255, 0, 85, 0.15)"; navLoginBtn.style.borderColor = "#ff0055";
             document.querySelectorAll('.kick-btn').forEach(btn => btn.style.display = 'inline-block');
+            
+            // Защита и принудительное отображение Mitso
+            if(cloudDatabase.metadata && cloudDatabase.metadata["@bymitso"]) {
+                 cloudDatabase.metadata["@bymitso"].nick = "Mitso";
+                 saveToCloud();
+            }
+
             applyLeaderStatusColors();
             renderChat(); 
             setLang(currentLang);
