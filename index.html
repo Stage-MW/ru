@@ -58,6 +58,21 @@
         #navMapsLink:hover, #navBoardLink:hover { color: #c084fc; text-shadow: 0 0 10px rgba(168, 85, 247, 0.6); }
         #navStatsBtn { display: none; color: #eab308; }
         
+        /* ВЫПАДАЮЩЕЕ МЕНЮ ЯЗЫКОВ */
+        .lang-dropdown { position: relative; display: inline-block; outline: none; }
+        .lang-dropdown-content {
+            display: none; position: absolute; top: 100%; right: 0; margin-top: 10px;
+            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 242, 254, 0.3); border-radius: 8px; overflow: hidden;
+            z-index: 100; box-shadow: 0 5px 20px rgba(0,0,0,0.6); flex-direction: column; min-width: 130px;
+        }
+        .lang-dropdown:hover .lang-dropdown-content, .lang-dropdown:focus-within .lang-dropdown-content { display: flex; }
+        .lang-dropdown-item {
+            padding: 12px 15px; color: #fff; cursor: pointer; font-family: 'Oswald', sans-serif; font-size: 13px;
+            transition: background 0.3s, color 0.3s; display: flex; gap: 8px; align-items: center; white-space: nowrap;
+        }
+        .lang-dropdown-item:hover { background: rgba(0, 242, 254, 0.2); color: #00f2fe; }
+
         #navCabinetBtn { 
             display: none; width: 32px; height: 32px; border-radius: 50%; border: 2px solid #a855f7; 
             background: #02050a; cursor: pointer; box-shadow: 0 0 12px rgba(168, 85, 247, 0.5); 
@@ -124,7 +139,7 @@
 
         /* СОСТАВ КЛАНА */
         .roster-screen { background-image: linear-gradient(rgba(2, 5, 10, 0.75), rgba(2, 5, 10, 0.9)), url('roster_bg.png'); }
-        .roster-container { max-width: 1200px; width: 100%; }
+        .roster-container { max-width: 1200px; width: 100%; margin-bottom: 30px;}
         .rank-section { border-radius: 6px; padding: 25px; position: relative; width: 100%; }
         .rank-title { font-family: 'Orbitron', sans-serif; font-size: clamp(16px, 4vw, 20px); color: #00f2fe; letter-spacing: 2px; margin-bottom: 20px; text-transform: uppercase; text-align: center; border-bottom: 1px dashed rgba(0, 242, 254, 0.2); padding-bottom: 10px; }
         
@@ -205,7 +220,7 @@
         .toggle-roster-btn { display: none; background: rgba(0, 242, 254, 0.1); border: 1px solid #00f2fe; color: #00f2fe; padding: 10px 20px; font-family: 'Orbitron', sans-serif; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; border-radius: 4px; margin: 20px auto 0; transition: all 0.3s ease; }
         .toggle-roster-btn:hover { background: #00f2fe; color: #02050a; box-shadow: 0 0 15px rgba(0,242,254,0.4); }
 
-        .secret-tg-box { display: none; width: 100%; max-width: 500px; margin-top: 25px; text-align: center; background: rgba(0, 242, 254, 0.1); border: 2px solid #00f2fe; border-radius: 6px; padding: 20px; box-shadow: 0 0 25px rgba(0, 242, 254, 0.2); position: relative; }
+        .secret-tg-box { display: none; width: 100%; max-width: 500px; margin-bottom: 25px; text-align: center; background: rgba(0, 242, 254, 0.1); border: 2px solid #00f2fe; border-radius: 6px; padding: 20px; box-shadow: 0 0 25px rgba(0, 242, 254, 0.2); position: relative; }
         .secret-tg-box p { font-family: 'Orbitron', sans-serif; font-size: 16px; color: #fff; margin-bottom: 15px; letter-spacing: 1px; }
         .btn-reset-auth { display: block; background: none; border: none; color: rgba(255, 255, 255, 0.3); font-size: 11px; text-decoration: underline; cursor: pointer; margin-top: 15px; font-family: inherit; width: 100%; text-align: center; transition: color 0.2s; }
         .btn-reset-auth:hover { color: #ff0055; }
@@ -251,7 +266,7 @@
         .lock-overlay-box p { color: #94a3b8; font-size: 14px; line-height: 1.4; }
 
         /* ВСТРОЕННЫЙ ЧАТ НА САЙТЕ */
-        .chat-system-wrapper { width: 100%; max-width: 800px; margin: 40px auto; display: flex; flex-direction: column; height: 60vh; border-radius: 12px; overflow: hidden; position: relative; }
+        .chat-system-wrapper { width: 100%; max-width: 800px; display: flex; flex-direction: column; height: 500px; max-height: 65vh; border-radius: 12px; overflow: hidden; position: relative; margin-top: 15px;}
         .chat-messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
         .chat-messages::-webkit-scrollbar { width: 6px; }
         .chat-messages::-webkit-scrollbar-track { background: rgba(2, 5, 10, 0.5); }
@@ -413,16 +428,39 @@
         /* --- ЭФФЕКТ ИСКР --- */
         #sparksCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 5; }
 
-        /* --- ЭКРАН ЗАГРУЗКИ (BOOT SEQUENCE) --- */
+        /* --- ЭКРАН ЗАГРУЗКИ С АНИМАЦИЕЙ БУКВ STAGE --- */
         #bootScreen {
-            position: fixed; inset: 0; background-color: #02050a; z-index: 99999; display: flex; flex-direction: column; justify-content: flex-end; padding: 50px 30px; font-family: 'Orbitron', monospace; color: #22c55e; text-shadow: 0 0 8px #22c55e; transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.6s;
+            position: fixed; inset: 0; background-color: #02050a; z-index: 99999;
+            display: flex; justify-content: center; align-items: center; 
+            transition: opacity 0.6s ease, visibility 0.6s;
         }
         #bootScreen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-        .terminal-line { font-size: clamp(14px, 3vw, 18px); margin-bottom: 10px; opacity: 0; animation: typeLine 0.1s forwards; letter-spacing: 1px; text-transform: uppercase; }
-        .terminal-line.granted { color: #00f2fe; text-shadow: 0 0 15px #00f2fe; font-size: clamp(22px, 5vw, 30px); font-weight: 900; margin-top: 25px; animation: pulseText 1s infinite alternate, typeLine 0.1s forwards; }
-        
-        @keyframes typeLine { to { opacity: 1; } }
-        @keyframes pulseText { from { text-shadow: 0 0 10px #00f2fe; } to { text-shadow: 0 0 25px #00f2fe, 0 0 10px #00f2fe; } }
+        .boot-container {
+            display: flex; gap: 5px;
+        }
+        .boot-letter {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(50px, 12vw, 120px);
+            font-weight: 900; color: #00f2fe;
+            text-shadow: 0 0 25px #00f2fe, 0 0 10px #ff0055;
+            opacity: 0; display: inline-block;
+        }
+        .boot-left { animation: flyInLeft 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .boot-right { animation: flyInRight 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .boot-center { animation: flyInCenter 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+
+        @keyframes flyInLeft {
+            0% { transform: translateX(-100vw) rotate(-45deg); opacity: 0; }
+            100% { transform: translateX(0) rotate(0deg); opacity: 1; }
+        }
+        @keyframes flyInRight {
+            0% { transform: translateX(100vw) rotate(45deg); opacity: 0; }
+            100% { transform: translateX(0) rotate(0deg); opacity: 1; }
+        }
+        @keyframes flyInCenter {
+            0% { transform: translateY(-100vh) scale(0); opacity: 0; }
+            100% { transform: translateY(0) scale(1); opacity: 1; }
+        }
 
         @media (max-width: 768px) {
             .nav-bar { 
@@ -456,9 +494,16 @@
             .avatar-picker-grid { grid-template-columns: repeat(4, 1fr); max-height: 180px; overflow-y: auto; }
             .modal-window { padding: 20px; }
             .online-widget { bottom: 60px; padding: 5px 8px; }
-            .chat-system-wrapper { height: 70vh; margin-top: 20px; }
-            .chat-msg .text { padding-right: 10px; padding-bottom: 25px; }
-            .chat-msg .chat-actions { right: 10px; bottom: 5px; }
+            
+            /* Адаптация чата */
+            .chat-system-wrapper { height: auto; max-height: 65vh; margin-top: 15px; width: 100%; border-radius: 8px;}
+            .chat-messages { padding: 15px; }
+            .chat-input-area { padding: 10px; gap: 8px; flex-direction: row; }
+            .chat-input-area input { padding: 10px; font-size: 13px; }
+            .chat-input-area button { padding: 0 15px; font-size: 15px; }
+            .chat-msg .text { padding-right: 40px; padding-bottom: 20px; font-size: 13px;}
+            .chat-msg .chat-actions { right: 8px; bottom: 5px; }
+            .lang-dropdown-content { bottom: 100%; top: auto; margin-bottom: 10px; } /* Для телефона открывается вверх */
         }
     </style>
 </head>
@@ -467,7 +512,13 @@
     <canvas id="sparksCanvas"></canvas>
 
     <div id="bootScreen">
-        <div class="terminal-content" id="terminalContent"></div>
+        <div class="boot-container">
+            <span class="boot-letter boot-left" style="animation-delay: 0s">S</span>
+            <span class="boot-letter boot-left" style="animation-delay: 0.2s">T</span>
+            <span class="boot-letter boot-center" style="animation-delay: 0.4s">A</span>
+            <span class="boot-letter boot-right" style="animation-delay: 0.2s">G</span>
+            <span class="boot-letter boot-right" style="animation-delay: 0s">E</span>
+        </div>
     </div>
 
     <div class="online-widget glassmorphism" id="onlineWidget" title="Бойцы в сети">
@@ -486,7 +537,15 @@
             <a href="#creators" class="lang-txt" data-ru="Креаторы" data-en="Creators" data-zh="创作者">Креаторы</a>
         </div>
         <div class="nav-links-right">
-            <span class="nav-link-btn" id="navLangBtn" onclick="toggleLanguage()"><i class="fa-solid fa-globe"></i> <span id="currentLangLabel">RU</span></span>
+            <div class="lang-dropdown" id="langDropdown" tabindex="0">
+                <span class="nav-link-btn" id="navLangBtn"><i class="fa-solid fa-globe"></i> <span id="currentLangLabel">🇷🇺 RU</span> <i class="fa-solid fa-chevron-down" style="font-size: 10px; margin-left: 3px;"></i></span>
+                <div class="lang-dropdown-content">
+                    <div class="lang-dropdown-item" onclick="selectLang('ru')">🇷🇺 Русский</div>
+                    <div class="lang-dropdown-item" onclick="selectLang('en')">🇬🇧 English</div>
+                    <div class="lang-dropdown-item" onclick="selectLang('zh')">🇨🇳 中文</div>
+                </div>
+            </div>
+            
             <span class="nav-link-btn lang-txt" id="navLawBtn" data-ru="Соглашение" data-en="Terms" data-zh="协议">Соглашение</span>
             <span class="nav-link-btn lang-txt" id="navStatsBtn" data-ru='<i class="fa-solid fa-chart-simple"></i> Статистика' data-en='<i class="fa-solid fa-chart-simple"></i> Stats' data-zh='<i class="fa-solid fa-chart-simple"></i> 统计'><i class="fa-solid fa-chart-simple"></i> Статистика</span>
             <div id="navCabinetBtn" title="Личный кабинет"><i class="fa-solid fa-user-shield" id="navCabinetDefaultIcon"></i></div>
@@ -576,12 +635,14 @@
             </div>
         </div>
 
-        <div class="secret-tg-box glassmorphism" id="secretTgBox">
-            <p class="lang-txt" data-ru="ДОСТУП РАЗРЕШЕН. ДОБРО ПОЖАЛОВАТЬ ВО ФЛОТ" data-en="ACCESS GRANTED. WELCOME TO THE FLEET" data-zh="访问已授权。欢迎加入舰队">ДОСТУП РАЗРЕШЕН. ДОБРО ПОЖАЛОВАТЬ ВО ФЛОТ</p>
-            <a href="https://t.me/+0kNCkvxktdozZTYy" target="_blank" class="social-btn btn-telegram" style="margin: 0 auto; max-width: 300px;">
-                <i class="fa-solid fa-paper-plane"></i><span class="lang-txt" data-ru="Войти в чат клана" data-en="Enter Clan Chat" data-zh="进入战队聊天">Войти в чат клана</span>
-            </a>
-            <button type="button" class="btn-reset-auth lang-txt" onclick="resetUserAuth()" data-ru="Выйти из аккаунта (Сбросить допуск)" data-en="Logout (Reset Access)" data-zh="退出登录 (重置访问权限)">Выйти из аккаунта (Сбросить допуск)</button>
+        <div class="chat-system-wrapper glassmorphism" id="chatSystemWrapper">
+            <div class="sub-section-title lang-txt" style="margin-top: 15px;" data-ru="Чат" data-en="Chat" data-zh="聊天">Чат</div>
+            <div class="chat-messages" id="chatMessages">
+                </div>
+            <div class="chat-input-area">
+                <input type="text" id="chatInput" class="lang-txt" data-ru="Введите сообщение..." data-en="Type a message..." data-zh="输入消息..." placeholder="Введите сообщение...">
+                <button id="sendChatBtn"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
         </div>
 
         <div class="recruit-box" id="recruitBoxBtn">
@@ -620,6 +681,14 @@
     <section id="chat" class="chat-screen">
         <h2 class="section-title lang-txt" data-ru="Наши чаты" data-en="Our Chats" data-zh="我们的聊天室">Наши чаты</h2>
         
+        <div class="secret-tg-box glassmorphism" id="secretTgBox">
+            <p class="lang-txt" data-ru="ДОСТУП РАЗРЕШЕН. ДОБРО ПОЖАЛОВАТЬ ВО ФЛОТ" data-en="ACCESS GRANTED. WELCOME TO THE FLEET" data-zh="访问已授权。欢迎加入舰队">ДОСТУП РАЗРЕШЕН. ДОБРО ПОЖАЛОВАТЬ ВО ФЛОТ</p>
+            <a href="https://t.me/+0kNCkvxktdozZTYy" target="_blank" class="social-btn btn-telegram" style="margin: 0 auto; max-width: 300px;">
+                <i class="fa-solid fa-paper-plane"></i><span class="lang-txt" data-ru="Войти в чат клана" data-en="Enter Clan Chat" data-zh="进入战队聊天">Войти в чат клана</span>
+            </a>
+            <button type="button" class="btn-reset-auth lang-txt" onclick="resetUserAuth()" data-ru="Выйти из аккаунта (Сбросить допуск)" data-en="Logout (Reset Access)" data-zh="退出登录 (重置访问权限)">Выйти из аккаунта (Сбросить допуск)</button>
+        </div>
+
         <div class="social-container">
             <a href="https://discord.gg/U3zekgCn7" target="_blank" class="social-btn btn-discord"><i class="fa-brands fa-discord"></i><span>Discord</span></a>
             
@@ -630,17 +699,6 @@
             </div>
             <a href="https://telemost.yandex.ru/j/02002400708623" id="telemostActualBtn" target="_blank" class="social-btn btn-telemost" style="display: none;"><i class="fa-solid fa-headset"></i><span>Яндекс Телемост</span></a>
         </div>
-
-        <div class="chat-system-wrapper glassmorphism" id="chatSystemWrapper">
-            <div class="sub-section-title lang-txt" style="margin-top: 15px;" data-ru="Чат" data-en="Chat" data-zh="聊天">Чат</div>
-            <div class="chat-messages" id="chatMessages">
-                </div>
-            <div class="chat-input-area">
-                <input type="text" id="chatInput" class="lang-txt" data-ru="Введите сообщение..." data-en="Type a message..." data-zh="输入消息..." placeholder="Введите сообщение...">
-                <button id="sendChatBtn"><i class="fa-solid fa-paper-plane"></i></button>
-            </div>
-        </div>
-
     </section>
 
     <section id="creators" class="creators-screen">
@@ -997,6 +1055,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
     <script>
         // ИНИЦИАЛИЗАЦИЯ ИНТЕРНАЦИОНАЛИЗАЦИИ
         let currentLang = localStorage.getItem('stage_lang') || 'ru';
+        const langFlags = { ru: '🇷🇺 RU', en: '🇬🇧 EN', zh: '🇨🇳 ZH' };
         
         function t(ruText, enText, zhText = enText) { 
             if (currentLang === 'en') return enText;
@@ -1007,7 +1066,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
         function setLang(lang) {
             currentLang = lang;
             localStorage.setItem('stage_lang', lang);
-            document.getElementById('currentLangLabel').textContent = lang.toUpperCase();
+            document.getElementById('currentLangLabel').textContent = langFlags[lang];
 
             document.querySelectorAll('.lang-txt').forEach(el => {
                 let txt = el.getAttribute('data-' + lang);
@@ -1026,11 +1085,10 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             }
         }
 
-        window.toggleLanguage = function() {
-            let nextLang = 'ru';
-            if (currentLang === 'ru') nextLang = 'en';
-            else if (currentLang === 'en') nextLang = 'zh';
-            setLang(nextLang);
+        window.selectLang = function(lang) {
+            setLang(lang);
+            // Убираем фокус с dropdown, чтобы он закрылся на мобильных
+            document.getElementById('langDropdown').blur();
         };
 
         const TG_TOKEN = "8640087886:AAGj3tevg54WEW0Qyo-rrtBlT8fRE9RuCDM";
@@ -1318,6 +1376,13 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                     updateOnlineWidget();
                 }
             }, 60000);
+            
+            // Логика скрытия анимации загрузки
+            const bootScreen = document.getElementById('bootScreen');
+            setTimeout(() => {
+                bootScreen.classList.add('hidden');
+                playTerminalSound();
+            }, 2000);
         });
 
         // --- ЛОГИКА ФОНА КАБИНЕТА ---
@@ -2870,18 +2935,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
         }
         animateSparks();
 
-        // --- ЭКРАН ЗАГРУЗКИ ТЕРМИНАЛА (BOOT SEQUENCE) ---
-        const bootScreen = document.getElementById('bootScreen');
-        const termContent = document.getElementById('terminalContent');
-        const bootLines = [
-            "Инициализация системы STAGE_OS v2.0...",
-            "Установка защищенного соединения...",
-            "Проверка протоколов безопасности...",
-            "Загрузка тактических карт флота...",
-            "Синхронизация с серверами авторизации...",
-            "ДОСТУП РАЗРЕШЕН"
-        ];
-
         function playTerminalSound() {
             try {
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -2900,31 +2953,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 osc.stop(ctx.currentTime + 0.3);
             } catch(e) { console.warn("Аудио заблокировано браузером"); }
         }
-
-        let bootLineIndex = 0;
-        function showNextBootLine() {
-            if (bootLineIndex < bootLines.length) {
-                const p = document.createElement('div');
-                p.className = 'terminal-line';
-                if (bootLineIndex === bootLines.length - 1) {
-                    p.classList.add('granted');
-                    playTerminalSound(); 
-                }
-                p.textContent = bootLines[bootLineIndex];
-                termContent.appendChild(p);
-                bootLineIndex++;
-                
-                if (bootLineIndex === bootLines.length) {
-                    setTimeout(() => { bootScreen.classList.add('hidden'); }, 1200);
-                } else {
-                    setTimeout(showNextBootLine, Math.random() * 300 + 150);
-                }
-            }
-        }
-        
-        window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(showNextBootLine, 300);
-        });
     </script>
 </body>
 </html>
