@@ -50,28 +50,13 @@
         .nav-bar a, .nav-bar span.nav-link-btn {
             color: #ffffff; text-decoration: none; text-transform: uppercase; font-size: 13px;
             letter-spacing: 1.5px; transition: color 0.3s, text-shadow 0.3s; white-space: nowrap; cursor: pointer;
-            display: flex; align-items: center; gap: 5px;
+            display: flex; align-items: center; gap: 5px; user-select: none;
         }
         .nav-bar a:hover, .nav-bar span.nav-link-btn:hover { color: #00f2fe; text-shadow: 0 0 10px rgba(0, 242, 254, 0.6); }
 
         #navMapsLink, #navBoardLink { color: #a855f7; }
         #navMapsLink:hover, #navBoardLink:hover { color: #c084fc; text-shadow: 0 0 10px rgba(168, 85, 247, 0.6); }
         #navStatsBtn { display: none; color: #eab308; }
-        
-        /* ВЫПАДАЮЩЕЕ МЕНЮ ЯЗЫКОВ */
-        .lang-dropdown { position: relative; display: inline-block; outline: none; }
-        .lang-dropdown-content {
-            display: none; position: absolute; top: 100%; right: 0; margin-top: 10px;
-            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 242, 254, 0.3); border-radius: 8px; overflow: hidden;
-            z-index: 100; box-shadow: 0 5px 20px rgba(0,0,0,0.6); flex-direction: column; min-width: 130px;
-        }
-        .lang-dropdown:hover .lang-dropdown-content, .lang-dropdown-content.show { display: flex; }
-        .lang-dropdown-item {
-            padding: 12px 15px; color: #fff; cursor: pointer; font-family: 'Oswald', sans-serif; font-size: 13px;
-            transition: background 0.3s, color 0.3s; display: flex; gap: 8px; align-items: center; white-space: nowrap;
-        }
-        .lang-dropdown-item:hover { background: rgba(0, 242, 254, 0.2); color: #00f2fe; }
 
         #navCabinetBtn { 
             display: none; width: 32px; height: 32px; border-radius: 50%; border: 2px solid #a855f7; 
@@ -432,39 +417,31 @@
         /* --- ЭФФЕКТ ИСКР --- */
         #sparksCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 5; }
 
-        /* --- ЭКРАН ЗАГРУЗКИ С АНИМАЦИЕЙ БУКВ STAGE --- */
+        /* --- НОВЫЙ ЭКРАН ПРЕДЗАГРУЗКИ: КИБЕР-ТЕРМИНАЛ --- */
         #bootScreen {
             position: fixed; inset: 0; background-color: #02050a; z-index: 99999;
-            display: flex; justify-content: center; align-items: center; 
-            transition: opacity 0.6s ease, visibility 0.6s;
+            display: flex; justify-content: center; align-items: center; flex-direction: column;
+            transition: opacity 0.5s ease, visibility 0.5s;
         }
         #bootScreen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-        .boot-container {
-            display: flex; gap: 5px; align-items: center; justify-content: center;
+        
+        .cyber-loader-box { width: 100%; max-width: 350px; text-align: center; padding: 20px; }
+        .loader-glitch {
+            font-family: 'Orbitron', sans-serif; font-size: clamp(40px, 10vw, 60px); font-weight: 900; color: #fff;
+            position: relative; letter-spacing: 10px; margin-bottom: 25px;
+            animation: cyberGlitch 2s infinite; text-shadow: 0 0 25px #00f2fe; text-transform: uppercase;
         }
-        .boot-letter {
-            font-family: 'Orbitron', sans-serif;
-            font-size: clamp(50px, 12vw, 120px);
-            font-weight: 900; color: #00f2fe;
-            text-shadow: 0 0 25px #00f2fe, 0 0 10px #ff0055;
-            opacity: 0; display: inline-block;
+        .loader-subtext {
+            font-family: 'Orbitron', sans-serif; font-size: 13px; color: #00f2fe;
+            margin-bottom: 15px; letter-spacing: 2px; height: 20px; text-transform: uppercase;
         }
-        .boot-left { animation: flyInLeft 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-        .boot-right { animation: flyInRight 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-        .boot-center-impact { animation: flyInCenterImpact 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-
-        @keyframes flyInLeft {
-            0% { transform: translateX(-100vw) rotate(-45deg); opacity: 0; }
-            100% { transform: translateX(0) rotate(0deg); opacity: 1; }
+        .loader-progress-wrap {
+            width: 100%; height: 4px; background: rgba(0, 242, 254, 0.2); border-radius: 2px; overflow: hidden;
+            position: relative; box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
         }
-        @keyframes flyInRight {
-            0% { transform: translateX(100vw) rotate(45deg); opacity: 0; }
-            100% { transform: translateX(0) rotate(0deg); opacity: 1; }
-        }
-        @keyframes flyInCenterImpact {
-            0% { transform: translateY(-100vh) scale(3) rotate(180deg); opacity: 0; filter: blur(10px); }
-            40% { transform: translateY(20px) scale(0.8) rotate(-10deg); opacity: 1; filter: blur(0px); text-shadow: 0 0 25px #00f2fe; }
-            100% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; text-shadow: 0 0 50px #fff, 0 0 20px #00f2fe, 0 0 40px #ff0055; }
+        .loader-progress-bar {
+            height: 100%; background: #00f2fe; width: 0%;
+            box-shadow: 0 0 15px #00f2fe; transition: width 0.15s ease-out;
         }
 
         @media (max-width: 768px) {
@@ -475,7 +452,7 @@
             .nav-links-left, .nav-links-right { flex-shrink: 0; }
             .nav-links-left { gap: 8px; }
             .nav-links-right { gap: 8px; padding-left: 8px; }
-            .nav-bar a, .nav-bar span.nav-link-btn { font-size: 9px; letter-spacing: 0.3px; }
+            .nav-bar a, .nav-bar span.nav-link-btn { font-size: 10px; letter-spacing: 0.5px; padding: 4px 6px; }
             .btn-nav-login { padding: 4px 10px; font-size: 9px; }
             #navCabinetBtn { width: 26px; height: 26px; line-height: 22px; flex-shrink: 0; }
             #navCabinetBtn i { font-size: 11px; }
@@ -508,7 +485,6 @@
             .chat-input-area button { padding: 0 15px; font-size: 15px; }
             .chat-msg .text { padding-right: 40px; padding-bottom: 20px; font-size: 13px;}
             .chat-msg .chat-actions { right: 8px; bottom: 5px; }
-            .lang-dropdown-content { bottom: 100%; top: auto; margin-bottom: 10px; }
         }
     </style>
 </head>
@@ -517,12 +493,12 @@
     <canvas id="sparksCanvas"></canvas>
 
     <div id="bootScreen">
-        <div class="boot-container">
-            <span class="boot-letter boot-left" style="animation-delay: 0s">S</span>
-            <span class="boot-letter boot-left" style="animation-delay: 0.2s">T</span>
-            <span class="boot-letter boot-center-impact" style="animation-delay: 0.8s">A</span>
-            <span class="boot-letter boot-right" style="animation-delay: 0.2s">G</span>
-            <span class="boot-letter boot-right" style="animation-delay: 0s">E</span>
+        <div class="cyber-loader-box">
+            <div class="loader-glitch" data-text="STAGE">STAGE</div>
+            <div class="loader-subtext" id="loaderSubtext">SYSTEM INITIALIZATION...</div>
+            <div class="loader-progress-wrap">
+                <div class="loader-progress-bar" id="loaderBar"></div>
+            </div>
         </div>
     </div>
 
@@ -542,14 +518,9 @@
             <a href="#creators" class="lang-txt" data-ru="Креаторы" data-en="Creators" data-zh="创作者">Креаторы</a>
         </div>
         <div class="nav-links-right">
-            <div class="lang-dropdown" id="langDropdown" tabindex="0">
-                <span class="nav-link-btn" id="navLangBtn"><i class="fa-solid fa-globe"></i> <span id="currentLangLabel">🇷🇺 RU</span> <i class="fa-solid fa-chevron-down" style="font-size: 10px; margin-left: 3px;"></i></span>
-                <div class="lang-dropdown-content">
-                    <div class="lang-dropdown-item" onclick="selectLang('ru'); event.stopPropagation();">🇷🇺 Русский</div>
-                    <div class="lang-dropdown-item" onclick="selectLang('en'); event.stopPropagation();">🇬🇧 English</div>
-                    <div class="lang-dropdown-item" onclick="selectLang('zh'); event.stopPropagation();">🇨🇳 中文</div>
-                </div>
-            </div>
+            <span class="nav-link-btn" id="navLangBtn" title="Сменить язык / Change Language">
+                <i class="fa-solid fa-globe"></i> <span id="currentLangLabel">🇷🇺 RU</span>
+            </span>
             
             <span class="nav-link-btn lang-txt" id="navLawBtn" data-ru="Соглашение" data-en="Terms" data-zh="协议">Соглашение</span>
             <span class="nav-link-btn lang-txt" id="navStatsBtn" data-ru='<i class="fa-solid fa-chart-simple"></i> Статистика' data-en='<i class="fa-solid fa-chart-simple"></i> Stats' data-zh='<i class="fa-solid fa-chart-simple"></i> 统计'><i class="fa-solid fa-chart-simple"></i> Статистика</span>
@@ -1063,7 +1034,9 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
     <script>
         // ИНИЦИАЛИЗАЦИЯ ИНТЕРНАЦИОНАЛИЗАЦИИ
         let currentLang = localStorage.getItem('stage_lang') || 'ru';
+        const langs = ['ru', 'en', 'zh'];
         const langFlags = { ru: '🇷🇺 RU', en: '🇬🇧 EN', zh: '🇨🇳 ZH' };
+        let currentLangIdx = langs.indexOf(currentLang) !== -1 ? langs.indexOf(currentLang) : 0;
         
         function t(ruText, enText, zhText = enText) { 
             if (currentLang === 'en') return enText;
@@ -1093,25 +1066,10 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             }
         }
 
-        window.selectLang = function(lang) {
-            setLang(lang);
-            // Убираем класс отображения для скрытия меню на телефонах
-            document.querySelector('.lang-dropdown-content').classList.remove('show');
-        };
-        
-        // Логика клика для меню языков на телефонах
-        const langDropdown = document.getElementById('langDropdown');
-        const langDropdownContent = document.querySelector('.lang-dropdown-content');
-        
-        langDropdown.addEventListener('click', function(e) {
-            e.stopPropagation();
-            langDropdownContent.classList.toggle('show');
-        });
-
-        document.addEventListener('click', function(e) {
-            if (!langDropdown.contains(e.target)) {
-                langDropdownContent.classList.remove('show');
-            }
+        // Новая логика переключения языка по циклу (идеально для телефонов)
+        document.getElementById('navLangBtn').addEventListener('click', () => {
+            currentLangIdx = (currentLangIdx + 1) % langs.length;
+            setLang(langs[currentLangIdx]);
         });
 
         const TG_TOKEN = "8640087886:AAGj3tevg54WEW0Qyo-rrtBlT8fRE9RuCDM";
@@ -1400,12 +1358,8 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 }
             }, 60000);
             
-            // Логика скрытия анимации загрузки
-            const bootScreen = document.getElementById('bootScreen');
-            setTimeout(() => {
-                bootScreen.classList.add('hidden');
-                playTerminalSound();
-            }, 2800); // Увеличено время для эффекта буквы A
+            // Запуск анимации терминала (загрузочный экран)
+            startCyberTerminalLoader();
         });
 
         // --- ЛОГИКА ФОНА КАБИНЕТА ---
@@ -1427,7 +1381,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             if (val === 'none') {
                 cabWindow.style.setProperty('background', 'rgba(15, 23, 42, 0.85)', 'important');
             } else {
-                // Измененный градиент для видимости картинки (opacity 0.65 - 0.85)
                 cabWindow.style.setProperty('background', `linear-gradient(rgba(2, 5, 10, 0.65), rgba(2, 5, 10, 0.85)), ${val}`, 'important');
                 cabWindow.style.setProperty('background-size', 'cover', 'important');
                 cabWindow.style.setProperty('background-position', 'center', 'important');
@@ -1716,12 +1669,11 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 activeUsers.slice(0, 5).forEach(u => {
                     let displayNick = u.nick;
                     
-                    // Переименовываем Test в Mitso для админа, или пропускаем других
                     if(displayNick.toLowerCase() === 'test' || displayNick.toLowerCase() === 'тест') {
                         if (u.chatId === "22E9E4E8CABB7FCF" || u.rank === t("Глава", "Leader", "队长")) {
                             displayNick = "Mitso";
                         } else {
-                            return; // Пропускаем левых тестовых юзеров
+                            return; 
                         }
                     }
                     if (u === cloudDatabase.metadata["@bymitso"]) {
@@ -2996,6 +2948,46 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 osc.start();
                 osc.stop(ctx.currentTime + 0.3);
             } catch(e) { console.warn("Аудио заблокировано браузером"); }
+        }
+
+        // --- ЛОГИКА АНИМАЦИИ КИБЕР-ТЕРМИНАЛА ---
+        function startCyberTerminalLoader() {
+            const bootScreen = document.getElementById('bootScreen');
+            const loaderBar = document.getElementById('loaderBar');
+            const loaderSubtext = document.getElementById('loaderSubtext');
+
+            let progress = 0;
+            const texts = [
+                t("УСТАНОВКА ЗАЩИЩЕННОГО СОЕДИНЕНИЯ...", "ESTABLISHING SECURE CONNECTION...", "正在建立安全连接..."),
+                t("ОБХОД СИСТЕМ БЕЗОПАСНОСТИ...", "BYPASSING SECURITY PROTOCOLS...", "正在绕过安全协议..."),
+                t("ДЕШИФРОВКА ТАКТИЧЕСКИХ ДАННЫХ...", "DECRYPTING TACTICAL DATA...", "正在解密战术数据..."),
+                t("ДОСТУП РАЗРЕШЕН", "ACCESS GRANTED", "访问已授权")
+            ];
+            
+            let textIndex = 0;
+            loaderSubtext.textContent = texts[0];
+
+            const interval = setInterval(() => {
+                progress += Math.random() * 12;
+                if(progress >= 100) progress = 100;
+                loaderBar.style.width = progress + '%';
+
+                if(progress > 30 && textIndex === 0) { loaderSubtext.textContent = texts[1]; textIndex++; }
+                if(progress > 65 && textIndex === 1) { loaderSubtext.textContent = texts[2]; textIndex++; }
+                
+                if(progress >= 100) {
+                    loaderSubtext.textContent = texts[3];
+                    loaderSubtext.style.color = "#22c55e"; 
+                    loaderBar.style.backgroundColor = "#22c55e";
+                    loaderBar.style.boxShadow = "0 0 15px #22c55e";
+                    
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        bootScreen.classList.add('hidden');
+                        playTerminalSound();
+                    }, 800);
+                }
+            }, 150);
         }
     </script>
 </body>
