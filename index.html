@@ -144,21 +144,21 @@
 
         .training-countdown-widget, .cw-countdown-widget { display: none; width: 100%; max-width: 500px; background: rgba(2, 5, 10, 0.9); padding: 20px; border-radius: 8px; margin: 0 auto 25px; text-align: center; font-family: 'Orbitron', sans-serif; position: relative; }
         .training-countdown-widget { border: 2px solid #00f2fe; box-shadow: 0 0 25px rgba(0, 242, 254, 0.35); }
-        .cw-countdown-widget { border: 2px solid #ff0055; box-shadow: 0 0 25px rgba(255, 0, 85, 0.35); }
+        .cw-countdown-widget { border: 2px solid #ff0055; box-shadow: 0 0 25px rgba(255, 0, 85, 0.35); transition: border-color 0.3s, box-shadow 0.3s; }
 
         .close-timer-btn { display: none; position: absolute; top: 8px; right: 14px; color: rgba(255, 255, 255, 0.3); font-size: 20px; cursor: pointer; transition: color 0.2s; font-family: sans-serif; font-weight: bold; }
         .close-timer-btn:hover { color: #ff0055; }
         
         .training-countdown-title { font-size: 13px; color: #a855f7; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; font-weight: 900; }
-        .cw-countdown-title { font-size: 13px; color: #ff0055; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; font-weight: 900; }
+        .cw-countdown-title { font-size: 13px; color: #ff0055; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; font-weight: 900; transition: color 0.3s; }
         
         .timer-unit-box, .cw-unit-box { background: rgba(15, 23, 42, 0.9); padding: 6px 10px; border-radius: 4px; min-width: 60px; }
         .training-timer-display, .cw-timer-display { display: flex; justify-content: center; gap: 15px; margin-top: 5px; }
         .timer-unit-box { border: 1px solid rgba(0, 242, 254, 0.2); }
-        .cw-unit-box { border: 1px solid rgba(255, 0, 85, 0.2); }
+        .cw-unit-box { border: 1px solid rgba(255, 0, 85, 0.2); transition: border-color 0.3s; }
         .timer-unit-box .num, .cw-unit-box .num { font-size: 20px; color: #fff; font-weight: 900; }
         .timer-unit-box .num { text-shadow: 0 0 10px #00f2fe; }
-        .cw-unit-box .num { text-shadow: 0 0 10px #ff0055; }
+        .cw-unit-box .num { text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
         .timer-unit-box .lbl, .cw-unit-box .lbl { font-size: 9px; color: #94a3b8; text-transform: uppercase; margin-top: 2px; font-family: 'Oswald', sans-serif; }
 
         .training-attendance-container { display: flex; gap: 15px; margin-top: 15px; padding-top: 15px; border-top: 1px dashed rgba(255,255,255,0.1); font-family: 'Oswald', sans-serif; text-align: left; }
@@ -562,7 +562,7 @@
 
         <div class="cw-countdown-widget glassmorphism" id="cwCountdownWidget">
             <span class="close-timer-btn" id="btnCloseCwTimer" onclick="executeResetCwTimer()">&times;</span>
-            <div class="cw-countdown-title lang-txt" data-ru="🔥 До начала Клановых Боёв:" data-en="🔥 Time to Clan Wars:" data-zh="🔥 距离战队战开始：">🔥 До начала Клановых Боёв:</div>
+            <div id="cwWidgetTitle" class="cw-countdown-title lang-txt" data-ru="🔥 До начала Клановых Боёв:" data-en="🔥 Time to Clan Wars:" data-zh="🔥 距离战队战开始：">🔥 До начала Клановых Боёв:</div>
             <div class="cw-timer-display">
                 <div class="cw-unit-box"><div class="num" id="cwTimerDays">00</div><div class="lbl lang-txt" data-ru="Дн" data-en="D" data-zh="天">Дн</div></div>
                 <div class="cw-unit-box"><div class="num" id="cwTimerHours">00</div><div class="lbl lang-txt" data-ru="Час" data-en="H" data-zh="时">Час</div></div>
@@ -850,18 +850,17 @@
     </div>
 
     <div class="modal-overlay" id="cwModalOverlay" style="z-index: 151;">
-        <div class="modal-window glassmorphism" style="max-width: 400px; border-color: #ff0055; box-shadow: 0 0 40px rgba(255, 0, 85, 0.4);">
+        <div class="modal-window glassmorphism" style="max-width: 400px; border-color: #ff0055; box-shadow: 0 0 40px rgba(255, 0, 85, 0.4); text-align: center;">
             <span class="close-btn" id="closeCwModalBtn">&times;</span>
-            <div class="modal-title lang-txt" style="color: #ff0055; border-bottom-color: rgba(255, 0, 85, 0.2);" data-ru="Планирование Клановых Боёв" data-en="Clan War Planning" data-zh="战队战规划">Планирование Клановых Боёв</div>
-            <div class="form-group">
-                <label class="lang-txt" data-ru="Выберите дату" data-en="Select Date" data-zh="选择日期">Выберите дату</label>
-                <input type="date" id="inputCwDate" required style="border-color: #ff0055; font-family: 'Orbitron', sans-serif; width: 100%;">
-            </div>
-            <div class="form-group">
-                <label class="lang-txt" data-ru="Укажите время начала" data-en="Specify start time" data-zh="指定开始时间">Укажите время начала</label>
-                <input type="text" id="inputCwTime" class="lang-txt" data-ru="Например: 20:00" data-en="Example: 20:00" data-zh="例如: 20:00" placeholder="Например: 20:00" required style="border-color: #ff0055; font-family: 'Orbitron', sans-serif; width: 100%;">
-            </div>
-            <button type="button" class="btn-submit lang-txt" id="btnSubmitCw" style="background: #ff0055; color: #fff;" data-ru="Запустить таймер" data-en="Start Timer" data-zh="启动计时器">Запустить таймер</button>
+            <div class="modal-title lang-txt" style="color: #ff0055; border-bottom-color: rgba(255, 0, 85, 0.2);" data-ru="Режим Клановых Боёв" data-en="Clan War Mode" data-zh="战队战模式">Режим Клановых Боёв</div>
+            
+            <i class="fa-solid fa-robot" style="font-size: 50px; color: #ff0055; margin: 20px 0;"></i>
+            
+            <p style="color: #94a3b8; font-size: 14px; margin-bottom: 20px; line-height: 1.5;" class="lang-txt" data-ru="Включите автоматический таймер. Система будет сама отсчитывать время до начала следующих окон КВ (ПТ-ВС) и время до их окончания по расписанию МСК." data-en="Enable automatic timer. The system will automatically count down to the next CW windows and their ends." data-zh="启用自动计时器。系统将自动倒计时到下一个战队战窗口。">
+                Включите автоматический таймер. Система будет сама отсчитывать время до начала следующих окон КВ (ПТ-ВС) и время до их окончания по расписанию МСК.
+            </p>
+
+            <button type="button" class="btn-submit lang-txt" id="btnSubmitCw" style="background: #ff0055; color: #fff;" data-ru="Активировать Авто-КВ" data-en="Activate Auto-CW" data-zh="激活自动战队战">Активировать Авто-КВ</button>
         </div>
     </div>
 
@@ -1230,8 +1229,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
 
         const btnCwTrigger = document.getElementById('btnCwTrigger');
         const btnSubmitCw = document.getElementById('btnSubmitCw');
-        const inputCwDate = document.getElementById('inputCwDate');
-        const inputCwTime = document.getElementById('inputCwTime');
         const cwCountdownWidget = document.getElementById('cwCountdownWidget');
         const btnCloseCwTimer = document.getElementById('btnCloseCwTimer');
 
@@ -1253,7 +1250,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
         let cloudDatabase = { 
             recruits: {}, banned: [], kickedNicks: [], metadata: {}, 
             trainingTime: null, trainingYes: [], trainingNo: [],
-            cwTime: null, cwNotified: false,
+            cwTime: null, cwNotified: false, autoCwEnabled: false,
             chat: [], chatBanned: [], chatMonth: new Date().getMonth()
         };
         let isCloudSynced = false; 
@@ -1489,6 +1486,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                         cloudDatabase.trainingNo = db.trainingNo || [];
                         cloudDatabase.cwTime = db.cwTime || null;
                         cloudDatabase.cwNotified = db.cwNotified || false;
+                        cloudDatabase.autoCwEnabled = db.autoCwEnabled || false;
                         
                         cloudDatabase.chat = db.chat || [];
                         cloudDatabase.chatBanned = db.chatBanned || [];
@@ -1664,7 +1662,9 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             const activeUsers = [];
             for(let tg in cloudDatabase.metadata) {
                 if(cloudDatabase.metadata[tg].lastActive && (now - cloudDatabase.metadata[tg].lastActive < 5 * 60 * 1000)) {
-                    activeUsers.push(cloudDatabase.metadata[tg]);
+                    let u = Object.assign({}, cloudDatabase.metadata[tg]);
+                    u._tgKey = tg;
+                    activeUsers.push(u);
                 }
             }
             
@@ -1676,14 +1676,8 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 activeUsers.slice(0, 5).forEach(u => {
                     let displayNick = u.nick;
                     
-                    if(displayNick.toLowerCase() === 'test' || displayNick.toLowerCase() === 'тест') {
-                        if (u.chatId === "22E9E4E8CABB7FCF" || u.rank === t("Глава", "Leader", "队长")) {
-                            displayNick = "Mitso";
-                        } else {
-                            return; 
-                        }
-                    }
-                    if (u === cloudDatabase.metadata["@bymitso"]) {
+                    // Железная привязка Mitso для Главы / Админа
+                    if (u._tgKey === "@bymitso" || u._tgKey === "admin@stage.ru" || displayNick.toLowerCase() === "test" || displayNick.toLowerCase() === "тест" || u.rank === t("Глава", "Leader", "队长")) {
                         displayNick = "Mitso";
                     }
 
@@ -2050,76 +2044,94 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             }
         });
 
+        // --- ЛОГИКА АВТОМАТИЧЕСКОГО ТАЙМЕРА КВ ---
+        
+        function getAutoCwEvent() {
+            const now = new Date();
+            // Переводим текущее локальное время в МСК (UTC+3)
+            const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+            const msk = new Date(utc + (3 * 3600000));
+
+            const day = msk.getDay(); // 0:Вс, 1:Пн, ..., 5:Пт, 6:Сб
+            const h = msk.getHours();
+
+            const isCwDay = (day === 5 || day === 6 || day === 0);
+            let isActive = false;
+            let endTimeMsk = new Date(msk);
+
+            if (isCwDay) {
+                if (h >= 4 && h < 6) { isActive = true; endTimeMsk.setHours(6, 0, 0, 0); }
+                else if (h >= 10 && h < 12) { isActive = true; endTimeMsk.setHours(12, 0, 0, 0); }
+                else if (h >= 16 && h < 18) { isActive = true; endTimeMsk.setHours(18, 0, 0, 0); }
+                else if (h >= 22 && h < 24) { isActive = true; endTimeMsk.setHours(24, 0, 0, 0); }
+            }
+
+            if (isActive) {
+                return { 
+                    active: true, 
+                    targetTime: endTimeMsk.getTime() - (3 * 3600000) - (now.getTimezoneOffset() * 60000) 
+                };
+            }
+
+            let nextStartMsk = new Date(msk);
+            nextStartMsk.setMinutes(0, 0, 0);
+
+            if (!isCwDay || (day === 0 && h >= 22)) {
+                let daysToFri = (5 - day + 7) % 7;
+                if (daysToFri === 0 && h >= 22) daysToFri = 5; // С вечера воскресенья до пятницы
+                nextStartMsk.setDate(msk.getDate() + daysToFri);
+                nextStartMsk.setHours(4, 0, 0, 0);
+            } else {
+                if (h < 4) nextStartMsk.setHours(4, 0, 0, 0);
+                else if (h < 10) nextStartMsk.setHours(10, 0, 0, 0);
+                else if (h < 16) nextStartMsk.setHours(16, 0, 0, 0);
+                else if (h < 22) nextStartMsk.setHours(22, 0, 0, 0);
+            }
+
+            return { 
+                active: false, 
+                targetTime: nextStartMsk.getTime() - (3 * 3600000) - (now.getTimezoneOffset() * 60000) 
+            };
+        }
+
         btnCwTrigger.addEventListener('click', () => {
             if(!isLeaderMode) return;
-            const todayStr = new Date().toISOString().split('T')[0];
-            inputCwDate.value = todayStr;
-            inputCwTime.value = "";
             cwModalOverlay.classList.add('active');
+            
+            if (cloudDatabase.autoCwEnabled) {
+                btnSubmitCw.textContent = t("Остановить Авто-КВ", "Stop Auto-CW", "停止自动战队战");
+                btnSubmitCw.style.background = "#1e293b";
+            } else {
+                btnSubmitCw.textContent = t("Активировать Авто-КВ", "Activate Auto-CW", "激活自动战队战");
+                btnSubmitCw.style.background = "#ff0055";
+            }
         });
-        closeCwModalBtn.addEventListener('click', () => cwModalOverlay.classList.remove('active'));
 
         btnSubmitCw.addEventListener('click', async () => {
-            const dateVal = inputCwDate.value;
-            const timeVal = inputCwTime.value.trim();
-            if(!dateVal || !timeVal) { alert(t("Пожалуйста, укажите дату и точное время!", "Please provide date and time!", "请提供日期和时间！")); return; }
-
-            const timeParts = timeVal.match(/(\d{1,2}):(\d{2})/);
-            let hours = 20, minutes = 0;
-            if (timeParts) {
-                hours = parseInt(timeParts[1], 10);
-                minutes = parseInt(timeParts[2], 10);
-            } else {
-                alert(t("Введите время в правильном формате ЧЧ:ММ!", "Use correct time format HH:MM!", "请使用正确的时间格式 HH:MM"));
-                return;
-            }
-
-            const targetDate = new Date(dateVal);
-            targetDate.setHours(hours, minutes, 0, 0);
-            const targetTimestamp = targetDate.getTime();
-
-            if(targetTimestamp <= Date.now()) { alert(t("Время не может быть в прошлом!", "Time cannot be in the past!", "时间不能是过去！")); return; }
-
-            btnSubmitCw.textContent = t("Запуск...", "Starting...", "启动中...");
             btnSubmitCw.disabled = true;
 
-            cloudDatabase.cwTime = targetTimestamp;
-            cloudDatabase.cwNotified = false;
-            await saveToCloud();
-
-            cwModalOverlay.classList.remove('active');
-            initCwCountdown(); 
-
-            alert(t("Таймер Клановых Боёв успешно запущен!", "Clan War timer successfully started!", "战队战计时器已成功启动！"));
-            
-            btnSubmitCw.textContent = t("Запустить таймер", "Start Timer", "启动计时器");
-            btnSubmitCw.disabled = false;
-        });
-
-        window.executeResetCwTimer = async function() {
-            if(!isLeaderMode) return;
-            if(confirm(t("Вы действительно хотите отменить таймер Клан Вара?", "Cancel Clan War timer?", "取消战队战计时器？"))) {
-                cloudDatabase.cwTime = null;
+            if (cloudDatabase.autoCwEnabled) {
+                cloudDatabase.autoCwEnabled = false;
                 cloudDatabase.cwNotified = false;
                 await saveToCloud();
-                
-                if (cwCountdownIntervalId) clearInterval(cwCountdownIntervalId);
-                cwCountdownWidget.style.display = 'none';
+                cwModalOverlay.classList.remove('active');
+                initCwCountdown();
+                alert(t("Режим Авто-КВ отключен.", "Auto-CW disabled.", "自动战队战已禁用。"));
+            } else {
+                cloudDatabase.autoCwEnabled = true;
+                cloudDatabase.cwNotified = false;
+                await saveToCloud();
+                cwModalOverlay.classList.remove('active');
+                initCwCountdown(); 
+                alert(t("Автоматический таймер Клановых Боёв успешно запущен!", "Auto Clan War timer successfully started!", "自动战队战计时器已成功启动！"));
             }
-        }
+            btnSubmitCw.disabled = false;
+        });
 
         function initCwCountdown() {
             if (cwCountdownIntervalId) clearInterval(cwCountdownIntervalId);
 
-            if (!cloudDatabase.cwTime) {
-                cwCountdownWidget.style.display = 'none';
-                return;
-            }
-
-            if (cloudDatabase.cwTime <= Date.now()) {
-                if (!cloudDatabase.cwNotified) {
-                    triggerCwNotification();
-                }
+            if (!cloudDatabase.autoCwEnabled) {
                 cwCountdownWidget.style.display = 'none';
                 return;
             }
@@ -2127,15 +2139,28 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             cwCountdownWidget.style.display = 'block';
             if(isLeaderMode) { btnCloseCwTimer.style.display = 'block'; }
 
+            const titleEl = document.getElementById('cwWidgetTitle');
+
             function updateCwTimer() {
-                const diff = cloudDatabase.cwTime - Date.now();
-                if (diff <= 0) {
-                    cwCountdownWidget.style.display = 'none';
-                    clearInterval(cwCountdownIntervalId);
-                    if (!cloudDatabase.cwNotified) {
-                        triggerCwNotification();
-                    }
-                    return;
+                const cwData = getAutoCwEvent();
+                const diff = cwData.targetTime - Date.now();
+
+                if (cwData.active) {
+                    titleEl.innerHTML = t("⚔️ КВ ИДУТ ПРЯМО СЕЙЧАС! Конец через:", "⚔️ CW IS LIVE! Ends in:", "⚔️ 战队战进行中！结束于：");
+                    titleEl.style.color = "#22c55e";
+                    cwCountdownWidget.style.borderColor = "#22c55e";
+                    cwCountdownWidget.style.boxShadow = "0 0 25px rgba(34, 197, 94, 0.35)";
+                } else {
+                    titleEl.innerHTML = t("🔥 До начала Клановых Боёв:", "🔥 Time to Clan Wars:", "🔥 距离战队战开始：");
+                    titleEl.style.color = "#ff0055";
+                    cwCountdownWidget.style.borderColor = "#ff0055";
+                    cwCountdownWidget.style.boxShadow = "0 0 25px rgba(255, 0, 85, 0.35)";
+                    
+                    if (cloudDatabase.cwNotified) cloudDatabase.cwNotified = false;
+                }
+
+                if (cwData.active && !cloudDatabase.cwNotified) {
+                    triggerCwNotification(); 
                 }
 
                 const days = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -2153,9 +2178,20 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             cwCountdownIntervalId = setInterval(updateCwTimer, 1000);
         }
 
+        window.executeResetCwTimer = async function() {
+            if(!isLeaderMode) return;
+            if(confirm(t("Вы действительно хотите выключить автоматический таймер Клан Вара?", "Disable Auto Clan War timer?", "禁用自动战队战计时器？"))) {
+                cloudDatabase.autoCwEnabled = false;
+                cloudDatabase.cwNotified = false;
+                await saveToCloud();
+                
+                if (cwCountdownIntervalId) clearInterval(cwCountdownIntervalId);
+                cwCountdownWidget.style.display = 'none';
+            }
+        }
+
         async function triggerCwNotification() {
             cloudDatabase.cwNotified = true;
-            cwCountdownWidget.style.display = 'none';
             await saveToCloud();
 
             const messageText = `⚔️ <b>ВНИМАНИЕ, ФЛОТ STAGE!</b>\n\n🔥 <b>КЛАНОВЫЕ БОИ НАЧАЛИСЬ!</b> 🔥\n\nНе пропустите! 🚢💥`;
@@ -3003,13 +3039,4 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('/sw.js')
             .then(registration => {
-              console.log('ServiceWorker успешно зарегистрирован:', registration.scope);
-            })
-            .catch(error => {
-              console.log('Ошибка регистрации ServiceWorker:', error);
-            });
-        });
-      }
-    </script>
-    </body>
-</html>
+              console.log('ServiceWorker успешно
