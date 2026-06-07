@@ -474,11 +474,47 @@
         #bootScreen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
         
         .cyber-loader-box { width: 100%; max-width: 350px; text-align: center; padding: 20px; }
+        
+        /* Обновленный загрузчик */
         .loader-glitch {
-            font-family: 'Orbitron', sans-serif; font-size: clamp(40px, 10vw, 60px); font-weight: 900; color: #fff;
-            position: relative; letter-spacing: 10px; margin-bottom: 25px;
-            animation: cyberGlitch 2s infinite; text-shadow: 0 0 25px #00f2fe; text-transform: uppercase;
+            display: flex; 
+            justify-content: center; 
+            gap: 4px;
+            font-family: 'Orbitron', sans-serif; 
+            font-size: clamp(40px, 10vw, 60px); 
+            font-weight: 900; 
+            color: #fff;
+            margin-bottom: 25px; 
+            text-transform: uppercase;
         }
+
+        .loader-glitch span {
+            display: inline-block;
+            opacity: 0;
+            /* Сначала вылет, затем переход в глитч-эффект */
+            animation: flyInLetter 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards, cyberGlitch 4s infinite 1.5s;
+        }
+
+        /* Направления вылета: слева, по центру, справа */
+        .loader-glitch span.fly-l { transform: translateX(-150px) scale(1.5); }
+        .loader-glitch span.fly-r { transform: translateX(150px) scale(1.5); }
+        .loader-glitch span.fly-c { transform: translateY(-100px) scale(1.5); }
+
+        /* Задержки для эффекта поочередной сборки (от краев к центру) */
+        .loader-glitch span:nth-child(1) { animation-delay: 0.1s, 1.5s; }
+        .loader-glitch span:nth-child(2) { animation-delay: 0.3s, 1.5s; }
+        .loader-glitch span:nth-child(3) { animation-delay: 0.5s, 1.5s; }
+        .loader-glitch span:nth-child(4) { animation-delay: 0.3s, 1.5s; }
+        .loader-glitch span:nth-child(5) { animation-delay: 0.1s, 1.5s; }
+
+        @keyframes flyInLetter {
+            to {
+                opacity: 1;
+                transform: translate(0, 0) scale(1);
+                text-shadow: 0 0 25px #00f2fe;
+            }
+        }
+
         .loader-subtext {
             font-family: 'Orbitron', sans-serif; font-size: 13px; color: #00f2fe;
             margin-bottom: 15px; letter-spacing: 2px; height: 20px; text-transform: uppercase;
@@ -575,7 +611,13 @@
 
     <div id="bootScreen">
         <div class="cyber-loader-box">
-            <div class="loader-glitch" data-text="STAGE">STAGE</div>
+            <div class="loader-glitch">
+                <span class="fly-l">S</span>
+                <span class="fly-l">T</span>
+                <span class="fly-c">A</span>
+                <span class="fly-r">G</span>
+                <span class="fly-r">E</span>
+            </div>
             <div class="loader-subtext" id="loaderSubtext">SYSTEM INITIALIZATION...</div>
             <div class="loader-progress-wrap">
                 <div class="loader-progress-bar" id="loaderBar"></div>
@@ -1749,6 +1791,40 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             }
         }
 
+        window.selectProfileAvatar = async function(avatarUrl, element) {
+            document.querySelectorAll('.avatar-picker-item').forEach(item => item.classList.remove('selected'));
+            element.classList.add('selected');
+            
+            localStorage.setItem('stage_user_avatar', avatarUrl);
+            
+            const mainAva = document.getElementById('cabAvatarMain');
+            mainAva.style.backgroundImage = `url('${avatarUrl}')`;
+            document.getElementById('cabAvatarIconDefault').style.display = 'none';
+            
+            // --- НОВОЕ: Синхронизация с карточкой Mitso в составе ---
+            const myTg = (localStorage.getItem('stage_user_registered_tg') || '').trim().toLowerCase();
+            if (isLeaderMode || myTg === '@bymitso' || myTg.includes('admin')) {
+                const mitsoCardAvatar = document.querySelector('.player-card[data-nick="Mitso"] .roster-avatar');
+                if (mitsoCardAvatar) {
+                    mitsoCardAvatar.style.backgroundImage = `url('${avatarUrl}')`;
+                }
+            }
+            // ---------------------------------------------------------
+            
+            refreshMenuCabinetAvatar();
+
+            let sessionTg = localStorage.getItem('stage_user_registered_tg') || "";
+            let cleanTg = sessionTg.trim().toLowerCase();
+            if (cleanTg) {
+                if (!cloudDatabase.metadata[cleanTg]) { cloudDatabase.metadata[cleanTg] = {}; }
+                cloudDatabase.metadata[cleanTg].avatar = avatarUrl;
+                renderLocalRecruits(); 
+                await saveToCloud();
+                showNotification(t("Аватар обновлен!", "Avatar updated!", "头像已更新！"), 'success');
+            }
+            renderAttendanceListsOnSite();
+        }
+
         function refreshMenuCabinetAvatar() {
             navCabinetBtn.style.display = 'block';
             const savedAvatar = localStorage.getItem('stage_user_avatar');
@@ -1756,6 +1832,16 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             if (savedAvatar) {
                 navCabinetBtn.style.backgroundImage = `url('${savedAvatar}')`;
                 if(defaultIcon) defaultIcon.style.display = 'none';
+
+                // --- НОВОЕ: Применяем сохраненный аватар к карточке Mitso при загрузке ---
+                const myTg = (localStorage.getItem('stage_user_registered_tg') || '').trim().toLowerCase();
+                if (isLeaderMode || myTg === '@bymitso' || myTg.includes('admin')) {
+                    const mitsoCardAvatar = document.querySelector('.player-card[data-nick="Mitso"] .roster-avatar');
+                    if (mitsoCardAvatar) {
+                        mitsoCardAvatar.style.backgroundImage = `url('${savedAvatar}')`;
+                    }
+                }
+                // -----------------------------------------------------------------------
             } else {
                 navCabinetBtn.style.backgroundImage = 'none';
                 if(defaultIcon) defaultIcon.style.display = 'inline-block';
@@ -1872,30 +1958,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
         document.getElementById('cabAvatarMain').addEventListener('click', () => {
             document.getElementById('avatarPickerGrid').classList.toggle('active');
         });
-
-        window.selectProfileAvatar = async function(avatarUrl, element) {
-            document.querySelectorAll('.avatar-picker-item').forEach(item => item.classList.remove('selected'));
-            element.classList.add('selected');
-            
-            localStorage.setItem('stage_user_avatar', avatarUrl);
-            
-            const mainAva = document.getElementById('cabAvatarMain');
-            mainAva.style.backgroundImage = `url('${avatarUrl}')`;
-            document.getElementById('cabAvatarIconDefault').style.display = 'none';
-            
-            refreshMenuCabinetAvatar();
-
-            let sessionTg = localStorage.getItem('stage_user_registered_tg') || "";
-            let cleanTg = sessionTg.trim().toLowerCase();
-            if (cleanTg) {
-                if (!cloudDatabase.metadata[cleanTg]) { cloudDatabase.metadata[cleanTg] = {}; }
-                cloudDatabase.metadata[cleanTg].avatar = avatarUrl;
-                renderLocalRecruits(); 
-                await saveToCloud();
-                showNotification(t("Аватар обновлен!", "Avatar updated!", "头像已更新！"), 'success');
-            }
-            renderAttendanceListsOnSite();
-        }
 
         navCabinetBtn.addEventListener('click', () => {
             let sessionTg = localStorage.getItem('stage_user_registered_tg') || "";
