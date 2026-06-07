@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>STAGE! | Официальный сайт клана</title>
 
     <link rel="manifest" href="/manifest.json">
@@ -15,9 +15,20 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "188ed938-2fd2-4a4b-8749-a35ff44b8747",
+        });
+      });
+    </script>
+    
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body, html { background-color: #02050a; color: #ffffff; font-family: 'Oswald', sans-serif; scroll-behavior: smooth; overflow-x: hidden; }
+        body, html { background-color: #02050a; color: #ffffff; font-family: 'Oswald', sans-serif; scroll-behavior: smooth; overflow-x: hidden; touch-action: manipulation; }
 
         /* Улучшенный стекломорфизм с бликами */
         .glassmorphism {
@@ -274,7 +285,8 @@
         .chat-msg .chat-btn.del-btn:hover { color: #ff0055; }
         
         .chat-input-area { display: flex; background: rgba(0,0,0,0.5); padding: 15px; border-top: 1px solid rgba(255,255,255,0.1); gap: 10px; }
-        .chat-input-area input { flex: 1; background: rgba(2, 5, 10, 0.6); border: 1px solid rgba(0, 242, 254, 0.3); color: #fff; padding: 12px 15px; font-family: 'Oswald', sans-serif; border-radius: 4px; outline: none; transition: 0.3s; }
+        /* ДОБАВЛЕНО: font-size: 16px !important; для фикса зума на iOS Safari */
+        .chat-input-area input { flex: 1; background: rgba(2, 5, 10, 0.6); border: 1px solid rgba(0, 242, 254, 0.3); color: #fff; padding: 12px 15px; font-family: 'Oswald', sans-serif; font-size: 16px !important; border-radius: 4px; outline: none; transition: 0.3s; }
         .chat-input-area input:focus { border-color: #00f2fe; box-shadow: 0 0 10px rgba(0, 242, 254, 0.2); }
         .chat-input-area button { background: #00f2fe; color: #02050a; border: none; padding: 0 25px; border-radius: 4px; cursor: pointer; transition: 0.2s; font-size: 16px; }
         .chat-input-area button:hover { background: #fff; box-shadow: 0 0 15px rgba(0, 242, 254, 0.6); }
@@ -546,6 +558,12 @@
                 padding-bottom: 20px;
                 border-top: 1px solid rgba(0, 242, 254, 0.3);
             }
+            
+            /* ДОБАВЛЕНО: Принудительный размер шрифта для input на мобилках (фикс зума) */
+            #chat-page .chat-input-area input {
+                font-size: 16px !important;
+            }
+            
             .chat-msg .text { padding-right: 40px; padding-bottom: 20px; font-size: 13px;}
             .chat-msg .chat-actions { right: 8px; bottom: 5px; }
         }
