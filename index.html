@@ -1588,6 +1588,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                     }
                     isCloudSynced = true; 
                     updateOnlineWidget();
+                    if(typeof updateTrainingButtonVisibility === 'function') updateTrainingButtonVisibility();
                 }
             } catch (err) { console.error("Ошибка синхронизации:", err); }
         }
@@ -2046,8 +2047,38 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
         });
         closeCabinetModalBtn.addEventListener('click', () => cabinetModalOverlay.classList.remove('active'));
 
+        // Функция проверки доступа к кнопке Тренировка
+        function updateTrainingButtonVisibility() {
+            const btn = document.getElementById('btnTrainingTrigger');
+            if (!btn) return;
+            let sessionTg = localStorage.getItem('stage_user_registered_tg') || "";
+            let cleanTg = sessionTg.trim().toLowerCase();
+            let hasSpec = false;
+            if (cleanTg && cloudDatabase.metadata && cloudDatabase.metadata[cleanTg]) {
+                let spec = cloudDatabase.metadata[cleanTg].specialization;
+                if (spec && spec !== "Не назначена" && spec !== "") hasSpec = true;
+            }
+            
+            if (isLeaderMode || hasSpec) {
+                btn.style.display = 'block';
+            } else {
+                btn.style.display = 'none';
+            }
+        }
+
         btnTrainingTrigger.addEventListener('click', () => {
-            if(!isLeaderMode) return;
+            let sessionTg = localStorage.getItem('stage_user_registered_tg') || "";
+            let cleanTg = sessionTg.trim().toLowerCase();
+            let hasSpec = false;
+            
+            if (cleanTg && cloudDatabase.metadata && cloudDatabase.metadata[cleanTg]) {
+                let spec = cloudDatabase.metadata[cleanTg].specialization;
+                if (spec && spec !== "Не назначена" && spec !== "") hasSpec = true;
+            }
+            
+            // Если не лидер и нет специализации — блокируем действие
+            if (!isLeaderMode && !hasSpec) return;
+
             const todayStr = new Date().toISOString().split('T')[0];
             inputTrainingDate.value = todayStr;
             inputTrainingTime.value = "";
@@ -2448,6 +2479,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             secretTgBox.style.display = 'block'; 
             recruitBoxBtn.style.display = 'none';
             setLang(currentLang);
+            if(typeof updateTrainingButtonVisibility === 'function') updateTrainingButtonVisibility();
         }
 
         function activateLeaderMode() {
@@ -2463,6 +2495,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             applyLeaderStatusColors();
             renderChat(); 
             setLang(currentLang);
+            if(typeof updateTrainingButtonVisibility === 'function') updateTrainingButtonVisibility();
         }
 
         navStatsBtn.addEventListener('click', () => {
@@ -2560,10 +2593,20 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             currentSelectedPlayerNick = nick;
             const idInput = document.getElementById('infoGameIdInput');
             const editIcon = document.getElementById('editIdIcon');
+            const infoAvatar = document.getElementById('infoAvatar');
             
             let playerMeta = null;
             for (let tg in cloudDatabase.metadata) {
                 if (cloudDatabase.metadata[tg].nick === nick) { playerMeta = cloudDatabase.metadata[tg]; break; }
+            }
+
+            // Устанавливаем аватарку или убираем её, если не задана
+            if (playerMeta && playerMeta.avatar) {
+                infoAvatar.style.backgroundImage = `url('${playerMeta.avatar}')`;
+            } else if (nick === 'Mitso' && cloudDatabase.metadata['@bymitso'] && cloudDatabase.metadata['@bymitso'].avatar) {
+                infoAvatar.style.backgroundImage = `url('${cloudDatabase.metadata['@bymitso'].avatar}')`;
+            } else {
+                infoAvatar.style.backgroundImage = 'none';
             }
             
             document.getElementById('infoNick').textContent = nick;
