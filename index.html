@@ -1637,14 +1637,10 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                     `;
                 }
 
-                // ДОБАВЛЕНО: Регулярное выражение для поиска @nickname и стилизации
-                let formattedText = msg.text.replace(/@([a-zA-Zа-яА-ЯЁё0-9_]+)/g, '<span style="color: #00f2fe; font-weight: bold; text-shadow: 0 0 8px rgba(0, 242, 254, 0.6); cursor: pointer;" title="Тег пользователя">@$1</span>');
-
-                // ИЗМЕНЕНО: Выводим formattedText вместо msg.text
                 const html = `
                     <div class="chat-msg glassmorphism">
                         <div class="author">${msg.author}</div>
-                        <div class="text" id="chat-text-${idx}">${formattedText}</div>
+                        <div class="text" id="chat-text-${idx}">${msg.text}</div>
                         <div class="timestamp">${new Date(msg.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
                         <div class="chat-actions">
                             <button class="chat-btn" onclick="translateMessage(${idx})" title="Перевести (Translate)"><i class="fa-solid fa-language"></i></button>
@@ -1911,18 +1907,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
 
             await saveToCloud();
 
-            // ИЗМЕНЕНО: Двуязычное сообщение для Telegram-бота
-            const personalMessage = `🎉 <b>Приветствуем на борту, боец ${currentParsedData.nick}! / Welcome aboard, fighter ${currentParsedData.nick}!</b>\n\n` +
-                `🇷🇺 Ваш рапорт в клан <b>STAGE</b> успешно утвержден Руководством флота!\n` +
-                `🇬🇧 Your application to the <b>STAGE</b> clan has been successfully approved by the Fleet Command!\n\n` +
-                `🔐 <b>Ваши ключи доступа к Штабу / Your HQ access keys:</b>\n` +
-                `👤 <b>Логин / Login (Ваш ТГ / Your TG):</b> <code>${currentParsedData.tg}</code>\n` +
-                `🔑 <b>Пароль / Password:</b> <code>${generatedPassword}</code>\n` +
-                `🆔 <b>ID Клана / Clan ID:</b> <code>${CLAN_ID}</code>\n\n` +
-                `⚓️ <b>Шлюзы коммуникации / Communication gateways:</b>\n` +
-                `✈️ Telegram чат / Telegram chat: https://t.me/+0kNCkvxktdozZTYy\n\n` +
-                `Возвращайтесь на сайт, авторизуйтесь через терминал "Вход" — Добро Пожаловать в клан STAGE! 🚢🔥\n` +
-                `Return to the website, authorize via the "Login" terminal — Welcome to the STAGE clan! 🚢🔥`;
+            const personalMessage = `🎉 <b>Приветствуем на борту, боец ${currentParsedData.nick}!</b>\n\nВаш рапорт в клан <b>STAGE</b> успешно утвержден Руководством флота!\n\n🔐 <b>Ваши персональные ключи доступа к Штабу:</b>\n👤 <b>Логин (Ваш ТГ):</b> <code>${currentParsedData.tg}</code>\n🔑 <b>Пароль:</b> <code>${generatedPassword}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\n⚓️ <b>Секретные шлюзы коммуникации:</b>\n✈️ Telegram чат: https://t.me/+0kNCkvxktdozZTYy\n\nВозвращайтесь на сайт, авторизуйтесь через терминал "Вход" — Добро Пожаловать в клан STAGE! 🚢🔥`;
 
             await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
