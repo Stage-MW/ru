@@ -5,18 +5,18 @@ const CACHE_NAME = 'stage-clan-cache-v2';
 
 // Список файлов PWA
 const urlsToCache = [
-    '/',
-    '/index.html',
-    '/manifest.json',
-    '/bg.png',
-    '/roster_bg.png',
-    '/maps_bg.png',
-    '/board_bg.png',
-    '/chat_page_bg.png',
-    '/chat_bg.png',
-    '/creators_bg.png',
-    '/founders_bg.png',
-    '/chat_logo.png'
+    './',
+    'index.html',
+    'manifest.json',
+    'bg.png',
+    'roster_bg.png',
+    'maps_bg.png',
+    'board_bg.png',
+    'chat_page_bg.png',
+    'chat_bg.png',
+    'creators_bg.png',
+    'founders_bg.png',
+    'chat_logo.png'
 ];
 
 self.addEventListener('install', (event) => {
