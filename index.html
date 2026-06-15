@@ -17,16 +17,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-  <script>
-  window.OneSignalDeferred = window.OneSignalDeferred || [];
-  OneSignalDeferred.push(async function(OneSignal) {
-    await OneSignal.init({
-      appId: "188ed938-2fd2-4a4b-8749-a35ff44b8747",
-      serviceWorkerParam: { scope: '/' },
-      serviceWorkerPath: 'sw.js'
-    });
-  });
-</script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "188ed938-2fd2-4a4b-8749-a35ff44b8747",
+          serviceWorkerParam: { scope: '/' },
+          serviceWorkerPath: 'sw.js'
+        });
+      });
+    </script>
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -1037,8 +1037,13 @@
                             <div id="cabRankInsigniaContainer"></div>
                         </div>
                     </div>
-
                 </div>
+                
+                <!-- НОВАЯ КНОПКА PUSH-УВЕДОМЛЕНИЙ -->
+                <button type="button" class="btn-submit" id="enablePushBtn" style="background: #22c55e; color: #000; margin-top:10px; font-size:12px; padding:10px;">
+                    <i class="fa-solid fa-bell"></i> <span class="lang-txt" data-ru="Включить уведомления (КВ и Тренировки)" data-en="Enable Notifications (CW & Training)" data-zh="启用通知 (战队战与训练)">Включить уведомления (КВ и Тренировки)</span>
+                </button>
+
             </div>
             <button type="button" class="btn-submit lang-txt" onclick="resetUserAuth()" style="background:#ef4444; color:#fff; margin-top:15px; font-size:12px; padding:10px;" data-ru="Покинуть мостик (Выйти)" data-en="Leave the bridge (Logout)" data-zh="离开指挥桥 (注销)">Покинуть мостик (Выйти)</button>
         </div>
@@ -2907,6 +2912,33 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 }
             }, 150);
         }
+
+        // --- ЛОГИКА PUSH-УВЕДОМЛЕНИЙ ---
+        document.getElementById('enablePushBtn').addEventListener('click', async () => {
+            const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+
+            if (isIos && !isStandalone) {
+                showNotification(t("Для пушей на iPhone добавьте сайт «На экран Домой» (Поделиться -> На экран Домой).", "For iPhone push, add site to Home Screen (Share -> Add to Home Screen).", "对于 iPhone 推送，请将网站添加到主屏幕 (分享 -> 添加到主屏幕)。"), "warning");
+                return;
+            }
+
+            if (window.OneSignal) {
+                try {
+                    await OneSignal.Notifications.requestPermission();
+                    if (OneSignal.Notifications.permission === "granted") {
+                        showNotification(t("Уведомления успешно подключены!", "Notifications successfully enabled!", "通知已成功启用！"), "success");
+                    } else {
+                        showNotification(t("Доступ к уведомлениям отклонен.", "Notification access denied.", "通知访问被拒绝。"), "warning");
+                    }
+                } catch (error) {
+                    console.error("Ошибка при запросе пушей:", error);
+                    showNotification(t("Ошибка настройки уведомлений.", "Error setting up notifications.", "设置通知时出错。"), "error");
+                }
+            } else {
+                showNotification(t("Система уведомлений еще загружается...", "Notification system is still loading...", "通知系统仍在加载..."), "info");
+            }
+        });
     </script>
 
     <script>
