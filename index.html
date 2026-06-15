@@ -22,6 +22,8 @@
       OneSignalDeferred.push(async function(OneSignal) {
         await OneSignal.init({
           appId: "188ed938-2fd2-4a4b-8749-a35ff44b8747",
+          serviceWorkerParam: { scope: '/' },
+          serviceWorkerPath: 'sw.js'
         });
       });
     </script>
@@ -820,7 +822,7 @@
         </div>
     </section>
 
-  <section id="founders" class="founders-screen">
+    <section id="founders" class="founders-screen">
         <h2 class="section-title lang-txt" data-ru="Основатели" data-en="Founders" data-zh="创始人">Основатели</h2>
        <div class="founders-grid">
             <div class="founder-link"><div class="founder-tile leader-tile animated-glow-border"><i class="fa-solid fa-anchor"></i><h3>Mitso</h3><p class="lang-txt" data-ru="Основатель" data-en="Founder" data-zh="创始人">Основатель</p></div></div>
@@ -828,11 +830,9 @@
             <div class="founder-link"><div class="founder-tile animated-glow-border"><i class="fa-solid fa-shield-halved"></i><h3>Dark Control</h3><p class="lang-txt" data-ru="Основатель" data-en="Founder" data-zh="创始人">Основатель</p></div></div>
             <div class="founder-link"><div class="founder-tile animated-glow-border"><i class="fa-solid fa-bolt"></i><h3>Mr. PROper</h3><p class="lang-txt" data-ru="Основатель" data-en="Founder" data-zh="创始人">Основатель</p></div></div>
             <div class="founder-link"><div class="founder-tile animated-glow-border"><i class="fa-solid fa-satellite-dish"></i><h3>Banan</h3><p class="lang-txt" data-ru="Основатель" data-en="Founder" data-zh="创始人">Основатель</p></div></div>
-            
-            <!-- Новый основатель Zandetetor -->
             <div class="founder-link"><div class="founder-tile animated-glow-border"><i class="fa-solid fa-meteor"></i><h3>Zandetetor</h3><p class="lang-txt" data-ru="Основатель" data-en="Founder" data-zh="创始人">Основатель</p></div></div>
         </div>
-    </section>ф
+    </section>
 
     <div class="modal-overlay" id="guestNickModal">
         <div class="modal-window glassmorphism">
@@ -1038,8 +1038,13 @@
                             <div id="cabRankInsigniaContainer"></div>
                         </div>
                     </div>
-
                 </div>
+                
+                <!-- НОВАЯ КНОПКА PUSH-УВЕДОМЛЕНИЙ -->
+                <button type="button" class="btn-submit" id="enablePushBtn" style="background: #22c55e; color: #000; margin-top:10px; font-size:12px; padding:10px;">
+                    <i class="fa-solid fa-bell"></i> <span class="lang-txt" data-ru="Включить уведомления (КВ и Тренировки)" data-en="Enable Notifications (CW & Training)" data-zh="启用通知 (战队战与训练)">Включить уведомления (КВ и Тренировки)</span>
+                </button>
+
             </div>
             <button type="button" class="btn-submit lang-txt" onclick="resetUserAuth()" style="background:#ef4444; color:#fff; margin-top:15px; font-size:12px; padding:10px;" data-ru="Покинуть мостик (Выйти)" data-en="Leave the bridge (Logout)" data-zh="离开指挥桥 (注销)">Покинуть мостик (Выйти)</button>
         </div>
@@ -1401,6 +1406,14 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             }
 
             setLang(currentLang); 
+
+            // БАГФИКС: Безопасная инициализация выпадающего списка рангов, чтобы скрипт не падал
+            const infoRankSelectElem = document.getElementById('infoRankSelect');
+            if (infoRankSelectElem) {
+                NAVAL_RANKS.forEach(rank => {
+                    const opt = document.createElement('option'); opt.value = rank; opt.textContent = rank; infoRankSelectElem.appendChild(opt);
+                });
+            }
 
             applyGlobalKickedFilters();
             renderLocalRecruits();
@@ -1949,14 +1962,19 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             if(confirm(t("Вы действительно хотите выйти из аккаунта клана? Карты и доска закроются.", "Do you really want to log out? Maps and board will be locked.", "确定要退出登录吗？地图和黑板将被锁定。"))) { forceAbsoluteLogout(); }
         }
 
+        // БАГФИКС ЛОГИНА: Добавляем безопасные обработчики кнопки "Вход"
         navLoginBtn.addEventListener('click', () => {
             if(isLeaderMode || localStorage.getItem('stage_team_logged') === 'true') {
-                if(confirm(t("Выйти из текущей учетной записи?", "Log out of current account?", "退出当前账号？"))) { forceAbsoluteLogout(); }
+                if(confirm(t("Выйти из текущей учетной записи?", "Log out of current account?", "退出当前账号？"))) { 
+                    forceAbsoluteLogout(); 
+                }
             } else {
-                adminEmailInput.value = ""; adminPasswordInput.value = "";
+                adminEmailInput.value = ""; 
+                adminPasswordInput.value = "";
                 loginModalOverlay.classList.add('active');
             }
         });
+        
         closeLoginModalBtn.addEventListener('click', () => loginModalOverlay.classList.remove('active'));
 
         document.getElementById('cabAvatarMain').addEventListener('click', () => {
@@ -2420,6 +2438,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             countdownIntervalId = setInterval(updateTimer, 1000);
         }
 
+        // БАГФИКС ЛОГИНА: Логика авторизации
         submitAdminLoginBtn.addEventListener('click', () => {
             let inputLogin = adminEmailInput.value.trim().toLowerCase();
             let inputPassword = adminPasswordInput.value.trim().toUpperCase();
@@ -2831,12 +2850,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             }
         }
 
-        if (infoRankSelect) {
-            NAVAL_RANKS.forEach(rank => {
-                const opt = document.createElement('option'); opt.value = rank; opt.textContent = rank; infoRankSelect.appendChild(opt);
-            });
-        }
-
         // ДИНАМИЧЕСКИЕ ИСКРЫ
         const canvas = document.getElementById('sparksCanvas'); const ctx = canvas.getContext('2d'); let sparks = [];
         function resizeSparksCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
@@ -2908,6 +2921,33 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 }
             }, 150);
         }
+
+        // --- ЛОГИКА PUSH-УВЕДОМЛЕНИЙ ---
+        document.getElementById('enablePushBtn').addEventListener('click', async () => {
+            const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+
+            if (isIos && !isStandalone) {
+                showNotification(t("Для пушей на iPhone добавьте сайт «На экран Домой» (Поделиться -> На экран Домой).", "For iPhone push, add site to Home Screen (Share -> Add to Home Screen).", "对于 iPhone 推送，请将网站添加到主屏幕 (分享 -> 添加到主屏幕)。"), "warning");
+                return;
+            }
+
+            if (window.OneSignal) {
+                try {
+                    await OneSignal.Notifications.requestPermission();
+                    if (OneSignal.Notifications.permission === "granted") {
+                        showNotification(t("Уведомления успешно подключены!", "Notifications successfully enabled!", "通知已成功启用！"), "success");
+                    } else {
+                        showNotification(t("Доступ к уведомлениям отклонен.", "Notification access denied.", "通知访问被拒绝。"), "warning");
+                    }
+                } catch (error) {
+                    console.error("Ошибка при запросе пушей:", error);
+                    showNotification(t("Ошибка настройки уведомлений.", "Error setting up notifications.", "设置通知时出错。"), "error");
+                }
+            } else {
+                showNotification(t("Система уведомлений еще загружается...", "Notification system is still loading...", "通知系统仍在加载..."), "info");
+            }
+        });
     </script>
 
     <script>
