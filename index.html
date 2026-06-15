@@ -28,9 +28,12 @@
       });
 
       // Функция отправки уведомлений
+      // Функция отправки уведомлений (С ПРОКСИ ДЛЯ ОБХОДА CORS)
       async function sendPushNotification(messageText) {
-        const MY_REST_API_KEY = 'os_v2_app_dchnsobp2jfexb2junp7is4hi7oxvtwt5beesqmwasxn2uagsdgk3q2n62cdng3zaeqpp5xlr53k47fujxe22nltjwyutfhlj7o7njy'; 
-        await fetch("https://onesignal.com/api/v1/notifications", {
+        const MY_REST_API_KEY = 'os_v2_app_dchnsobp2jfexb2junp7is4hi5xiqndtew3uekvsgq5be6ul76mbvsbbxqlykpmthyud4yjvca3whedv57lxtogr775oiixwf4624vy'; 
+        
+        // Используем сервис corsproxy.io для обхода блокировки браузера
+        await fetch("https://corsproxy.io/?https://onesignal.com/api/v1/notifications", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
