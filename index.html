@@ -17,18 +17,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-<script>
+    <script>
       window.OneSignalDeferred = window.OneSignalDeferred || [];
       OneSignalDeferred.push(async function(OneSignal) {
-        await OneSignal.init({
+       await OneSignal.init({
           appId: "188ed938-2fd2-4a4b-8749-a35ff44b8747",
           serviceWorkerParam: { scope: '/ru/' },
           serviceWorkerPath: 'sw.js'
         });
       });
 
+      // Функция отправки уведомлений
       async function sendPushNotification(messageText) {
-        const MY_REST_API_KEY = 'os_v2_app_dchnsobp2jfexb2junp7is4hi7cqhax75z3efk4gkqvz4etbotfykvtl74blndxunicykbwh5x765ohesfgf47eggp2kxysg7z6rm5y'; 
+        const MY_REST_API_KEY = 'os_v2_app_dchnsobp2jfexb2junp7is4hi4vtogjmghqevveykdl4hkephcvmchs5ujmlvkubzf5jwryve4xh6edaawjkpgxfziqlsoahc2ezsma'; 
         await fetch("https://onesignal.com/api/v1/notifications", {
           method: "POST",
           headers: {
@@ -42,9 +43,6 @@
           })
         });
       }
-</script> ```
-    </script>
-      });
     </script>
     
     <style>
@@ -1059,7 +1057,6 @@
                     </div>
                 </div>
                 
-                <!-- НОВАЯ КНОПКА PUSH-УВЕДОМЛЕНИЙ -->
                 <button type="button" class="btn-submit" id="enablePushBtn" style="background: #22c55e; color: #000; margin-top:10px; font-size:12px; padding:10px;">
                     <i class="fa-solid fa-bell"></i> <span class="lang-txt" data-ru="Включить уведомления (КВ и Тренировки)" data-en="Enable Notifications (CW & Training)" data-zh="启用通知 (战队战与训练)">Включить уведомления (КВ и Тренировки)</span>
                 </button>
@@ -1772,6 +1769,13 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             cloudDatabase.chat.push({ author, text, time: Date.now() });
             if (cloudDatabase.chat.length > 100) cloudDatabase.chat.shift();
             
+            // ВЫЗОВ ПУША СЮДА
+            try {
+                await sendPushNotification(text);
+            } catch(e) {
+                console.error("Ошибка отправки пуша:", e);
+            }
+
             input.value = '';
             await saveToCloud();
             renderChat();
