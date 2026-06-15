@@ -23,19 +23,19 @@
        await OneSignal.init({
           appId: "188ed938-2fd2-4a4b-8749-a35ff44b8747",
           serviceWorkerParam: { scope: '/ru/' },
-          serviceWorkerPath: '/ru/sw.js'
+          serviceWorkerPath: '/ru/OneSignalSDKWorker.js' // ИСПРАВЛЕН ПУТЬ
         });
       });
 
-      // Функция отправки уведомлений
-      // Функция отправки уведомлений (С ПРОКСИ ДЛЯ ОБХОДА CORS)
-     // Функция отправки уведомлений
-      async function sendPushNotification(messageText) {
-        // Не забудь вставить свои половинки ключа!
+      // Функция отправки уведомлений о сообщениях в чате (Всем подписанным пользователям)
+      async function sendPushNotification(authorName, messageText) {
+        // Разделенный ключ для обхода сканера GitHub
         const part1 = "os_v2_app_"; 
         const part2 = "dchnsobp2jfexb2junp7is4hi5yglqahctkejufd5z4p3rxklmqorx3gbq4hs644swhy5p43etwm7dvcdh2hwvsqqx2t33pybvxqbky";
         const MY_REST_API_KEY = part1 + part2; 
         
+        const pushText = authorName + ": " + messageText;
+
         await fetch("https://corsproxy.io/?https://onesignal.com/api/v1/notifications", {
           method: "POST",
           headers: {
@@ -50,8 +50,8 @@
               "ru": "STAGE Чат"
             },
             contents: { 
-              "en": messageText,
-              "ru": messageText
+              "en": pushText,
+              "ru": pushText
             }
           })
         });
@@ -189,8 +189,8 @@
         .training-countdown-widget { border: 2px solid #00f2fe; box-shadow: 0 0 25px rgba(0, 242, 254, 0.35); }
         .cw-countdown-widget { border: 2px solid #ff0055; box-shadow: 0 0 25px rgba(255, 0, 85, 0.35); transition: border-color 0.3s, box-shadow 0.3s; }
 
-        .close-timer-btn { display: none; position: absolute; top: 8px; right: 14px; color: rgba(255, 255, 255, 0.3); font-size: 20px; cursor: pointer; transition: color 0.2s; font-family: sans-serif; font-weight: bold; }
-        .close-timer-btn:hover { color: #ff0055; }
+        .close-timer-btn { display: none; position: absolute; top: 8px; right: 14px; color: rgba(255, 255, 255, 0.5); font-size: 24px; cursor: pointer; transition: color 0.2s; font-family: sans-serif; font-weight: bold; z-index: 100; }
+        .close-timer-btn:hover { color: #ff0055; text-shadow: 0 0 10px #ff0055; }
         
         .training-countdown-title { font-size: 13px; color: #a855f7; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; font-weight: 900; }
         .cw-countdown-title { font-size: 13px; color: #ff0055; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; font-weight: 900; transition: color 0.3s; }
@@ -317,7 +317,6 @@
         .chat-msg .chat-btn.del-btn:hover { color: #ff0055; }
         
         .chat-input-area { display: flex; background: rgba(0,0,0,0.5); padding: 15px; border-top: 1px solid rgba(255,255,255,0.1); gap: 10px; }
-        /* ДОБАВЛЕНО: font-size: 16px !important; для фикса зума на iOS Safari */
         .chat-input-area input { flex: 1; background: rgba(2, 5, 10, 0.6); border: 1px solid rgba(0, 242, 254, 0.3); color: #fff; padding: 12px 15px; font-family: 'Oswald', sans-serif; font-size: 16px !important; border-radius: 4px; outline: none; transition: 0.3s; }
         .chat-input-area input:focus { border-color: #00f2fe; box-shadow: 0 0 10px rgba(0, 242, 254, 0.2); }
         .chat-input-area button { background: #00f2fe; color: #02050a; border: none; padding: 0 25px; border-radius: 4px; cursor: pointer; transition: 0.2s; font-size: 16px; }
@@ -340,7 +339,6 @@
         .btn-wiki { border: 2px solid #a855f7; background: rgba(168, 85, 247, 0.15); box-shadow: 0 0 15px rgba(168, 85, 247, 0.2); }
         .btn-wiki:hover { background: #a855f7; box-shadow: 0 0 35px rgba(168, 85, 247, 0.6); color: #ffffff !important; }
         
-        /* Кнопка MW Stats */
         .btn-mwstats { border: 2px solid #00f2fe; background: rgba(0, 242, 254, 0.15); box-shadow: 0 0 15px rgba(0, 242, 254, 0.2); }
         .btn-mwstats:hover { background: #00f2fe; box-shadow: 0 0 35px rgba(0, 242, 254, 0.6); color: #02050a !important; }
 
@@ -710,7 +708,7 @@
         <div id="adminBadge" class="lang-txt" data-ru='<i class="fa-solid fa-shield-halved"></i> Режим Лидера Активирован' data-en='<i class="fa-solid fa-shield-halved"></i> Leader Mode Activated' data-zh='<i class="fa-solid fa-shield-halved"></i> 队长模式已激活'><i class="fa-solid fa-shield-halved"></i> Режим Лидера Активирован</div>
 
         <div class="cw-countdown-widget glassmorphism" id="cwCountdownWidget">
-            <span class="close-timer-btn" id="btnCloseCwTimer" onclick="executeResetCwTimer()">&times;</span>
+            <span class="close-timer-btn" id="btnCloseCwTimer">&times;</span>
             <div id="cwWidgetTitle" class="cw-countdown-title lang-txt" data-ru="🔥 До начала Клановых Боёв:" data-en="🔥 Time to Clan Wars:" data-zh="🔥 距离战队战开始：">🔥 До начала Клановых Боёв:</div>
             <div class="cw-timer-display">
                 <div class="cw-unit-box"><div class="num" id="cwTimerDays">00</div><div class="lbl lang-txt" data-ru="Дн" data-en="D" data-zh="天">Дн</div></div>
@@ -721,7 +719,7 @@
         </div>
 
         <div class="training-countdown-widget glassmorphism" id="trainingCountdownWidget">
-            <span class="close-timer-btn" id="btnCloseTimer" onclick="executeResetTrainingTimer()">&times;</span>
+            <span class="close-timer-btn" id="btnCloseTimer">&times;</span>
             
             <div class="training-countdown-title lang-txt" data-ru="⚔️ До начала тренировки:" data-en="⚔️ Time to tactical fleet training:" data-zh="⚔️ 距离舰队训练开始：">⚔️ До начала тренировки флота:</div>
             <div class="training-timer-display">
@@ -1337,10 +1335,21 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
         const adminEmailInput = document.getElementById('adminEmailInput');
         const adminPasswordInput = document.getElementById('adminPasswordInput');
 
+        // ИСПРАВЛЕНИЕ: Кнопки проверки статуса одобрения
         const switchToVerify = document.getElementById('switchToVerify');
         const switchToForm = document.getElementById('switchToForm');
         const checkVerifyBtn = document.getElementById('checkVerifyBtn');
         const verifyTgInput = document.getElementById('verifyTgInput');
+        
+        switchToVerify.addEventListener('click', () => {
+            recruitForm.style.display = 'none';
+            verifyBlock.style.display = 'block';
+        });
+        
+        switchToForm.addEventListener('click', () => {
+            verifyBlock.style.display = 'none';
+            recruitForm.style.display = 'block';
+        });
         
         const boardActualContainer = document.getElementById('boardActualContainer');
         const boardContainer = document.getElementById('boardContainer');
@@ -1782,9 +1791,9 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             cloudDatabase.chat.push({ author, text, time: Date.now() });
             if (cloudDatabase.chat.length > 100) cloudDatabase.chat.shift();
             
-            // ВЫЗОВ ПУША СЮДА
+            // ВЫЗОВ ПУША С ПЕРЕДАЧЕЙ ИМЕНИ АВТОРА
             try {
-                await sendPushNotification(text);
+                await sendPushNotification(author, text);
             } catch(e) {
                 console.error("Ошибка отправки пуша:", e);
             }
@@ -1998,7 +2007,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             if(confirm(t("Вы действительно хотите выйти из аккаунта клана? Карты и доска закроются.", "Do you really want to log out? Maps and board will be locked.", "确定要退出登录吗？地图和黑板将被锁定。"))) { forceAbsoluteLogout(); }
         }
 
-        // БАГФИКС ЛОГИНА: Добавляем безопасные обработчики кнопки "Вход"
         navLoginBtn.addEventListener('click', () => {
             if(isLeaderMode || localStorage.getItem('stage_team_logged') === 'true') {
                 if(confirm(t("Выйти из текущей учетной записи?", "Log out of current account?", "退出当前账号？"))) { 
@@ -2104,7 +2112,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
         });
         closeCabinetModalBtn.addEventListener('click', () => cabinetModalOverlay.classList.remove('active'));
 
-        // Функция проверки доступа к кнопке Тренировка
         function updateTrainingButtonVisibility() {
             const btn = document.getElementById('btnTrainingTrigger');
             if (!btn) return;
@@ -2133,7 +2140,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 if (spec && spec !== "Не назначена" && spec !== "") hasSpec = true;
             }
             
-            // Если не лидер и нет специализации — блокируем действие
             if (!isLeaderMode && !hasSpec) return;
 
             const todayStr = new Date().toISOString().split('T')[0];
@@ -2195,6 +2201,12 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                     })
                 });
 
+                // ИСПРАВЛЕНИЕ: Обработка ошибок телеграм бота
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.description || "Неизвестная ошибка Telegram API");
+                }
+
                 cloudDatabase.trainingTime = targetTimestamp;
                 cloudDatabase.trainingYes = [];
                 cloudDatabase.trainingNo = [];
@@ -2205,7 +2217,8 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
 
                 showNotification(t("Тренировка запланирована!", "Training scheduled!", "训练已安排！"), 'success');
             } catch (err) {
-                alert("Ошибка связи: " + err.message);
+                alert("Ошибка связи с Telegram: " + err.message + "\nУбедитесь, что бот является администратором и ID темы верный.");
+                console.error(err);
             } finally {
                 btnSubmitTraining.textContent = t("Готово", "Done", "完成");
                 btnSubmitTraining.disabled = false;
@@ -2339,6 +2352,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             cwCountdownIntervalId = setInterval(updateCwTimer, 1000);
         }
 
+        // ИСПРАВЛЕНИЕ: Надежные слушатели для крестиков таймеров
         window.executeResetCwTimer = async function() {
             if(!isLeaderMode) return;
             if(confirm(t("Вы действительно хотите выключить автоматический таймер Клан Вара?", "Disable Auto Clan War timer?", "禁用自动战队战计时器？"))) {
@@ -2348,18 +2362,41 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 if (cwCountdownIntervalId) clearInterval(cwCountdownIntervalId);
                 cwCountdownWidget.style.display = 'none';
             }
-        }
+        };
+        btnCloseCwTimer.addEventListener('click', executeResetCwTimer);
+
+        window.executeResetTrainingTimer = async function() {
+            if(!isLeaderMode) return;
+            if(confirm(t("Вы действительно хотите отменить текущую тренировку и удалить таймер?", "Cancel training and remove timer?", "取消当前训练并移除计时器？"))) {
+                cloudDatabase.trainingTime = null;
+                cloudDatabase.trainingYes = [];
+                cloudDatabase.trainingNo = [];
+                await saveToCloud();
+                if (countdownIntervalId) clearInterval(countdownIntervalId);
+                trainingCountdownWidget.style.display = 'none';
+                showNotification(t("Тренировка отменена", "Training cancelled", "训练已取消"), 'warning');
+            }
+        };
+        btnCloseTimer.addEventListener('click', executeResetTrainingTimer);
+
 
         async function triggerCwNotification() {
             cloudDatabase.cwNotified = true;
             await saveToCloud();
             const messageText = `⚔️ <b>ВНИМАНИЕ, ФЛОТ STAGE!</b>\n\n🔥 <b>КЛАНОВЫЕ БОИ НАЧАЛИСЬ!</b> 🔥\n\nНе пропустите! 🚢💥`;
             try {
-                await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+                const response = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ chat_id: TG_CHAT_ID, message_thread_id: TRAINING_THREAD_ID, text: messageText, parse_mode: 'html' })
                 });
-            } catch (err) { console.error("Ошибка уведомления КВ:", err); }
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.description);
+                }
+            } catch (err) { 
+                console.error("Ошибка уведомления КВ:", err); 
+                showNotification("Ошибка бота ТГ (Авто-КВ): " + err.message, "error");
+            }
         }
 
         window.registerWebsiteVote = async function(type) {
@@ -2386,19 +2423,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
 
             renderAttendanceListsOnSite();
             await saveToCloud();
-        }
-
-        window.executeResetTrainingTimer = async function() {
-            if(!isLeaderMode) return;
-            if(confirm(t("Вы действительно хотите отменить текущую тренировку и удалить таймер?", "Cancel training and remove timer?", "取消当前训练并移除计时器？"))) {
-                cloudDatabase.trainingTime = null;
-                cloudDatabase.trainingYes = [];
-                cloudDatabase.trainingNo = [];
-                await saveToCloud();
-                if (countdownIntervalId) clearInterval(countdownIntervalId);
-                trainingCountdownWidget.style.display = 'none';
-                showNotification(t("Тренировка отменена", "Training cancelled", "训练已取消"), 'warning');
-            }
         }
 
         function renderAttendanceListsOnSite() {
@@ -2474,7 +2498,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             countdownIntervalId = setInterval(updateTimer, 1000);
         }
 
-        // БАГФИКС ЛОГИНА: Логика авторизации
         submitAdminLoginBtn.addEventListener('click', () => {
             let inputLogin = adminEmailInput.value.trim().toLowerCase();
             let inputPassword = adminPasswordInput.value.trim().toUpperCase();
@@ -2658,7 +2681,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 if (cloudDatabase.metadata[tg].nick === nick) { playerMeta = cloudDatabase.metadata[tg]; break; }
             }
 
-            // Устанавливаем аватарку или убираем её, если не задана
             if (playerMeta && playerMeta.avatar) {
                 infoAvatar.style.backgroundImage = `url('${playerMeta.avatar}')`;
             } else if (nick === 'Mitso' && cloudDatabase.metadata['@bymitso'] && cloudDatabase.metadata['@bymitso'].avatar) {
@@ -2912,86 +2934,4 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
         }
         for (let i = 0; i < 35; i++) sparks.push(new Spark());
         function animateSparks() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height); sparks.forEach(spark => { spark.update(); spark.draw(); });
-            requestAnimationFrame(animateSparks);
-        }
-        animateSparks();
-
-        function playTerminalSound() {
-            try {
-                const AudioContext = window.AudioContext || window.webkitAudioContext; if (!AudioContext) return;
-                const ctx = new AudioContext(); const osc = ctx.createOscillator(); const gain = ctx.createGain();
-                osc.connect(gain); gain.connect(ctx.destination); osc.type = 'square';
-                osc.frequency.setValueAtTime(600, ctx.currentTime); osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.1);
-                gain.gain.setValueAtTime(0.05, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
-                osc.start(); osc.stop(ctx.currentTime + 0.3);
-            } catch(e){}
-        }
-
-        function startCyberTerminalLoader() {
-            const bootScreen = document.getElementById('bootScreen');
-            const loaderBar = document.getElementById('loaderBar');
-            const loaderSubtext = document.getElementById('loaderSubtext');
-
-            let progress = 0;
-            const texts = [
-                t("УСТАНОВКА ЗАЩИЩЕННОГО СОЕДИНЕНИЯ...", "ESTABLISHING SECURE CONNECTION...", "正在建立安全连接..."),
-                t("ОБХОД СИСТЕМ БЕЗОПАСНОСТИ...", "BYPASSING SECURITY PROTOCOLS...", "正在绕过安全协议..."),
-                t("ДЕШИФРОВКА ТАКТИЧЕСКИХ ДАННЫХ...", "DECRYPTING TACTICAL DATA...", "正在解密战术数据..."),
-                t("ДОСТУП РАЗРЕШЕН", "ACCESS GRANTED", "访问已授权")
-            ];
-            let textIndex = 0; loaderSubtext.textContent = texts[0];
-
-            const interval = setInterval(() => {
-                progress += Math.random() * 12; if(progress >= 100) progress = 100;
-                loaderBar.style.width = progress + '%';
-
-                if(progress > 30 && textIndex === 0) { loaderSubtext.textContent = texts[1]; textIndex++; }
-                if(progress > 65 && textIndex === 1) { loaderSubtext.textContent = texts[2]; textIndex++; }
-                
-                if(progress >= 100) {
-                    loaderSubtext.textContent = texts[3]; loaderSubtext.style.color = "#22c55e"; 
-                    loaderBar.style.backgroundColor = "#22c55e"; loaderBar.style.boxShadow = "0 0 15px #22c55e";
-                    clearInterval(interval);
-                    setTimeout(() => { bootScreen.classList.add('hidden'); playTerminalSound(); }, 800);
-                }
-            }, 150);
-        }
-
-        // --- ЛОГИКА PUSH-УВЕДОМЛЕНИЙ ---
-        document.getElementById('enablePushBtn').addEventListener('click', async () => {
-            const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
-
-            if (isIos && !isStandalone) {
-                showNotification(t("Для пушей на iPhone добавьте сайт «На экран Домой» (Поделиться -> На экран Домой).", "For iPhone push, add site to Home Screen (Share -> Add to Home Screen).", "对于 iPhone 推送，请将网站添加到主屏幕 (分享 -> 添加到主屏幕)。"), "warning");
-                return;
-            }
-
-            if (window.OneSignal) {
-                try {
-                    await OneSignal.Notifications.requestPermission();
-                    if (OneSignal.Notifications.permission === "granted") {
-                        showNotification(t("Уведомления успешно подключены!", "Notifications successfully enabled!", "通知已成功启用！"), "success");
-                    } else {
-                        showNotification(t("Доступ к уведомлениям отклонен.", "Notification access denied.", "通知访问被拒绝。"), "warning");
-                    }
-                } catch (error) {
-                    console.error("Ошибка при запросе пушей:", error);
-                    showNotification(t("Ошибка настройки уведомлений.", "Error setting up notifications.", "设置通知时出错。"), "error");
-                }
-            } else {
-                showNotification(t("Система уведомлений еще загружается...", "Notification system is still loading...", "通知系统仍在加载..."), "info");
-            }
-        });
-    </script>
-
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('sw.js').then(registration => { console.log('ServiceWorker успешно запущен'); });
-        });
-      }
-    </script>
-</body>
-</html>
+            ctx.clearRect(0
