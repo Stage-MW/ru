@@ -23,46 +23,15 @@
        await OneSignal.init({
           appId: "188ed938-2fd2-4a4b-8749-a35ff44b8747",
           serviceWorkerParam: { scope: '/ru/' },
-          serviceWorkerPath: '/ru/sw.js'
+          serviceWorkerPath: '/ru/OneSignalSDKWorker.js'
         });
       });
-
-      // Функция отправки уведомлений
-      // Функция отправки уведомлений (С ПРОКСИ ДЛЯ ОБХОДА CORS)
-     // Функция отправки уведомлений
-      async function sendPushNotification(messageText) {
-        // Не забудь вставить свои половинки ключа!
-        const part1 = "os_v2_app_"; 
-        const part2 = "dchnsobp2jfexb2junp7is4hi5yglqahctkejufd5z4p3rxklmqorx3gbq4hs644swhy5p43etwm7dvcdh2hwvsqqx2t33pybvxqbky";
-        const MY_REST_API_KEY = part1 + part2; 
-        
-        await fetch("https://corsproxy.io/?https://onesignal.com/api/v1/notifications", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Basic " + MY_REST_API_KEY
-          },
-          body: JSON.stringify({
-            app_id: "188ed938-2fd2-4a4b-8749-a35ff44b8747",
-            included_segments: ["Subscribed Users"],
-            headings: {
-              "en": "STAGE Чат",
-              "ru": "STAGE Чат"
-            },
-            contents: { 
-              "en": messageText,
-              "ru": messageText
-            }
-          })
-        });
-      }
     </script>
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body, html { background-color: #02050a; color: #ffffff; font-family: 'Oswald', sans-serif; scroll-behavior: smooth; overflow-x: hidden; touch-action: manipulation; }
 
-        /* Улучшенный стекломорфизм с бликами */
         .glassmorphism {
             background: rgba(15, 23, 42, 0.45) !important;
             backdrop-filter: blur(12px) !important;
@@ -71,7 +40,6 @@
             box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3), 0 8px 32px rgba(0, 0, 0, 0.6) !important;
         }
 
-        /* Бегущие световые рамки при наведении */
         .animated-glow-border { position: relative; z-index: 1; }
         .animated-glow-border::before {
             content: ""; position: absolute; inset: -2px; border-radius: inherit;
@@ -81,13 +49,12 @@
         }
         .animated-glow-border::after {
             content: ""; position: absolute; inset: 0px; border-radius: inherit;
-            background: rgba(15, 23, 42, 0.85); /* Базовый темный фон карточки */
+            background: rgba(15, 23, 42, 0.85); 
             z-index: -1;
         }
         .animated-glow-border:hover::before { opacity: 1; }
         @keyframes borderMove { 0% { background-position: 0% 0%; } 100% { background-position: 100% 0%; } }
 
-        /* Навигационная панель */
         .nav-bar {
             position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 10;
             display: flex; justify-content: space-between; align-items: center;
@@ -172,7 +139,6 @@
         
         .sub-section-title { font-family: 'Orbitron', sans-serif; font-size: clamp(18px, 4vw, 22px); text-transform: uppercase; letter-spacing: 2px; margin: 25px 0 15px; color: #a855f7; text-shadow: 0 0 10px rgba(168, 85, 247, 0.4); text-align: center; width: 100%; }
 
-        /* СОСТАВ КЛАНА */
         .roster-screen { background-image: linear-gradient(rgba(2, 5, 10, 0.75), rgba(2, 5, 10, 0.9)), url('roster_bg.png'); }
         .roster-container { max-width: 1200px; width: 100%; margin-bottom: 30px;}
         .rank-section { border-radius: 6px; padding: 25px; position: relative; width: 100%; }
@@ -270,7 +236,6 @@
         }
         .btn-join-neon:hover { background: #0088cc; color: #02050a; box-shadow: 0 0 35px rgba(0, 136, 204, 0.8); transform: scale(1.03); }
 
-        /* КАРТЫ И ДОСКА */
         .maps-screen { background-image: linear-gradient(rgba(2, 5, 10, 0.75), rgba(2, 5, 10, 0.9)), url('maps_bg.png'); }
         .maps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; max-width: 1200px; width: 100%; }
         .map-card { border-radius: 6px; padding: 15px; display: flex; flex-direction: column; gap: 12px; transition: border 0.3s, box-shadow 0.3s, transform 0.2s; cursor: grab; user-select: none; }
@@ -300,7 +265,6 @@
         .lock-overlay-box h3 { font-family: 'Orbitron', sans-serif; font-size: 20px; letter-spacing: 2px; margin-bottom: 10px; text-transform: uppercase; }
         .lock-overlay-box p { color: #94a3b8; font-size: 14px; line-height: 1.4; }
 
-        /* ВСТРОЕННЫЙ ЧАТ НА САЙТЕ */
         .chat-system-wrapper { width: 100%; max-width: 800px; display: flex; flex-direction: column; height: auto; border-radius: 12px; overflow: hidden; position: relative; margin-top: 15px;}
         .chat-messages { flex: 1; height: 360px; max-height: 360px; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
         .chat-messages::-webkit-scrollbar { width: 6px; }
@@ -317,13 +281,11 @@
         .chat-msg .chat-btn.del-btn:hover { color: #ff0055; }
         
         .chat-input-area { display: flex; background: rgba(0,0,0,0.5); padding: 15px; border-top: 1px solid rgba(255,255,255,0.1); gap: 10px; }
-        /* ДОБАВЛЕНО: font-size: 16px !important; для фикса зума на iOS Safari */
         .chat-input-area input { flex: 1; background: rgba(2, 5, 10, 0.6); border: 1px solid rgba(0, 242, 254, 0.3); color: #fff; padding: 12px 15px; font-family: 'Oswald', sans-serif; font-size: 16px !important; border-radius: 4px; outline: none; transition: 0.3s; }
         .chat-input-area input:focus { border-color: #00f2fe; box-shadow: 0 0 10px rgba(0, 242, 254, 0.2); }
         .chat-input-area button { background: #00f2fe; color: #02050a; border: none; padding: 0 25px; border-radius: 4px; cursor: pointer; transition: 0.2s; font-size: 16px; }
         .chat-input-area button:hover { background: #fff; box-shadow: 0 0 15px rgba(0, 242, 254, 0.6); }
 
-        /* КНОПКИ ЧАТОВ */
         .social-container { max-width: 500px; width: 100%; display: flex; flex-direction: column; gap: 15px; align-items: center; }
         .social-btn { display: flex; align-items: center; justify-content: center; gap: 15px; width: 100%; padding: 18px; border-radius: 8px; text-decoration: none; font-family: 'Orbitron', sans-serif; font-size: clamp(18px, 5vw, 24px); font-weight: 900; text-transform: uppercase; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); backdrop-filter: blur(5px); color: #fff; }
         .social-btn:hover { transform: scale(1.08); color: #02050a; }
@@ -340,11 +302,9 @@
         .btn-wiki { border: 2px solid #a855f7; background: rgba(168, 85, 247, 0.15); box-shadow: 0 0 15px rgba(168, 85, 247, 0.2); }
         .btn-wiki:hover { background: #a855f7; box-shadow: 0 0 35px rgba(168, 85, 247, 0.6); color: #ffffff !important; }
         
-        /* Кнопка MW Stats */
         .btn-mwstats { border: 2px solid #00f2fe; background: rgba(0, 242, 254, 0.15); box-shadow: 0 0 15px rgba(0, 242, 254, 0.2); }
         .btn-mwstats:hover { background: #00f2fe; box-shadow: 0 0 35px rgba(0, 242, 254, 0.6); color: #02050a !important; }
 
-        /* Новые фоны и разделы */
         .chat-page-screen { background-image: linear-gradient(rgba(2, 5, 10, 0.75), rgba(2, 5, 10, 0.95)), url('chat_page_bg.png'); }
         .channels-screen { background-image: linear-gradient(rgba(2, 5, 10, 0.75), rgba(2, 5, 10, 0.95)), url('chat_bg.png'); }
         .creators-screen { background-image: linear-gradient(rgba(2, 5, 10, 0.75), rgba(2, 5, 10, 0.95)), url('creators_bg.png'); }
@@ -360,7 +320,6 @@
         .founder-tile p { color: #00f2fe; font-size: 13px; text-transform: uppercase; font-weight: bold; }
         .founder-link:hover .founder-tile { transform: translateY(-8px); }
 
-        /* СТИЛИ ЛИЧНОГО КАБИНЕТА */
         .cabinet-profile-box { display: flex; flex-direction: column; align-items: center; gap: 20px; margin-top: 10px; }
         .cabinet-avatar-container { position: relative; width: 110px; height: 110px; border-radius: 50%; border: 3px solid #a855f7; background: #02050a; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 25px rgba(168, 85, 247, 0.4); overflow: hidden; background-size: cover; background-position: center; cursor: pointer; transition: all 0.3s ease; }
         .cabinet-avatar-container:hover { transform: scale(1.05); border-color: #00f2fe; box-shadow: 0 0 35px rgba(0, 242, 254, 0.6); }
@@ -398,7 +357,6 @@
             100% { transform: scale(1); box-shadow: 0 0 10px rgba(168, 85, 247, 0.5); }
         }
 
-        /* ИНДИКАТОР ОНЛАЙН */
         .online-widget { position: fixed; bottom: 20px; right: 20px; background: rgba(5, 10, 20, 0.85); border: 1px solid rgba(34, 197, 94, 0.4); padding: 8px 12px; border-radius: 20px; z-index: 100; display: none; align-items: center; gap: 10px; backdrop-filter: blur(5px); box-shadow: 0 0 15px rgba(34, 197, 94, 0.2); font-family: 'Orbitron', sans-serif; transition: all 0.3s ease; cursor: default; }
         .online-widget:hover { border-color: #22c55e; box-shadow: 0 0 25px rgba(34, 197, 94, 0.4); }
         .online-dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; box-shadow: 0 0 8px #22c55e; animation: pulseDot 2s infinite; }
@@ -409,34 +367,19 @@
 
         @keyframes pulseDot { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.2); } 100% { opacity: 1; transform: scale(1); } }
 
-        /* --- СИСТЕМА УВЕДОМЛЕНИЙ --- */
         .toast-container {
-            position: fixed;
-            bottom: 90px;
-            right: 20px;
-            z-index: 100000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            pointer-events: none;
+            position: fixed; bottom: 90px; right: 20px; z-index: 100000;
+            display: flex; flex-direction: column; gap: 10px; pointer-events: none;
         }
         .toast-msg {
-            background: rgba(15, 23, 42, 0.9);
-            border-left: 4px solid #00f2fe;
-            color: #fff;
-            padding: 12px 20px;
-            border-radius: 4px;
-            font-family: 'Oswald', sans-serif;
-            font-size: 14px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            backdrop-filter: blur(5px);
-            pointer-events: auto;
+            background: rgba(15, 23, 42, 0.9); border-left: 4px solid #00f2fe; color: #fff;
+            padding: 12px 20px; border-radius: 4px; font-family: 'Oswald', sans-serif; font-size: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5); backdrop-filter: blur(5px); pointer-events: auto;
             animation: slideInRight 0.3s forwards, fadeOut 0.3s forwards 4s;
         }
         @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; transform: translateY(-10px); } }
 
-        /* МОДАЛЬНЫЕ ОКНА */
         .modal-overlay { position: fixed; inset: 0; background: rgba(1, 4, 10, 0.85); z-index: 100; display: none; justify-content: center; align-items: center; backdrop-filter: blur(8px); padding: 15px; }
         .modal-overlay.active { display: flex; }
         
@@ -488,16 +431,13 @@
         .stats-item .num { font-family: 'Orbitron', sans-serif; font-size: 26px; color: #a855f7; font-weight: 900; text-shadow: 0 0 10px rgba(168,85,247,0.4); }
         .stats-item .label { font-size: 10px; color: #94a3b8; text-transform: uppercase; margin-top: 3px; letter-spacing: 0.5px; }
 
-        /* ШТАБ МОДЕРАЦИИ */
         .terminal-box { border: 1px solid rgba(0, 242, 254, 0.3); background: rgba(2, 5, 10, 0.8); padding: 12px; border-radius: 4px; margin-top: 10px; text-align: left; }
         .terminal-actions { display: flex; gap: 10px; margin-top: 10px; }
         .btn-terminal-accept { flex: 1; padding: 8px; background: #22c55e; border: none; font-family: 'Orbitron', sans-serif; font-weight: 900; color: #000; border-radius: 4px; cursor: pointer; text-transform: uppercase; font-size: 12px; text-align: center; }
         .btn-terminal-reject { flex: 1; padding: 8px; background: #ef4444; border: none; font-family: 'Orbitron', sans-serif; font-weight: 900; color: #fff; border-radius: 4px; cursor: pointer; text-transform: uppercase; font-size: 12px; text-align: center; }
 
-        /* --- ЭФФЕКТ ИСКР --- */
         #sparksCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 5; }
 
-        /* --- НОВЫЙ ЭКРАН ПРЕДЗАГРУЗКИ: КИБЕР-ТЕРМИНАЛ --- */
         #bootScreen {
             position: fixed; inset: 0; background-color: #02050a; z-index: 99999;
             display: flex; justify-content: center; align-items: center; flex-direction: column;
@@ -507,63 +447,39 @@
         
         .cyber-loader-box { width: 100%; max-width: 350px; text-align: center; padding: 20px; }
         
-        /* Обновленный загрузчик */
         .loader-glitch {
-            display: flex; 
-            justify-content: center; 
-            gap: 4px;
-            font-family: 'Orbitron', sans-serif; 
-            font-size: clamp(40px, 10vw, 60px); 
-            font-weight: 900; 
-            color: #fff;
-            margin-bottom: 25px; 
-            text-transform: uppercase;
+            display: flex; justify-content: center; gap: 4px; font-family: 'Orbitron', sans-serif; 
+            font-size: clamp(40px, 10vw, 60px); font-weight: 900; color: #fff; margin-bottom: 25px; text-transform: uppercase;
         }
 
         .loader-glitch span {
-            display: inline-block;
-            opacity: 0;
-            /* Сначала вылет, затем переход в глитч-эффект */
+            display: inline-block; opacity: 0;
             animation: flyInLetter 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards, cyberGlitch 4s infinite 1.5s;
         }
 
-        /* Направления вылета: слева, по центру, справа */
         .loader-glitch span.fly-l { transform: translateX(-150px) scale(1.5); }
         .loader-glitch span.fly-r { transform: translateX(150px) scale(1.5); }
         .loader-glitch span.fly-c { transform: translateY(-100px) scale(1.5); }
-
-        /* Задержки для эффекта поочередной сборки (от краев к центру) */
         .loader-glitch span:nth-child(1) { animation-delay: 0.1s, 1.5s; }
         .loader-glitch span:nth-child(2) { animation-delay: 0.3s, 1.5s; }
         .loader-glitch span:nth-child(3) { animation-delay: 0.5s, 1.5s; }
         .loader-glitch span:nth-child(4) { animation-delay: 0.3s, 1.5s; }
         .loader-glitch span:nth-child(5) { animation-delay: 0.1s, 1.5s; }
 
-        @keyframes flyInLetter {
-            to {
-                opacity: 1;
-                transform: translate(0, 0) scale(1);
-                text-shadow: 0 0 25px #00f2fe;
-            }
-        }
+        @keyframes flyInLetter { to { opacity: 1; transform: translate(0, 0) scale(1); text-shadow: 0 0 25px #00f2fe; } }
 
         .loader-subtext {
-            font-family: 'Orbitron', sans-serif; font-size: 13px; color: #00f2fe;
-            margin-bottom: 15px; letter-spacing: 2px; height: 20px; text-transform: uppercase;
+            font-family: 'Orbitron', sans-serif; font-size: 13px; color: #00f2fe; margin-bottom: 15px; letter-spacing: 2px; height: 20px; text-transform: uppercase;
         }
         .loader-progress-wrap {
-            width: 100%; height: 4px; background: rgba(0, 242, 254, 0.2); border-radius: 2px; overflow: hidden;
-            position: relative; box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+            width: 100%; height: 4px; background: rgba(0, 242, 254, 0.2); border-radius: 2px; overflow: hidden; position: relative; box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
         }
         .loader-progress-bar {
-            height: 100%; background: #00f2fe; width: 0%;
-            box-shadow: 0 0 15px #00f2fe; transition: width 0.15s ease-out;
+            height: 100%; background: #00f2fe; width: 0%; box-shadow: 0 0 15px #00f2fe; transition: width 0.15s ease-out;
         }
 
         @media (max-width: 768px) {
-            .nav-bar { 
-                top: auto; bottom: 15px; padding: 8px 15px; gap: 12px; width: 95%; left: 50%; transform: translateX(-50%); overflow-x: auto; justify-content: flex-start; -webkit-overflow-scrolling: touch;
-            }
+            .nav-bar { top: auto; bottom: 15px; padding: 8px 15px; gap: 12px; width: 95%; left: 50%; transform: translateX(-50%); overflow-x: auto; justify-content: flex-start; -webkit-overflow-scrolling: touch; }
             .nav-bar::-webkit-scrollbar { display: none; }
             .nav-links-left, .nav-links-right { flex-shrink: 0; }
             .nav-links-left { gap: 8px; }
@@ -593,45 +509,12 @@
             .modal-window { padding: 20px; }
             .online-widget { bottom: 60px; padding: 5px 8px; }
             
-            /* Полноэкранная мобильная адаптация чата */
-            #chat-page {
-                padding: 0 !important; 
-                height: 100vh;
-                display: flex;
-                flex-direction: column;
-                justify-content: flex-start;
-            }
-            #chat-page .section-title {
-                display: none;
-            }
-            #chat-page .chat-system-wrapper {
-                height: calc(100vh - 65px) !important;
-                max-height: none !important;
-                margin-top: 0;
-                border-radius: 0;
-                border: none;
-                display: flex;
-                flex-direction: column;
-                width: 100%;
-            }
-            #chat-page .chat-messages {
-                flex: 1;
-                max-height: none !important;
-                height: auto !important;
-                padding: 15px;
-                padding-top: 20px;
-            }
-            #chat-page .chat-input-area {
-                padding: 10px;
-                padding-bottom: 20px;
-                border-top: 1px solid rgba(0, 242, 254, 0.3);
-            }
-            
-            /* ДОБАВЛЕНО: Принудительный размер шрифта для input на мобилках (фикс зума) */
-            #chat-page .chat-input-area input {
-                font-size: 16px !important;
-            }
-            
+            #chat-page { padding: 0 !important; height: 100vh; display: flex; flex-direction: column; justify-content: flex-start; }
+            #chat-page .section-title { display: none; }
+            #chat-page .chat-system-wrapper { height: calc(100vh - 65px) !important; max-height: none !important; margin-top: 0; border-radius: 0; border: none; display: flex; flex-direction: column; width: 100%; }
+            #chat-page .chat-messages { flex: 1; max-height: none !important; height: auto !important; padding: 15px; padding-top: 20px; }
+            #chat-page .chat-input-area { padding: 10px; padding-bottom: 20px; border-top: 1px solid rgba(0, 242, 254, 0.3); }
+            #chat-page .chat-input-area input { font-size: 16px !important; }
             .chat-msg .text { padding-right: 40px; padding-bottom: 20px; font-size: 13px;}
             .chat-msg .chat-actions { right: 8px; bottom: 5px; }
         }
@@ -710,7 +593,7 @@
         <div id="adminBadge" class="lang-txt" data-ru='<i class="fa-solid fa-shield-halved"></i> Режим Лидера Активирован' data-en='<i class="fa-solid fa-shield-halved"></i> Leader Mode Activated' data-zh='<i class="fa-solid fa-shield-halved"></i> 队长模式已激活'><i class="fa-solid fa-shield-halved"></i> Режим Лидера Активирован</div>
 
         <div class="cw-countdown-widget glassmorphism" id="cwCountdownWidget">
-            <span class="close-timer-btn" id="btnCloseCwTimer" onclick="executeResetCwTimer()">&times;</span>
+            <span class="close-timer-btn" id="btnCloseCwTimer">&times;</span>
             <div id="cwWidgetTitle" class="cw-countdown-title lang-txt" data-ru="🔥 До начала Клановых Боёв:" data-en="🔥 Time to Clan Wars:" data-zh="🔥 距离战队战开始：">🔥 До начала Клановых Боёв:</div>
             <div class="cw-timer-display">
                 <div class="cw-unit-box"><div class="num" id="cwTimerDays">00</div><div class="lbl lang-txt" data-ru="Дн" data-en="D" data-zh="天">Дн</div></div>
@@ -721,7 +604,7 @@
         </div>
 
         <div class="training-countdown-widget glassmorphism" id="trainingCountdownWidget">
-            <span class="close-timer-btn" id="btnCloseTimer" onclick="executeResetTrainingTimer()">&times;</span>
+            <span class="close-timer-btn" id="btnCloseTimer">&times;</span>
             
             <div class="training-countdown-title lang-txt" data-ru="⚔️ До начала тренировки:" data-en="⚔️ Time to tactical fleet training:" data-zh="⚔️ 距离舰队训练开始：">⚔️ До начала тренировки флота:</div>
             <div class="training-timer-display">
@@ -792,7 +675,7 @@
         <div class="lock-overlay-box glassmorphism" id="mapsLockBox">
             <i class="fa-solid fa-building-shield"></i>
             <h3 class="lang-txt" data-ru="Доступ Ограничен" data-en="Access Restricted" data-zh="访问受限">Доступ Ограничен</h3>
-            <p class="lang-txt" data-ru="Тактические карты доступны исключительно действующим членам клана STAGE. Пожалуйста, авторизуйтесь через terminal 'Вход' в верхнем меню." data-en="Tactical maps are available exclusively to active STAGE clan members. Please authorize via the 'Login' terminal in the top menu." data-zh="战术地图仅供 STAGE 现役成员使用。请通过顶部菜单的“登录”终端进行授权。">Тактические карты доступны исключительно действующим членам клана STAGE. Пожалуйста, авторизуйтесь через терминал "Вход" в верхнем меню.</p>
+            <p class="lang-txt" data-ru="Тактические карты доступны исключительно действующим членам клана STAGE. Пожалуйста, авторизуйтесь через терминал 'Вход' в верхнем меню." data-en="Tactical maps are available exclusively to active STAGE clan members. Please authorize via the 'Login' terminal in the top menu." data-zh="战术地图仅供 STAGE 现役成员使用。请通过顶部菜单的“登录”终端进行授权。">Тактические карты доступны исключительно действующим членам клана STAGE. Пожалуйста, авторизуйтесь через терминал "Вход" в верхнем меню.</p>
         </div>
         <div class="maps-grid collapsed" id="mapsActualGrid" style="display: none; width: 100%;"></div>
         <button type="button" class="toggle-roster-btn lang-txt" id="toggleMapsBtn" data-ru="Показать все карты" data-en="Show all maps" data-zh="显示所有地图" style="display: none; margin-top: 20px;">Показать все карты</button>
@@ -1035,50 +918,6 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="cabinetModalOverlay" style="z-index: 140;">
-        <div class="modal-window glassmorphism" id="cabinetModalWindow" style="max-width: 420px; border-color: #a855f7; box-shadow: 0 0 40px rgba(168, 85, 247, 0.35);">
-            <span class="close-btn" id="closeCabinetModalBtn">&times;</span>
-            <div class="modal-title lang-txt" style="color: #a855f7; border-bottom-color: rgba(168, 85, 247, 0.2);" data-ru="Личный Кабинет Бойца" data-en="Fighter's Personal Cabinet" data-zh="战士个人中心">Личный Кабинет Бойца</div>
-            
-            <div class="cabinet-profile-box">
-                <div class="cabinet-avatar-container" id="cabAvatarMain" title="Кликните для выбора аватара">
-                    <i class="fa-solid fa-user-shield" id="cabAvatarIconDefault"></i>
-                </div>
-                
-                <div class="avatar-picker-title lang-txt" data-ru="Выберите аватар профиля:" data-en="Choose profile avatar:" data-zh="选择个人头像:">Выберите аватар профиля:</div>
-                <div class="avatar-picker-grid" id="avatarPickerGrid"></div>
-                
-                <div class="avatar-picker-title lang-txt" data-ru="Стиль кабинета (Фон):" data-en="Cabinet Style (Bg):" data-zh="界面风格 (背景):" style="margin-top: 10px;">Стиль кабинета (Фон):</div>
-                <div class="avatar-picker-grid" id="bgPickerGrid" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 15px; border-color: rgba(0, 242, 254, 0.3); max-height: 140px; overflow-y: auto; padding-right: 5px;">
-                </div>
-
-                <div class="cabinet-info-list" style="background: rgba(2, 5, 10, 0.4);">
-                    <div class="cabinet-info-item"><span class="lbl lang-txt" data-ru="Ник:" data-en="Nick:" data-zh="昵称:">Ник:</span><span class="val" id="cabNick">-</span></div>
-                    <div class="cabinet-info-item"><span class="lbl lang-txt" data-ru="Игровой ID:" data-en="Game ID:" data-zh="游戏 ID:">Игровой ID:</span><span class="val" id="cabGameId" style="color: #00f2fe;">-</span></div>
-                    <div class="cabinet-info-item"><span class="lbl lang-txt" data-ru="Профиль TG:" data-en="TG Profile:" data-zh="TG 账号:">Профиль TG:</span><span class="val" id="cabTg">-</span></div>
-                    <div class="cabinet-info-item"><span class="lbl lang-txt" data-ru="Telegram ID:" data-en="Telegram ID:" data-zh="Telegram ID:">Telegram ID:</span><span class="val" id="cabTgId">-</span></div>
-                    <div class="cabinet-info-item"><span class="lbl lang-txt" data-ru="Ранг Штаба:" data-en="HQ Rank:" data-zh="总部级别:">Ранг Штаба:</span><span class="val" id="cabRank">-</span></div>
-                    <div class="cabinet-info-item"><span class="lbl lang-txt" data-ru="Дата призыва:" data-en="Enlistment Date:" data-zh="入伍日期:">Дата призыва:</span><span class="val" id="cabDate">-</span></div>
-                    <div class="cabinet-info-item"><span class="lbl lang-txt" data-ru="Специализация:" data-en="Specialization:" data-zh="专业:">Специализация:</span><span class="val" id="cabSpec" style="color: #a855f7;">-</span></div>
-                    
-                    <div class="cabinet-info-item" style="align-items: center;">
-                        <span class="lbl lang-txt" data-ru="Морское Звание:" data-en="Naval Rank:" data-zh="海军军衔:">Морское Звание:</span>
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <span class="val rank-highlight" id="cabRole">-</span>
-                            <div id="cabRankInsigniaContainer"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <button type="button" class="btn-submit" id="enablePushBtn" style="background: #22c55e; color: #000; margin-top:10px; font-size:12px; padding:10px;">
-                    <i class="fa-solid fa-bell"></i> <span class="lang-txt" data-ru="Включить уведомления (КВ и Тренировки)" data-en="Enable Notifications (CW & Training)" data-zh="启用通知 (战队战与训练)">Включить уведомления (КВ и Тренировки)</span>
-                </button>
-
-            </div>
-            <button type="button" class="btn-submit lang-txt" onclick="resetUserAuth()" style="background:#ef4444; color:#fff; margin-top:15px; font-size:12px; padding:10px;" data-ru="Покинуть мостик (Выйти)" data-en="Leave the bridge (Logout)" data-zh="离开指挥桥 (注销)">Покинуть мостик (Выйти)</button>
-        </div>
-    </div>
-
     <div class="modal-overlay" id="lawModalOverlay" style="z-index: 110;">
         <div class="modal-window glassmorphism" style="max-width: 500px;">
             <span class="close-btn" id="closeLawModalBtn">&times;</span>
@@ -1086,10 +925,7 @@
             <div class="law-window-content lang-txt" data-ru="<p>Клан STAGE является некоммерческим добровольным объединением игроков Modern Warships.</p><h4>Регистрируясь на сайте клана, пользователь добровольно предоставляет следующие данные: Telegram username (тег Telegram); Telegram ID; игровой ID; игровой никнейм. Пользователь даёт согласие администрации сайта на хранение, обработку и использование указанных данных исключительно в целях: обработки заявок на вступление в клан; работы Telegram-бота; отправки уведомлений; отображения информации об участниках клана на сайте и в служебных Telegram-группах клана. Предоставленные данные не используются в коммерческих целях и не передаются третьим лицам, за исключением случаев, предусмотренных законодательством Российской Федерации. Пользователь вправе в любой момент запросить удаление своих данных через администрацию сайта. Продолжая регистрацию, пользователь подтверждает согласие с настоящими условиями.</p>" data-en="<p>STAGE clan is a non-commercial voluntary association of Modern Warships players.</p><h4>By registering on the clan website, the user voluntarily provides the following information: * Telegram username (Telegram tag); * Telegram ID; * Game ID; * In-game nickname. The user grants the website administration permission to store, process, and use the provided data solely for the following purposes: * Processing clan membership applications; * Operating the Telegram bot; * Sending notifications; * Displaying information about clan members on the website and in the clan's official Telegram groups. The provided data is not used for commercial purposes and is not shared with third parties, except where required by the legislation of the Russian Federation. The user has the right to request the deletion of their data at any time by contacting the website administration. By continuing the registration process, the user confirms their agreement with these terms and conditions.</p>" data-zh="<p>STAGE战队是Modern Warships玩家的非商业自愿组织。</p><h4>在战队网站注册，即表示用户自愿提供以下信息： * Telegram 用户名； * Telegram ID； * 游戏 ID； * 游戏内昵称。 用户同意网站管理方仅出于以下目的存储、处理和使用提供的数据： * 处理战队入队申请； * 运行 Telegram 机器人； * 发送通知； * 在网站及战队官方 Telegram 群组中显示战队成员信息。 提供的数据不会用于商业目的，也不会与第三方共享，俄罗斯联邦法律规定的情况除外。 用户有权随时联系网站管理方请求删除其数据。 继续注册即表示用户确认同意这些条款和条件。</p>">
                 <p>Клан STAGE является некоммерческим добровольным объединением игроков Modern Warships.</p>
                 <h4>1. Принцип добровольности</h4>
-                <p>Регистрируясь на сайте клана, пользователь добровольно предоставляет следующие данные:
-Telegram username (тег Telegram); Telegram ID; игровой ID; игровой никнейм.
-Пользователь даёт согласие администрации сайта на хранение, обработку и использование данных исключительно в целях функционирования клана.
-                </p>
+                <p>Регистрируясь на сайте клана, пользователь добровольно предоставляет следующие данные: Telegram username (тег Telegram); Telegram ID; игровой ID; игровой никнейм.</p>
             </div>
             <button type="button" class="btn-submit lang-txt" id="acceptLawBtn" style="background: #a855f7; color: #fff; margin-top: 15px;" data-ru="Ясно, вернуться" data-en="Understood, return" data-zh="了解，返回">Ясно, вернуться</button>
         </div>
@@ -1177,7 +1013,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             }
         }
 
-        // Переключение языка по циклу
         document.getElementById('navLangBtn').addEventListener('click', () => {
             currentLangIdx = (currentLangIdx + 1) % langs.length;
             setLang(langs[currentLangIdx]);
@@ -1375,9 +1210,9 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
         let cwCountdownIntervalId = null;
         let currentSelectedPlayerNick = "";
         
-        let cloudDatabase = { 
+        window.cloudDatabase = { 
             recruits: {}, banned: [], kickedNicks: [], metadata: {}, 
-            trainingTime: null, trainingYes: [], trainingNo: [],
+            trainingTime: null, trainingYes: [], trainingNo: [], trainingNotified: false,
             cwTime: null, cwNotified: false, autoCwEnabled: false,
             chat: [], chatBanned: [], chatMonth: new Date().getMonth()
         };
@@ -1406,7 +1241,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             const isLeader = localStorage.getItem('stage_leader_session') === 'true';
             if (isLeader || (userTg && (userTg.toLowerCase() === '@bymitso' || userTg.toLowerCase() === 'admin@stage.ru'))) return false;
             
-            if (userTg && Array.isArray(cloudDatabase.banned) && cloudDatabase.banned.includes(userTg.trim().toLowerCase())) {
+            if (userTg && Array.isArray(window.cloudDatabase.banned) && window.cloudDatabase.banned.includes(userTg.trim().toLowerCase())) {
                 forceAbsoluteLogout();
                 return true;
             }
@@ -1436,7 +1271,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
 
             setLang(currentLang); 
 
-            // БАГФИКС: Безопасная инициализация выпадающего списка рангов, чтобы скрипт не падал
             const infoRankSelectElem = document.getElementById('infoRankSelect');
             if (infoRankSelectElem) {
                 NAVAL_RANKS.forEach(rank => {
@@ -1487,1511 +1321,15 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                     initCwCountdown(); 
                     renderChat();
                 });
-            }, 30000);
+            }, 5000); // 5 СЕКУНД ДЛЯ БЫСТРОГО ОБНОВЛЕНИЯ ЧАТА
 
             setInterval(async () => {
                 let myTg = localStorage.getItem('stage_user_registered_tg');
-                if(myTg && cloudDatabase.metadata[myTg]) {
-                    cloudDatabase.metadata[myTg].lastActive = Date.now();
+                if(myTg && window.cloudDatabase.metadata[myTg]) {
+                    window.cloudDatabase.metadata[myTg].lastActive = Date.now();
                     await saveToCloud();
                     updateOnlineWidget();
                 }
             }, 60000);
             
-            startCyberTerminalLoader();
-        });
-
-        function initCabinetBg() {
-            const savedIndex = localStorage.getItem('stage_cab_bg') || '0';
-            const items = document.querySelectorAll('.bg-picker-item');
-            if(items[savedIndex]) {
-                setCabinetBg(parseInt(savedIndex), items[savedIndex], false);
-            }
-        }
-
-        window.setCabinetBg = function(index, element, saveToCloudFlag = true) {
-            document.querySelectorAll('.bg-picker-item').forEach(el => el.classList.remove('selected'));
-            if(element) element.classList.add('selected');
-            
-            const val = CABINET_BG_OPTIONS[index].val;
-            const cabWindow = document.getElementById('cabinetModalWindow');
-            
-            if (val === 'none') {
-                cabWindow.style.setProperty('background', 'rgba(15, 23, 42, 0.85)', 'important');
-            } else {
-                cabWindow.style.setProperty('background', `linear-gradient(rgba(2, 5, 10, 0.65), rgba(2, 5, 10, 0.85)), ${val}`, 'important');
-                cabWindow.style.setProperty('background-size', 'cover', 'important');
-                cabWindow.style.setProperty('background-position', 'center', 'important');
-            }
-            
-            localStorage.setItem('stage_cab_bg', index.toString());
-        };
-
-        document.getElementById('openCwProposalBtn').addEventListener('click', () => {
-            document.getElementById('cwProposalModalOverlay').classList.add('active');
-        });
-
-        document.getElementById('cwProposalForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const btn = document.getElementById('propSubmitBtn');
-            btn.disabled = true; btn.textContent = t("Отправка...", "Sending...", "发送中...");
-            
-            const clan = document.getElementById('propClanName').value.trim();
-            const contact = document.getElementById('propContact').value.trim();
-            const date = document.getElementById('propDate').value;
-            const time = document.getElementById('propTime').value;
-            const timeZone = currentLang === 'en' ? 'UTC' : (currentLang === 'zh' ? 'UTC' : 'МСК');
-
-            const msg = `⚔️ <b>ВЫЗОВ НА КЛАНОВЫЙ БОЙ!</b>\n\n🛡 <b>Клан:</b> ${clan}\n✈️ <b>Связь:</b> ${contact}\n📅 <b>Дата:</b> ${date}\n⏰ <b>Время:</b> ${time} (${timeZone})`;
-
-            fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: TG_CHAT_ID, text: msg, parse_mode: 'html' })
-            }).then(r => {
-                showNotification(t("Ваш вызов отправлен!", "Challenge sent!", "挑战已发送！"), 'success');
-                document.getElementById('cwProposalModalOverlay').classList.remove('active');
-                btn.disabled = false; btn.textContent = t("Отправить вызов", "Send Challenge", "发送挑战");
-                this.reset();
-            }).catch(e => {
-                showNotification(t("Ошибка отправки!", "Send error!", "发送失败！"), 'error');
-                btn.disabled = false; btn.textContent = t("Отправить вызов", "Send Challenge", "发送挑战");
-            });
-        });
-
-        toggleFullscreenBtn.addEventListener('click', () => {
-            if (!document.fullscreenElement) {
-                if (boardActualContainer.requestFullscreen) { boardActualContainer.requestFullscreen(); } 
-                else if (boardActualContainer.webkitRequestFullscreen) { boardActualContainer.webkitRequestFullscreen(); } 
-                else if (boardActualContainer.msRequestFullscreen) { boardActualContainer.msRequestFullscreen(); }
-            } else {
-                if (document.exitFullscreen) { document.exitFullscreen(); }
-            }
-        });
-
-        document.addEventListener('fullscreenchange', handleFullscreenChange);
-        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
-
-        function handleFullscreenChange() {
-            const btnSpan = document.getElementById('fullscreenBtnText');
-            if (document.fullscreenElement || document.webkitFullscreenElement) {
-                boardContainer.style.height = "100vh";
-                boardContainer.style.border = "none";
-                boardContainer.style.borderRadius = "0";
-                
-                toggleFullscreenBtn.innerHTML = `<i class="fa-solid fa-compress"></i> <span id="fullscreenBtnText" class="lang-txt" data-ru="Свернуть доску" data-en="Collapse Board" data-zh="收起黑板">${t("Свернуть доску", "Collapse Board", "收起黑板")}</span>`;
-                toggleFullscreenBtn.style.position = "absolute";
-                toggleFullscreenBtn.style.top = "15px";
-                toggleFullscreenBtn.style.right = "15px";
-                toggleFullscreenBtn.style.zIndex = "10000";
-            } else {
-                boardContainer.style.height = "65vh";
-                boardContainer.style.border = "2px solid #a855f7";
-                boardContainer.style.borderRadius = "8px";
-                
-                toggleFullscreenBtn.innerHTML = `<i class="fa-solid fa-expand"></i> <span id="fullscreenBtnText" class="lang-txt" data-ru="Развернуть во весь экран" data-en="Expand Fullscreen" data-zh="全屏展开">${t("Развернуть во весь экран", "Expand Fullscreen", "全屏展开")}</span>`;
-                toggleFullscreenBtn.style.position = "static";
-            }
-        }
-
-        document.getElementById('navBoardLink').addEventListener('click', function() {
-            if(!excalidrawFrame.src || excalidrawFrame.src === 'about:blank' || excalidrawFrame.src === window.location.href) {
-                excalidrawFrame.src = excalidrawFrame.getAttribute('data-src');
-            }
-        });
-
-        async function syncWithCloud() {
-            try {
-                const response = await fetch(`${SUPABASE_URL}state?id=eq.1&select=data`, {
-                    headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}`, "Cache-Control": "no-cache" },
-                    cache: 'no-store'
-                });
-                if (response.ok) {
-                    const rows = await response.json();
-                    if(rows.length > 0 && rows[0].data && Object.keys(rows[0].data).length > 0) {
-                        const db = rows[0].data;
-                        cloudDatabase.recruits = db.recruits || {};
-                        cloudDatabase.banned = db.banned || [];
-                        cloudDatabase.kickedNicks = db.kickedNicks || [];
-                        cloudDatabase.metadata = db.metadata || {};
-                        cloudDatabase.trainingTime = db.trainingTime || null;
-                        cloudDatabase.trainingYes = db.trainingYes || [];
-                        cloudDatabase.trainingNo = db.trainingNo || [];
-                        cloudDatabase.cwTime = db.cwTime || null;
-                        cloudDatabase.cwNotified = db.cwNotified || false;
-                        cloudDatabase.autoCwEnabled = db.autoCwEnabled || false;
-                        
-                        cloudDatabase.chat = db.chat || [];
-                        cloudDatabase.chatBanned = db.chatBanned || [];
-                        cloudDatabase.chatMonth = db.chatMonth !== undefined ? db.chatMonth : new Date().getMonth();
-                        
-                        const currentMonth = new Date().getMonth();
-                        if (cloudDatabase.chatMonth !== currentMonth) {
-                            cloudDatabase.chat = [];
-                            cloudDatabase.chatMonth = currentMonth;
-                            await saveToCloud();
-                        }
-                    }
-                    isCloudSynced = true; 
-                    updateOnlineWidget();
-                    if(typeof updateTrainingButtonVisibility === 'function') updateTrainingButtonVisibility();
-                }
-            } catch (err) { console.error("Ошибка синхронизации:", err); }
-        }
-
-        async function saveToCloud() {
-            if (!isCloudSynced) {
-                await syncWithCloud();
-                if (!isCloudSynced) return; 
-            }
-            try {
-                await fetch(`${SUPABASE_URL}state`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "apikey": SUPABASE_KEY,
-                        "Authorization": `Bearer ${SUPABASE_KEY}`,
-                        "Prefer": "resolution=merge-duplicates"
-                    },
-                    body: JSON.stringify({ id: 1, data: cloudDatabase })
-                });
-            } catch (err) { console.error("Ошибка сохранения:", err); }
-        }
-
-        // ЧАТ СИСТЕМЫ
-        function renderChat() {
-            const container = document.getElementById('chatMessages');
-            if(!container) return;
-            
-            const currentCount = container.children.length;
-            container.innerHTML = '';
-            
-            if (cloudDatabase.chat.length === 0) {
-                container.innerHTML = `<div style="text-align:center; color:#94a3b8; font-size:12px; margin-top:20px;">${t("Сообщений пока нет...", "No messages yet...", "暂无消息...")}</div>`;
-                return;
-            }
-
-            cloudDatabase.chat.forEach((msg, idx) => {
-                const isBanned = cloudDatabase.chatBanned.includes(msg.author);
-                if (isBanned && !isLeaderMode) return; 
-
-                let adminControls = '';
-                if (isLeaderMode) {
-                    adminControls = `
-                        <button class="chat-btn del-btn" onclick="deleteChatMessage(${idx})" title="Удалить"><i class="fa-solid fa-trash"></i></button>
-                        <button class="chat-btn del-btn" onclick="banChatUser('${msg.author}')" title="Забанить автора"><i class="fa-solid fa-ban"></i></button>
-                    `;
-                }
-
-                const html = `
-                    <div class="chat-msg glassmorphism">
-                        <div class="author">${msg.author}</div>
-                        <div class="text" id="chat-text-${idx}">${msg.text}</div>
-                        <div class="timestamp">${new Date(msg.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
-                        <div class="chat-actions">
-                            <button class="chat-btn" onclick="translateMessage(${idx})" title="Перевести (Translate)"><i class="fa-solid fa-language"></i></button>
-                            ${adminControls}
-                        </div>
-                    </div>
-                `;
-                container.innerHTML += html;
-            });
-            container.scrollTop = container.scrollHeight;
-
-            if (currentCount > 0 && cloudDatabase.chat.length > currentCount) {
-                const lastMsg = cloudDatabase.chat[cloudDatabase.chat.length - 1];
-                let currentAuthor = localStorage.getItem('stage_user_registered_tg') || localStorage.getItem('stage_guest_nick') || '';
-                if (cloudDatabase.metadata && cloudDatabase.metadata[currentAuthor.toLowerCase()]) {
-                    currentAuthor = cloudDatabase.metadata[currentAuthor.toLowerCase()].nick;
-                }
-                if (lastMsg.author !== currentAuthor) {
-                    showNotification(`${lastMsg.author}: ${lastMsg.text.substring(0, 30)}...`, 'chat');
-                }
-            }
-        }
-
-        window.translateMessage = async function(idx) {
-            const msgObj = cloudDatabase.chat[idx];
-            const textDiv = document.getElementById(`chat-text-${idx}`);
-            if (!textDiv) return;
-            
-            textDiv.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Translating...`;
-            
-            const isCyrillic = /[а-яА-ЯЁё]/.test(msgObj.text);
-            const isChinese = /[\u4e00-\u9fa5]/.test(msgObj.text);
-            let langPair = isCyrillic ? 'ru|en' : 'en|ru';
-            if (currentLang === 'zh') {
-                 langPair = isChinese ? 'zh|en' : (isCyrillic ? 'ru|zh' : 'en|zh');
-            }
-            
-            try {
-                const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(msgObj.text)}&langpair=${langPair}`);
-                const data = await res.json();
-                if(data && data.responseData && data.responseData.translatedText) {
-                    textDiv.innerHTML = `<span style="color:#a855f7;">[TR]</span> ${data.responseData.translatedText}`;
-                } else {
-                    textDiv.innerText = msgObj.text;
-                }
-            } catch(e) {
-                textDiv.innerText = msgObj.text;
-                showNotification(t("Ошибка сервиса перевода", "Translation failed", "翻译失败"), 'error');
-            }
-        }
-
-        window.deleteChatMessage = async function(idx) {
-            if (!isLeaderMode) return;
-            cloudDatabase.chat.splice(idx, 1);
-            await saveToCloud();
-            renderChat();
-        }
-
-        window.banChatUser = async function(author) {
-            if (!isLeaderMode) return;
-            if (confirm(t(`Вы точно хотите запретить пользователю ${author} писать в чат?`, `Do you want to ban ${author} from chat?`, `你确定要禁止 ${author} 在聊天中发言吗？`))) {
-                if(!cloudDatabase.chatBanned.includes(author)) {
-                    cloudDatabase.chatBanned.push(author);
-                    await saveToCloud();
-                    renderChat();
-                    showNotification(t("Пользователь забанен в чате", "User banned from chat", "用户已被禁言"), 'warning');
-                }
-            }
-        }
-
-        document.getElementById('sendChatBtn').addEventListener('click', async () => {
-            const input = document.getElementById('chatInput');
-            const text = input.value.trim();
-            if (!text) return;
-
-            let author = localStorage.getItem('stage_user_registered_tg') || localStorage.getItem('stage_guest_nick');
-            
-            if (!author) {
-                document.getElementById('guestNickModal').classList.add('active');
-                return;
-            }
-
-            if (cloudDatabase.metadata && cloudDatabase.metadata[author.toLowerCase()]) {
-                author = cloudDatabase.metadata[author.toLowerCase()].nick;
-            }
-
-            if (cloudDatabase.chatBanned && cloudDatabase.chatBanned.includes(author)) {
-                showNotification(t("Вам ограничен доступ к чату.", "Comms access restricted.", "您已被限制聊天权限。"), 'error');
-                input.value = '';
-                return;
-            }
-
-            document.getElementById('sendChatBtn').disabled = true;
-            cloudDatabase.chat.push({ author, text, time: Date.now() });
-            if (cloudDatabase.chat.length > 100) cloudDatabase.chat.shift();
-            
-            // ВЫЗОВ ПУША СЮДА
-            try {
-                await sendPushNotification(text);
-            } catch(e) {
-                console.error("Ошибка отправки пуша:", e);
-            }
-
-            input.value = '';
-            await saveToCloud();
-            renderChat();
-            document.getElementById('sendChatBtn').disabled = false;
-        });
-        
-        document.getElementById('chatInput').addEventListener('keypress', (e) => {
-            if(e.key === 'Enter') document.getElementById('sendChatBtn').click();
-        });
-
-        document.getElementById('saveGuestNickBtn').addEventListener('click', () => {
-            const val = document.getElementById('guestNickInput').value.trim();
-            if(val.length >= 2) {
-                localStorage.setItem('stage_guest_nick', val);
-                document.getElementById('guestNickModal').classList.remove('active');
-                document.getElementById('sendChatBtn').click();
-            } else {
-                showNotification(t("Слишком короткий никнейм.", "Nickname too short.", "昵称太短。"), 'warning');
-            }
-        });
-
-        function updateOnlineWidget() {
-            const now = Date.now();
-            const activeUsers = [];
-            for(let tg in cloudDatabase.metadata) {
-                if(cloudDatabase.metadata[tg].lastActive && (now - cloudDatabase.metadata[tg].lastActive < 5 * 60 * 1000)) {
-                    let u = Object.assign({}, cloudDatabase.metadata[tg]);
-                    u._tgKey = tg;
-                    activeUsers.push(u);
-                }
-            }
-            
-            const widget = document.getElementById('onlineWidget');
-            const container = document.getElementById('onlineUsersContainer');
-            if(activeUsers.length > 0) {
-                widget.style.display = 'flex';
-                let html = '';
-                activeUsers.slice(0, 5).forEach(u => {
-                    let displayNick = u.nick;
-                    if (u._tgKey === "@bymitso" || u._tgKey === "admin@stage.ru" || displayNick.toLowerCase() === "test" || displayNick.toLowerCase() === "тест" || u.rank === t("Глава", "Leader", "队长")) {
-                        displayNick = "Mitso";
-                    }
-                    html += `
-                    <div class="online-user-item" title="${displayNick}">
-                        <div class="online-avatar" style="background-image: url('${u.avatar || ''}');"></div>
-                        <span class="online-user-nick">${displayNick}</span>
-                    </div>`;
-                });
-                if(activeUsers.length > 5) html += `<div style="font-size: 10px; color:#22c55e; font-weight:bold;">+${activeUsers.length - 5}</div>`;
-                container.innerHTML = html;
-            } else {
-                widget.style.display = 'none';
-            }
-        }
-
-        window.selectProfileAvatar = async function(avatarUrl, element) {
-            document.querySelectorAll('.avatar-picker-item').forEach(item => item.classList.remove('selected'));
-            element.classList.add('selected');
-            
-            localStorage.setItem('stage_user_avatar', avatarUrl);
-            
-            const mainAva = document.getElementById('cabAvatarMain');
-            mainAva.style.backgroundImage = `url('${avatarUrl}')`;
-            document.getElementById('cabAvatarIconDefault').style.display = 'none';
-            
-            // --- НОВОЕ: Синхронизация с карточкой Mitso в составе ---
-            const myTg = (localStorage.getItem('stage_user_registered_tg') || '').trim().toLowerCase();
-            if (isLeaderMode || myTg === '@bymitso' || myTg.includes('admin')) {
-                const mitsoCardAvatar = document.querySelector('.player-card[data-nick="Mitso"] .roster-avatar');
-                if (mitsoCardAvatar) {
-                    mitsoCardAvatar.style.backgroundImage = `url('${avatarUrl}')`;
-                }
-            }
-            // ---------------------------------------------------------
-            
-            refreshMenuCabinetAvatar();
-
-            let sessionTg = localStorage.getItem('stage_user_registered_tg') || "";
-            let cleanTg = sessionTg.trim().toLowerCase();
-            if (cleanTg) {
-                if (!cloudDatabase.metadata[cleanTg]) { cloudDatabase.metadata[cleanTg] = {}; }
-                cloudDatabase.metadata[cleanTg].avatar = avatarUrl;
-                renderLocalRecruits(); 
-                await saveToCloud();
-                showNotification(t("Аватар обновлен!", "Avatar updated!", "头像已更新！"), 'success');
-            }
-            renderAttendanceListsOnSite();
-        }
-
-        function refreshMenuCabinetAvatar() {
-            navCabinetBtn.style.display = 'block';
-            const savedAvatar = localStorage.getItem('stage_user_avatar');
-            const defaultIcon = document.getElementById('navCabinetDefaultIcon');
-            if (savedAvatar) {
-                navCabinetBtn.style.backgroundImage = `url('${savedAvatar}')`;
-                if(defaultIcon) defaultIcon.style.display = 'none';
-
-                // --- НОВОЕ: Применяем сохраненный аватар к карточке Mitso при загрузке ---
-                const myTg = (localStorage.getItem('stage_user_registered_tg') || '').trim().toLowerCase();
-                if (isLeaderMode || myTg === '@bymitso' || myTg.includes('admin')) {
-                    const mitsoCardAvatar = document.querySelector('.player-card[data-nick="Mitso"] .roster-avatar');
-                    if (mitsoCardAvatar) {
-                        mitsoCardAvatar.style.backgroundImage = `url('${savedAvatar}')`;
-                    }
-                }
-                // -----------------------------------------------------------------------
-            } else {
-                navCabinetBtn.style.backgroundImage = 'none';
-                if(defaultIcon) defaultIcon.style.display = 'inline-block';
-            }
-            
-            let myTg = localStorage.getItem('stage_user_registered_tg');
-            if(myTg && cloudDatabase.metadata[myTg]) {
-                cloudDatabase.metadata[myTg].lastActive = Date.now();
-                saveToCloud().then(updateOnlineWidget);
-            }
-        }
-
-        rawTelegramInput.addEventListener('input', function() {
-            const val = this.value;
-            if(!val) { terminalStatusBox.style.display = 'none'; return; }
-
-            const nickMatch = val.match(/(?:Ник:)\s*([^\n🆔✈️]+)/i);
-            const gameIdMatch = val.match(/(?:ID:)\s*([^\n✈️🆔]+)/i);
-            const tgMatch = val.match(/(?:TG:)\s*([^\n🆔⚖️]+)/i);
-            const idMatch = val.match(/(?:CID:)\s*([^\n⚖️]+)/i);
-
-            if (nickMatch && tgMatch && idMatch) {
-                currentParsedData = { 
-                    nick: nickMatch[1].trim(), 
-                    gameId: gameIdMatch ? gameIdMatch[1].trim() : "Не указан",
-                    tg: tgMatch[1].trim(), 
-                    chatId: idMatch[1].trim() 
-                };
-                parsedNickText.textContent = currentParsedData.nick;
-                parsedGameIdText.textContent = currentParsedData.gameId;
-                parsedTgText.textContent = currentParsedData.tg;
-                parsedIdText.textContent = currentParsedData.chatId;
-                terminalStatusBox.style.display = 'block';
-            } else { terminalStatusBox.style.display = 'none'; }
-        });
-
-        window.executeTerminalApprove = async function() {
-            if(!isLeaderMode || !currentParsedData) return;
-            const acceptBtn = document.getElementById('terminalAcceptBtn');
-            acceptBtn.textContent = t("Синхронизация...", "Syncing...", "同步中...");
-            acceptBtn.disabled = true;
-
-            const registerTimestamp = Math.max(Date.now(), FOUNDATION_DATE.getTime());
-            let targetTgKey = currentParsedData.tg.trim().toLowerCase();
-            if (!targetTgKey.startsWith('@')) targetTgKey = '@' + targetTgKey;
-            
-            const generatedPassword = getClanPassword(targetTgKey);
-            
-            cloudDatabase.recruits[currentParsedData.nick] = registerTimestamp;
-            cloudDatabase.metadata[targetTgKey] = {
-                nick: currentParsedData.nick,
-                gameId: currentParsedData.gameId,
-                chatId: currentParsedData.chatId,
-                joinDate: registerTimestamp,
-                rank: t("Действующий боец", "Active Fighter", "现役战士"),
-                avatar: "",
-                lastActive: Date.now()
-            };
-            
-            cloudDatabase.banned = cloudDatabase.banned.filter(tg => tg !== targetTgKey);
-            cloudDatabase.kickedNicks = cloudDatabase.kickedNicks.filter(n => n.toLowerCase() !== currentParsedData.nick.toLowerCase());
-
-            await saveToCloud();
-
-            const personalMessage = `🎉 <b>Приветствуем на борту, боец ${currentParsedData.nick}!</b>\n\nВаш рапорт в клан <b>STAGE</b> успешно утвержден Руководством флота!\n\n🔐 <b>Ваши персональные ключи доступа к Штабу:</b>\n👤 <b>Логин (Ваш ТГ):</b> <code>${currentParsedData.tg}</code>\n🔑 <b>Пароль:</b> <code>${generatedPassword}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\n⚓️ <b>Секретные шлюзы коммуникации:</b>\n✈️ Telegram чат: https://t.me/+0kNCkvxktdozZTYy\n\nВозвращайтесь на сайт, авторизуйтесь через терминал "Вход" — Добро Пожаловать в клан STAGE! 🚢🔥`;
-
-            await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: currentParsedData.chatId, text: personalMessage, parse_mode: 'html' })
-            });
-
-            showNotification(t(`Игрок ${currentParsedData.nick} одобрен!`, `Player ${currentParsedData.nick} accepted!`, `玩家 ${currentParsedData.nick} 已批准！`), 'success');
-            
-            rawTelegramInput.value = "";
-            terminalStatusBox.style.display = 'none';
-            currentParsedData = null;
-            acceptBtn.textContent = t("Принять", "Accept", "接受");
-            acceptBtn.disabled = false;
-            renderLocalRecruits();
-        }
-
-        window.executeTerminalReject = function() {
-            if(!confirm(t("Отклонить рапорт бойца?", "Reject application?", "拒绝申请？"))) return;
-            rawTelegramInput.value = "";
-            terminalStatusBox.style.display = 'none';
-            currentParsedData = null;
-        }
-
-        function forceAbsoluteLogout() {
-            localStorage.removeItem('stage_authorized');
-            localStorage.removeItem('stage_approved_list');
-            localStorage.removeItem('stage_user_registered_tg');
-            localStorage.removeItem('stage_team_logged');
-            localStorage.removeItem('stage_leader_session');
-            localStorage.removeItem('stage_cached_nick');
-            localStorage.removeItem('stage_user_avatar'); 
-            location.reload();
-        }
-
-        window.resetUserAuth = function() {
-            if(confirm(t("Вы действительно хотите выйти из аккаунта клана? Карты и доска закроются.", "Do you really want to log out? Maps and board will be locked.", "确定要退出登录吗？地图和黑板将被锁定。"))) { forceAbsoluteLogout(); }
-        }
-
-        // БАГФИКС ЛОГИНА: Добавляем безопасные обработчики кнопки "Вход"
-        navLoginBtn.addEventListener('click', () => {
-            if(isLeaderMode || localStorage.getItem('stage_team_logged') === 'true') {
-                if(confirm(t("Выйти из текущей учетной записи?", "Log out of current account?", "退出当前账号？"))) { 
-                    forceAbsoluteLogout(); 
-                }
-            } else {
-                adminEmailInput.value = ""; 
-                adminPasswordInput.value = "";
-                loginModalOverlay.classList.add('active');
-            }
-        });
-        
-        closeLoginModalBtn.addEventListener('click', () => loginModalOverlay.classList.remove('active'));
-
-        document.getElementById('cabAvatarMain').addEventListener('click', () => {
-            document.getElementById('avatarPickerGrid').classList.toggle('active');
-        });
-
-        navCabinetBtn.addEventListener('click', () => {
-            let sessionTg = localStorage.getItem('stage_user_registered_tg') || "";
-            let cleanTg = sessionTg.trim().toLowerCase();
-            
-            let nick = localStorage.getItem('stage_cached_nick') || t("Боец STAGE", "STAGE Fighter", "STAGE 战士");
-            let tgId = t("Не указан", "Not specified", "未指定");
-            let gameId = t("Не указан", "Not specified", "未指定");
-            let joinDateStr = t("С 26.05.2026 г.", "Since 26.05.2026", "自 2026.05.26");
-            let rank = t("Участник клана", "Clan Member", "战队成员");
-            let roleTitle = "Юнга"; 
-            let specialization = t("Не назначена", "Not assigned", "未分配");
-            let diffMonths = 0;
-            
-            if (isLeaderMode || cleanTg === "@bymitso" || cleanTg.includes("admin")) {
-                nick = "Mitso";
-                rank = t("Глава", "Leader", "队长");
-                roleTitle = "Адмирал флота";
-                specialization = t("Тактик", "Tactician", "战术家");
-                joinDateStr = t("С 26.05.2026 г.", "Since 26.05.2026", "自 2026.05.26");
-                gameId = "22E9E4E8CABB7FCF";
-                diffMonths = 19;
-            } else if (cleanTg && cloudDatabase.metadata[cleanTg]) {
-                let meta = cloudDatabase.metadata[cleanTg];
-                nick = meta.nick || nick;
-                tgId = meta.chatId || tgId;
-                gameId = meta.gameId || gameId;
-                rank = meta.rank || rank;
-                specialization = meta.specialization || specialization;
-                if (meta.joinDate) {
-                    let d = new Date(meta.joinDate);
-                    if (d < FOUNDATION_DATE) d = FOUNDATION_DATE;
-                    let localeOpts = currentLang === 'en' ? 'en-US' : (currentLang === 'zh' ? 'zh-CN' : 'ru-RU');
-                    joinDateStr = d.toLocaleDateString(localeOpts);
-                    
-                    let diffMs = Date.now() - meta.joinDate;
-                    diffMonths = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 30.4375));
-                    if (diffMonths < 0) diffMonths = 0;
-                    if (diffMonths >= NAVAL_RANKS.length) diffMonths = NAVAL_RANKS.length - 1;
-                    roleTitle = NAVAL_RANKS[diffMonths];
-                }
-                
-                if (meta.manualRank) {
-                    roleTitle = meta.manualRank;
-                    diffMonths = NAVAL_RANKS.indexOf(meta.manualRank);
-                    if(diffMonths === -1) diffMonths = 0;
-                }
-            }
-
-            document.getElementById('cabNick').textContent = nick;
-            document.getElementById('cabGameId').textContent = gameId;
-            document.getElementById('cabTg').textContent = sessionTg || "@stage_member";
-            document.getElementById('cabTgId').textContent = tgId;
-            document.getElementById('cabRank').textContent = rank;
-            document.getElementById('cabDate').textContent = joinDateStr;
-            document.getElementById('cabSpec').textContent = specialization;
-            document.getElementById('cabRole').textContent = roleTitle;
-
-            document.getElementById('cabRankInsigniaContainer').innerHTML = getRankInsigniaHTML(diffMonths);
-            
-            let savedRank = parseInt(localStorage.getItem('stage_saved_rank_idx') || '-1');
-            if (diffMonths > savedRank && savedRank !== -1) {
-                const insigniaEl = document.querySelector('#cabRankInsigniaContainer .rank-insignia');
-                if(insigniaEl) insigniaEl.classList.add('rank-upgrade-anim');
-                playTerminalSound();
-                showNotification(t("Ваше воинское звание повышено!", "Your naval rank has been upgraded!", "您的海军军衔已提升！"), 'success');
-            }
-            localStorage.setItem('stage_saved_rank_idx', diffMonths.toString());
-
-            const savedAvatar = localStorage.getItem('stage_user_avatar');
-            const mainAva = document.getElementById('cabAvatarMain');
-            document.querySelectorAll('.avatar-picker-item').forEach(item => item.classList.remove('selected'));
-            
-            if (savedAvatar) {
-                mainAva.style.backgroundImage = `url('${savedAvatar}')`;
-                document.getElementById('cabAvatarIconDefault').style.display = 'none';
-                document.querySelectorAll('.avatar-picker-item').forEach(item => {
-                    if(item.style.backgroundImage.includes(savedAvatar)) item.classList.add('selected');
-                });
-            } else {
-                mainAva.style.backgroundImage = 'none';
-                document.getElementById('cabAvatarIconDefault').style.display = 'block';
-            }
-
-            cabinetModalOverlay.classList.add('active');
-        });
-        closeCabinetModalBtn.addEventListener('click', () => cabinetModalOverlay.classList.remove('active'));
-
-        // Функция проверки доступа к кнопке Тренировка
-        function updateTrainingButtonVisibility() {
-            const btn = document.getElementById('btnTrainingTrigger');
-            if (!btn) return;
-            let sessionTg = localStorage.getItem('stage_user_registered_tg') || "";
-            let cleanTg = sessionTg.trim().toLowerCase();
-            let hasSpec = false;
-            if (cleanTg && cloudDatabase.metadata && cloudDatabase.metadata[cleanTg]) {
-                let spec = cloudDatabase.metadata[cleanTg].specialization;
-                if (spec && spec !== "Не назначена" && spec !== "") hasSpec = true;
-            }
-            
-            if (isLeaderMode || hasSpec) {
-                btn.style.display = 'block';
-            } else {
-                btn.style.display = 'none';
-            }
-        }
-
-        btnTrainingTrigger.addEventListener('click', () => {
-            let sessionTg = localStorage.getItem('stage_user_registered_tg') || "";
-            let cleanTg = sessionTg.trim().toLowerCase();
-            let hasSpec = false;
-            
-            if (cleanTg && cloudDatabase.metadata && cloudDatabase.metadata[cleanTg]) {
-                let spec = cloudDatabase.metadata[cleanTg].specialization;
-                if (spec && spec !== "Не назначена" && spec !== "") hasSpec = true;
-            }
-            
-            // Если не лидер и нет специализации — блокируем действие
-            if (!isLeaderMode && !hasSpec) return;
-
-            const todayStr = new Date().toISOString().split('T')[0];
-            inputTrainingDate.value = todayStr;
-            inputTrainingTime.value = "";
-            trainingModalOverlay.classList.add('active');
-        });
-        closeTrainingModalBtn.addEventListener('click', () => trainingModalOverlay.classList.remove('active'));
-
-        btnSubmitTraining.addEventListener('click', async () => {
-            const dateVal = inputTrainingDate.value;
-            const timeVal = inputTrainingTime.value.trim();
-            if(!dateVal || !timeVal) { alert(t("Укажите дату и время!", "Provide date and time!", "请提供日期和时间！")); return; }
-
-            const timeParts = timeVal.match(/(\d{1,2}):(\d{2})/);
-            let hours = 18, minutes = 0;
-            if (timeParts) {
-                hours = parseInt(timeParts[1], 10);
-                minutes = parseInt(timeParts[2], 10);
-            } else {
-                alert(t("Используйте формат ЧЧ:ММ (например: 19:30)!", "Use HH:MM format", "请使用 HH:MM 格式"));
-                return;
-            }
-
-            const targetDate = new Date(dateVal);
-            targetDate.setHours(hours, minutes, 0, 0);
-            const targetTimestamp = targetDate.getTime();
-
-            if(targetTimestamp <= Date.now()) { alert(t("Нельзя назначить на прошлое время!", "Cannot schedule in past!", "不能安排在过去的時間！")); return; }
-
-            btnSubmitTraining.textContent = t("Отправка в чат...", "Sending to chat...", "发送至聊天...");
-            btnSubmitTraining.disabled = true;
-
-            const formattedDate = targetDate.toLocaleString('ru-RU', {
-                day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
-            });
-
-            const messageText = `⚔️ <b>ВНИМАНИЕ! Назначена тренировка!</b>\n\n⚓️ <b>Событие:</b> Тренировка\n📅 <b>Время сбора:</b> ${formattedDate}\n\nВсем участникам быть ! Прямая связь в Яндекс Телемост или Discord. 🚢🔥`;
-
-            const replyMarkupButtons = {
-                inline_keyboard: [
-                    [
-                        { text: "⚓️ Прибуду в строй", callback_data: "verify" }, 
-                        { text: "❌ Не смогу", callback_data: "switchToForm" }
-                    ]
-                ]
-            };
-
-            try {
-                const response = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        chat_id: TG_CHAT_ID, 
-                        message_thread_id: TRAINING_THREAD_ID, 
-                        text: messageText, 
-                        parse_mode: 'html',
-                        reply_markup: replyMarkupButtons 
-                    })
-                });
-
-                cloudDatabase.trainingTime = targetTimestamp;
-                cloudDatabase.trainingYes = [];
-                cloudDatabase.trainingNo = [];
-                await saveToCloud();
-
-                trainingModalOverlay.classList.remove('active');
-                initTrainingCountdown(); 
-
-                showNotification(t("Тренировка запланирована!", "Training scheduled!", "训练已安排！"), 'success');
-            } catch (err) {
-                alert("Ошибка связи: " + err.message);
-            } finally {
-                btnSubmitTraining.textContent = t("Готово", "Done", "完成");
-                btnSubmitTraining.disabled = false;
-            }
-        });
-
-        function getAutoCwEvent() {
-            const now = new Date();
-            const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-            const msk = new Date(utc + (3 * 3600000));
-
-            const day = msk.getDay(); 
-            const h = msk.getHours();
-
-            const isCwDay = (day === 5 || day === 6 || day === 0);
-            let isActive = false;
-            let endTimeMsk = new Date(msk);
-
-            if (isCwDay) {
-                if (h >= 4 && h < 6) { isActive = true; endTimeMsk.setHours(6, 0, 0, 0); }
-                else if (h >= 10 && h < 12) { isActive = true; endTimeMsk.setHours(12, 0, 0, 0); }
-                else if (h >= 16 && h < 18) { isActive = true; endTimeMsk.setHours(18, 0, 0, 0); }
-                else if (h >= 22 && h < 24) { isActive = true; endTimeMsk.setHours(24, 0, 0, 0); }
-            }
-
-            if (isActive) {
-                return { 
-                    active: true, 
-                    targetTime: endTimeMsk.getTime() - (3 * 3600000) - (now.getTimezoneOffset() * 60000) 
-                };
-            }
-
-            let nextStartMsk = new Date(msk);
-            nextStartMsk.setMinutes(0, 0, 0);
-
-            if (!isCwDay || (day === 0 && h >= 22)) {
-                let daysToFri = (5 - day + 7) % 7;
-                if (daysToFri === 0 && h >= 22) daysToFri = 5; 
-                nextStartMsk.setDate(msk.getDate() + daysToFri);
-                nextStartMsk.setHours(4, 0, 0, 0);
-            } else {
-                if (h < 4) nextStartMsk.setHours(4, 0, 0, 0);
-                else if (h < 10) nextStartMsk.setHours(10, 0, 0, 0);
-                else if (h < 16) nextStartMsk.setHours(16, 0, 0, 0);
-                else if (h < 22) nextStartMsk.setHours(22, 0, 0, 0);
-            }
-
-            return { 
-                active: false, 
-                targetTime: nextStartMsk.getTime() - (3 * 3600000) - (now.getTimezoneOffset() * 60000) 
-            };
-        }
-
-        btnCwTrigger.addEventListener('click', () => {
-            if(!isLeaderMode) return;
-            cwModalOverlay.classList.add('active');
-            if (cloudDatabase.autoCwEnabled) {
-                btnSubmitCw.textContent = t("Остановить Авто-КВ", "Stop Auto-CW", "停止自动战队战");
-                btnSubmitCw.style.background = "#1e293b";
-            } else {
-                btnSubmitCw.textContent = t("Активировать Авто-КВ", "Activate Auto-CW", "激活自动战队战");
-                btnSubmitCw.style.background = "#ff0055";
-            }
-        });
-
-        btnSubmitCw.addEventListener('click', async () => {
-            btnSubmitCw.disabled = true;
-
-            if (cloudDatabase.autoCwEnabled) {
-                cloudDatabase.autoCwEnabled = false;
-                cloudDatabase.cwNotified = false;
-                await saveToCloud();
-                cwModalOverlay.classList.remove('active');
-                initCwCountdown();
-                showNotification(t("Режим Авто-КВ отключен.", "Auto-CW disabled.", "自动战队战已禁用。"), 'warning');
-            } else {
-                cloudDatabase.autoCwEnabled = true;
-                cloudDatabase.cwNotified = false;
-                await saveToCloud();
-                cwModalOverlay.classList.remove('active');
-                initCwCountdown(); 
-                showNotification(t("Авто-КВ успешно запущен!", "Auto Clan War started!", "自动战队战已成功启动！"), 'success');
-            }
-            btnSubmitCw.disabled = false;
-        });
-
-        function initCwCountdown() {
-            if (cwCountdownIntervalId) clearInterval(cwCountdownIntervalId);
-            if (!cloudDatabase.autoCwEnabled) {
-                cwCountdownWidget.style.display = 'none';
-                return;
-            }
-
-            cwCountdownWidget.style.display = 'block';
-            if(isLeaderMode) btnCloseCwTimer.style.display = 'block';
-            const titleEl = document.getElementById('cwWidgetTitle');
-
-            function updateCwTimer() {
-                const cwData = getAutoCwEvent();
-                const diff = cwData.targetTime - Date.now();
-
-                if (cwData.active) {
-                    titleEl.innerHTML = t("⚔️ КВ ИДУТ ПРЯМО СЕЙЧАС! Конец через:", "⚔️ CW IS LIVE! Ends in:", "⚔️ 战队战进行中！结束于：");
-                    titleEl.style.color = "#22c55e";
-                    cwCountdownWidget.style.borderColor = "#22c55e";
-                    cwCountdownWidget.style.boxShadow = "0 0 25px rgba(34, 197, 94, 0.35)";
-                } else {
-                    titleEl.innerHTML = t("🔥 До начала Клановых Боёв:", "🔥 Time to Clan Wars:", "🔥 距离战队战开始：");
-                    titleEl.style.color = "#ff0055";
-                    cwCountdownWidget.style.borderColor = "#ff0055";
-                    cwCountdownWidget.style.boxShadow = "0 0 25px rgba(255, 0, 85, 0.35)";
-                    if (cloudDatabase.cwNotified) cloudDatabase.cwNotified = false;
-                }
-
-                if (cwData.active && !cloudDatabase.cwNotified) {
-                    triggerCwNotification(); 
-                }
-
-                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-                document.getElementById('cwTimerDays').textContent = days.toString().padStart(2, '0');
-                document.getElementById('cwTimerHours').textContent = hours.toString().padStart(2, '0');
-                document.getElementById('cwTimerMinutes').textContent = minutes.toString().padStart(2, '0');
-                document.getElementById('cwTimerSeconds').textContent = seconds.toString().padStart(2, '0');
-            }
-
-            updateCwTimer();
-            cwCountdownIntervalId = setInterval(updateCwTimer, 1000);
-        }
-
-        window.executeResetCwTimer = async function() {
-            if(!isLeaderMode) return;
-            if(confirm(t("Вы действительно хотите выключить автоматический таймер Клан Вара?", "Disable Auto Clan War timer?", "禁用自动战队战计时器？"))) {
-                cloudDatabase.autoCwEnabled = false;
-                cloudDatabase.cwNotified = false;
-                await saveToCloud();
-                if (cwCountdownIntervalId) clearInterval(cwCountdownIntervalId);
-                cwCountdownWidget.style.display = 'none';
-            }
-        }
-
-        async function triggerCwNotification() {
-            cloudDatabase.cwNotified = true;
-            await saveToCloud();
-            const messageText = `⚔️ <b>ВНИМАНИЕ, ФЛОТ STAGE!</b>\n\n🔥 <b>КЛАНОВЫЕ БОИ НАЧАЛИСЬ!</b> 🔥\n\nНе пропустите! 🚢💥`;
-            try {
-                await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ chat_id: TG_CHAT_ID, message_thread_id: TRAINING_THREAD_ID, text: messageText, parse_mode: 'html' })
-                });
-            } catch (err) { console.error("Ошибка уведомления КВ:", err); }
-        }
-
-        window.registerWebsiteVote = async function(type) {
-            let sessionTg = localStorage.getItem('stage_user_registered_tg') || "";
-            let cleanTg = sessionTg.trim().toLowerCase();
-            
-            let userNick = t("Боец STAGE", "STAGE Fighter", "STAGE 战士");
-            if (isLeaderMode || cleanTg === "@bymitso" || cleanTg.includes("admin")) {
-                userNick = "Mitso";
-            } else if (cleanTg && cloudDatabase.metadata[cleanTg]) {
-                userNick = cloudDatabase.metadata[cleanTg].nick || userNick;
-            }
-
-            cloudDatabase.trainingYes = cloudDatabase.trainingYes.filter(n => n !== userNick);
-            cloudDatabase.trainingNo = cloudDatabase.trainingNo.filter(n => n !== userNick);
-
-            if(type === 'yes') {
-                cloudDatabase.trainingYes.push(userNick);
-                showNotification(t("Вы записались на тренировку!", "You enlisted for training!", "您已报名参加训练！"), 'success');
-            } else {
-                cloudDatabase.trainingNo.push(userNick);
-                showNotification(t("Вы отметились, что не придете", "Marked as not attending", "已标记为不参加"), 'warning');
-            }
-
-            renderAttendanceListsOnSite();
-            await saveToCloud();
-        }
-
-        window.executeResetTrainingTimer = async function() {
-            if(!isLeaderMode) return;
-            if(confirm(t("Вы действительно хотите отменить текущую тренировку и удалить таймер?", "Cancel training and remove timer?", "取消当前训练并移除计时器？"))) {
-                cloudDatabase.trainingTime = null;
-                cloudDatabase.trainingYes = [];
-                cloudDatabase.trainingNo = [];
-                await saveToCloud();
-                if (countdownIntervalId) clearInterval(countdownIntervalId);
-                trainingCountdownWidget.style.display = 'none';
-                showNotification(t("Тренировка отменена", "Training cancelled", "训练已取消"), 'warning');
-            }
-        }
-
-        function renderAttendanceListsOnSite() {
-            const yesListElement = document.getElementById('attendanceYesList');
-            const noListElement = document.getElementById('attendanceNoList');
-            if(!yesListElement || !noListElement) return;
-
-            if(cloudDatabase.trainingYes.length === 0 && cloudDatabase.trainingNo.length === 0) {
-                yesListElement.innerHTML = `<div style="font-size:11px; color:rgba(255,255,255,0.2);" class="lang-txt" data-ru="Списки пусты" data-en="Lists are empty" data-zh="名单为空">${t("Списки пусты", "Lists are empty", "名单为空")}</div>`;
-                noListElement.innerHTML = `<div style="font-size:11px; color:rgba(255,255,255,0.2);" class="lang-txt" data-ru="Списки пусты" data-en="Lists are empty" data-zh="名单为空">${t("Списки пусты", "Lists are empty", "名单为空")}</div>`;
-                return;
-            }
-
-            yesListElement.innerHTML = ""; noListElement.innerHTML = "";
-
-            if(cloudDatabase.trainingYes.length === 0) yesListElement.innerHTML = `<div style="font-size:11px; color:rgba(255,255,255,0.1);">${t("Никто не записался", "No one enlisted", "无人报名")}</div>`;
-            if(cloudDatabase.trainingNo.length === 0) noListElement.innerHTML = `<div style="font-size:11px; color:rgba(255,255,255,0.1);">${t("Никто не записался", "No one enlisted", "无人报名")}</div>`;
-
-            cloudDatabase.trainingYes.forEach(userNick => {
-                let avaUrl = "";
-                for(let k in cloudDatabase.metadata) {
-                    if(cloudDatabase.metadata[k].nick === userNick && cloudDatabase.metadata[k].avatar) avaUrl = cloudDatabase.metadata[k].avatar;
-                }
-                const inlineAva = avaUrl ? `style="background-image:url('${avaUrl}');"` : '';
-                yesListElement.innerHTML += `<div class="attendance-user"><div class="micro-ava" ${inlineAva}></div><span>${userNick}</span></div>`;
-            });
-
-            cloudDatabase.trainingNo.forEach(userNick => {
-                let avaUrl = "";
-                for(let k in cloudDatabase.metadata) {
-                    if(cloudDatabase.metadata[k].nick === userNick && cloudDatabase.metadata[k].avatar) avaUrl = cloudDatabase.metadata[k].avatar;
-                }
-                const inlineAva = avaUrl ? `style="background-image:url('${avaUrl}');"` : '';
-                noListElement.innerHTML += `<div class="attendance-user"><div class="micro-ava" ${inlineAva}></div><span>${userNick}</span></div>`;
-            });
-        }
-
-        function initTrainingCountdown() {
-            if (countdownIntervalId) clearInterval(countdownIntervalId);
-            if (!cloudDatabase.trainingTime || cloudDatabase.trainingTime <= Date.now()) {
-                trainingCountdownWidget.style.display = 'none';
-                return;
-            }
-
-            trainingCountdownWidget.style.display = 'block';
-            if(isLeaderMode) btnCloseTimer.style.display = 'block';
-            if(localStorage.getItem('stage_team_logged') === 'true' || localStorage.getItem('stage_authorized') === 'true') {
-                websiteVoteBlock.style.display = 'flex';
-            }
-
-            renderAttendanceListsOnSite();
-
-            function updateTimer() {
-                const diff = cloudDatabase.trainingTime - Date.now();
-                if (diff <= 0) {
-                    trainingCountdownWidget.style.display = 'none';
-                    clearInterval(countdownIntervalId);
-                    return;
-                }
-
-                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-                document.getElementById('timerDays').textContent = days.toString().padStart(2, '0');
-                document.getElementById('timerHours').textContent = hours.toString().padStart(2, '0');
-                document.getElementById('timerMinutes').textContent = minutes.toString().padStart(2, '0');
-                document.getElementById('timerSeconds').textContent = seconds.toString().padStart(2, '0');
-            }
-
-            updateTimer();
-            countdownIntervalId = setInterval(updateTimer, 1000);
-        }
-
-        // БАГФИКС ЛОГИНА: Логика авторизации
-        submitAdminLoginBtn.addEventListener('click', () => {
-            let inputLogin = adminEmailInput.value.trim().toLowerCase();
-            let inputPassword = adminPasswordInput.value.trim().toUpperCase();
-            
-            if (!inputLogin.startsWith('@') && inputLogin !== "admin@stage.ru") inputLogin = '@' + inputLogin;
-            if (cloudDatabase.banned && cloudDatabase.banned.includes(inputLogin)) {
-                alert(t("Данный аккаунт заблокирован.", "Account blocked.", "该账号已被封禁。"));
-                return;
-            }
-
-            let isApproved = false;
-            if (inputLogin === SUPER_ADMIN.email.toLowerCase() && inputPassword === SUPER_ADMIN.password.toUpperCase()) {
-                isApproved = true;
-                localStorage.setItem('stage_leader_session', 'true');
-                localStorage.setItem('stage_user_registered_tg', "@bymitso");
-            } else {
-                const expectedPassword = getClanPassword(inputLogin);
-                if (inputPassword === expectedPassword || inputPassword === "STAGE") {
-                    isApproved = true;
-                    localStorage.setItem('stage_user_registered_tg', inputLogin);
-                }
-            }
-
-            if (isApproved) {
-                localStorage.setItem('stage_team_logged', 'true');
-                if (localStorage.getItem('stage_leader_session') === 'true') activateLeaderMode();
-                unlockTeamFeatures(); 
-                loginModalOverlay.classList.remove('active');
-                refreshMenuCabinetAvatar();
-                renderLocalRecruits();
-                initTrainingCountdown();
-                initCwCountdown();
-                showNotification(t("Успешная авторизация!", "Authorized successfully!", "授权成功！"), 'success');
-            } else {
-                alert(t("Ошибка доступа!", "Access Error!", "访问错误！"));
-            }
-        });
-
-        function applyGlobalKickedFilters() {
-            cloudDatabase.kickedNicks.forEach(kickedNick => {
-                const cardToRemove = document.querySelector(`.player-card[data-nick="${kickedNick}"]`);
-                if (cardToRemove) cardToRemove.remove();
-            });
-        }
-
-        function unlockTeamFeatures() {
-            document.getElementById('mapsLockBox').style.display = 'none';
-            document.getElementById('boardLockBox').style.display = 'none';
-            document.getElementById('telemostLockBox').style.display = 'none';
-            document.getElementById('mapsActualGrid').style.display = 'grid';
-            
-            if (window.innerWidth <= 768) document.getElementById('toggleMapsBtn').style.display = 'block';
-            
-            document.getElementById('boardActualContainer').style.display = 'flex';
-            document.getElementById('telemostActualBtn').style.display = 'flex';
-            
-            navLoginBtn.innerHTML = `<i class="fa-solid fa-user-check" style="color:#00f2fe;"></i> <span class="lang-txt" data-ru="В команде" data-en="Active" data-zh="现役">В команде</span>`;
-            navLoginBtn.style.background = "rgba(0, 242, 254, 0.15)"; navLoginBtn.style.borderColor = "#00f2fe";
-            
-            secretTgBox.style.display = 'block'; 
-            recruitBoxBtn.style.display = 'none';
-            setLang(currentLang);
-            if(typeof updateTrainingButtonVisibility === 'function') updateTrainingButtonVisibility();
-        }
-
-        function activateLeaderMode() {
-            isLeaderMode = true; adminBadge.style.display = 'block'; navStatsBtn.style.display = 'block'; 
-            btnTrainingTrigger.style.display = 'block'; btnCwTrigger.style.display = 'block';
-            if(btnCloseTimer) btnCloseTimer.style.display = 'block'; 
-            if(btnCloseCwTimer) btnCloseCwTimer.style.display = 'block';
-            
-            navLoginBtn.innerHTML = `<i class="fa-solid fa-user-gear" style="color:#ff0055;"></i> <span class="lang-txt" data-ru="Админ" data-en="Admin" data-zh="管理员">Админ</span>`;
-            navLoginBtn.style.background = "rgba(255, 0, 85, 0.15)"; navLoginBtn.style.borderColor = "#ff0055";
-            document.querySelectorAll('.kick-btn').forEach(btn => btn.style.display = 'inline-block');
-            
-            applyLeaderStatusColors();
-            renderChat(); 
-            setLang(currentLang);
-            if(typeof updateTrainingButtonVisibility === 'function') updateTrainingButtonVisibility();
-        }
-
-        navStatsBtn.addEventListener('click', () => {
-            if(!isLeaderMode) return;
-            const totalV = parseInt(localStorage.getItem('stage_views') || '0');
-            const uniqueV = parseInt(localStorage.getItem('stage_uniques') || '0');
-            const totalR = parseInt(localStorage.getItem('stage_requests_count') || '0');
-            let conversion = uniqueV > 0 ? Math.round((totalR / uniqueV) * 100) : 0;
-
-            document.getElementById('statTotalViews').textContent = totalV;
-            document.getElementById('statUniqueVisits').textContent = uniqueV;
-            document.getElementById('statTotalRequests').textContent = totalR;
-            document.getElementById('statConversionRate').textContent = conversion + "%";
-            statsModalOverlay.classList.add('active');
-        });
-        
-        closeStatsModalBtn.addEventListener('click', () => statsModalOverlay.classList.remove('active'));
-
-        resetStatsBtn.addEventListener('click', () => {
-            if (confirm(t("Сбросить статистику?", "Reset stats?", "重置统计？"))) {
-                localStorage.removeItem('stage_uniques');
-                localStorage.removeItem('stage_requests_count');
-                uniqueVisits = 1; totalRequests = 0;
-                document.getElementById('statUniqueVisits').textContent = uniqueVisits;
-                document.getElementById('statTotalRequests').textContent = totalRequests;
-                document.getElementById('statConversionRate').textContent = "0%";
-            }
-        });
-
-        function generateTacticalMapsGrid() {
-            const container = document.getElementById('mapsActualGrid');
-            if(!container) return;
-            container.innerHTML = "";
-            for (let i = 1; i <= 16; i++) {
-                const card = document.createElement('div');
-                card.className = 'map-card animated-glow-border glassmorphism'; card.setAttribute('draggable', 'true');
-                card.innerHTML = `
-                    <div class="map-img-holder" style="background-image: url('map${i}.png');"></div>
-                    <div class="map-info"><div class="map-name lang-txt" data-ru="КАРТА №${i}" data-en="MAP #${i}" data-zh="地图 #${i}">КАРТА №${i}</div></div>
-                    <a href="map${i}.png" download="STAGE_Map_${i}.png" class="btn-map-download lang-txt" data-ru="<i class='fa-solid fa-cloud-arrow-down'></i> Скачать карту" data-en="<i class='fa-solid fa-cloud-arrow-down'></i> Download Map" data-zh="<i class='fa-solid fa-cloud-arrow-down'></i> 下载地图"><i class="fa-solid fa-cloud-arrow-down'></i> Скачать карту</a>
-                    <button type="button" class="btn-map-copy lang-txt" onclick="sendMapToBoard('map${i}.png', this)" data-ru="<i class='fa-solid fa-chalkboard'></i> На доску" data-en="<i class='fa-solid fa-chalkboard'></i> To Board" data-zh="<i class='fa-solid fa-chalkboard'></i> 到黑板"><i class="fa-solid fa-chalkboard"></i> На доску</button>
-                `;
-                card.addEventListener('dragstart', (e) => { e.dataTransfer.setData('text/plain', `map${i}.png`); });
-                container.appendChild(card);
-            }
-            setLang(currentLang);
-        }
-
-        const toggleMapsBtn = document.getElementById('toggleMapsBtn');
-        let isMapsExpanded = false;
-        toggleMapsBtn.addEventListener('click', () => {
-            isMapsExpanded = !isMapsExpanded;
-            const grid = document.getElementById('mapsActualGrid');
-            if (isMapsExpanded) {
-                grid.classList.remove('collapsed');
-                toggleMapsBtn.textContent = t("Скрыть карты", "Hide maps", "隐藏地图");
-            } else {
-                grid.classList.add('collapsed');
-                toggleMapsBtn.textContent = t("Показать все карты", "Show all maps", "显示所有地图");
-            }
-        });
-
-        function setupDragAndDrop() {
-            boardContainer.addEventListener('dragover', (e) => { e.preventDefault(); boardContainer.classList.add('drag-over'); });
-            boardContainer.addEventListener('dragleave', () => { boardContainer.classList.remove('drag-over'); });
-            boardContainer.addEventListener('drop', (e) => {
-                e.preventDefault(); boardContainer.classList.remove('drag-over');
-                const mapFileName = e.dataTransfer.getData('text/plain');
-                if (mapFileName && mapFileName.includes('.png')) {
-                    const fullMapUrl = window.location.origin + '/' + mapFileName;
-                    excalidrawFrame.contentWindow.postMessage({ type: "excalidraw-load-image", url: fullMapUrl }, "*");
-                    showNotification(t("Карта развернута на доске!", "Map deployed on board!", "地图已部署在黑板上！"), 'success');
-                }
-            });
-        }
-
-        checkVerifyBtn.addEventListener('click', () => {
-            let inputNick = verifyTgInput.value.trim().toLowerCase();
-            if(!inputNick.startsWith('@')) inputNick = '@' + inputNick;
-            if(cloudDatabase.banned && cloudDatabase.banned.includes(inputNick)) { alert(t("Доступ заблокирован.", "Access blocked.", "访问被封锁。")); return; }
-
-            localStorage.setItem('stage_authorized', 'true');
-            localStorage.setItem('stage_user_registered_tg', inputNick); 
-            if(cloudDatabase.metadata && cloudDatabase.metadata[inputNick]) {
-                localStorage.setItem('stage_cached_nick', cloudDatabase.metadata[inputNick].nick);
-            }
-            secretTgBox.style.display = 'block'; recruitBoxBtn.style.display = 'none';
-            refreshMenuCabinetAvatar();
-            document.getElementById('modalOverlay').classList.remove('active');
-            unlockTeamFeatures();
-            showNotification(t("Допуск подтвержден!", "Access granted!", "访问权限已确认！"), 'success');
-        });
-
-        window.showPlayerInfo = function(nick) {
-            currentSelectedPlayerNick = nick;
-            const idInput = document.getElementById('infoGameIdInput');
-            const editIcon = document.getElementById('editIdIcon');
-            const infoAvatar = document.getElementById('infoAvatar');
-            
-            let playerMeta = null;
-            for (let tg in cloudDatabase.metadata) {
-                if (cloudDatabase.metadata[tg].nick === nick) { playerMeta = cloudDatabase.metadata[tg]; break; }
-            }
-
-            // Устанавливаем аватарку или убираем её, если не задана
-            if (playerMeta && playerMeta.avatar) {
-                infoAvatar.style.backgroundImage = `url('${playerMeta.avatar}')`;
-            } else if (nick === 'Mitso' && cloudDatabase.metadata['@bymitso'] && cloudDatabase.metadata['@bymitso'].avatar) {
-                infoAvatar.style.backgroundImage = `url('${cloudDatabase.metadata['@bymitso'].avatar}')`;
-            } else {
-                infoAvatar.style.backgroundImage = 'none';
-            }
-            
-            document.getElementById('infoNick').textContent = nick;
-            let joinDateMs = (playerMeta && playerMeta.joinDate) ? playerMeta.joinDate : FOUNDATION_DATE.getTime();
-            let diffMs = Date.now() - joinDateMs;
-            let diffMonths = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 30.4375));
-            if (diffMonths < 0) diffMonths = 0;
-            if (diffMonths >= NAVAL_RANKS.length) diffMonths = NAVAL_RANKS.length - 1;
-            
-            const rankText = document.getElementById('infoRankText');
-            const rankInsigniaContainer = document.getElementById('infoRankInsigniaContainer');
-            const rankEditWrapper = document.getElementById('infoRankEditWrapper');
-            const rankSelect = document.getElementById('infoRankSelect');
-            const specText = document.getElementById('infoSpecText');
-            const specEditWrapper = document.getElementById('infoSpecEditWrapper');
-            const specSelect = document.getElementById('infoSpecSelect');
-
-            if (nick === 'Mitso') {
-                idInput.value = "22E9E4E8CABB7FCF";
-                rankText.textContent = t("Адмирал флота (Глава)", "Fleet Admiral (Leader)", "舰队上将 (队长)");
-                rankInsigniaContainer.innerHTML = getRankInsigniaHTML(19);
-                rankText.style.display = 'block'; rankInsigniaContainer.style.display = 'block'; rankEditWrapper.style.display = 'none';
-                specText.textContent = t("Тактик", "Tactician", "战术家");
-                specText.style.display = 'block'; specEditWrapper.style.display = 'none';
-            } else {
-                if (playerMeta) {
-                    idInput.value = playerMeta.gameId || t("Не указан", "Not specified", "未指定");
-                    let currentRank = playerMeta.manualRank || NAVAL_RANKS[diffMonths];
-                    rankText.textContent = currentRank;
-                    let currentRankIdx = playerMeta.manualRank ? NAVAL_RANKS.indexOf(playerMeta.manualRank) : diffMonths;
-                    rankInsigniaContainer.innerHTML = getRankInsigniaHTML(currentRankIdx);
-                    specText.textContent = playerMeta.specialization || t("Не назначена", "Not assigned", "未分配");
-
-                    if (isLeaderMode) {
-                        rankText.style.display = 'none'; rankInsigniaContainer.style.display = 'none'; rankEditWrapper.style.display = 'block';
-                        rankSelect.value = playerMeta.manualRank || "";
-                        rankSelect.onchange = async function() { playerMeta.manualRank = this.value; await saveToCloud(); };
-
-                        specText.style.display = 'none'; specEditWrapper.style.display = 'block';
-                        specSelect.value = playerMeta.specialization || "";
-                        specSelect.onchange = async function() { playerMeta.specialization = this.value; await saveToCloud(); };
-                    } else {
-                        rankText.style.display = 'block'; rankInsigniaContainer.style.display = 'block'; rankEditWrapper.style.display = 'none';
-                        specText.style.display = 'block'; specEditWrapper.style.display = 'none';
-                    }
-                }
-            }
-
-            if (isLeaderMode && playerMeta) {
-                idInput.removeAttribute('readonly'); editIcon.style.display = 'block';
-                idInput.style.borderBottom = "1px dashed rgba(0, 242, 254, 0.3)";
-                idInput.onchange = async function() { playerMeta.gameId = this.value.trim(); await saveToCloud(); };
-            } else {
-                idInput.setAttribute('readonly', true); editIcon.style.display = 'none'; idInput.style.borderBottom = "none";
-            }
-
-            document.getElementById('adminStatusButtons').style.display = isLeaderMode ? 'flex' : 'none';
-            playerInfoModalOverlay.classList.add('active');
-        }
-
-        window.assignPlayerStatus = async function(statusType) {
-            if (!isLeaderMode || !currentSelectedPlayerNick) return;
-            let tgKeyToUpdate = currentSelectedPlayerNick === 'Mitso' ? '@bymitso' : null;
-            if(!tgKeyToUpdate) {
-                for (let tg in cloudDatabase.metadata) {
-                    if (cloudDatabase.metadata[tg].nick === currentSelectedPlayerNick) { tgKeyToUpdate = tg; break; }
-                }
-            }
-            if (!tgKeyToUpdate) return;
-
-            if (statusType === 'none') delete cloudDatabase.metadata[tgKeyToUpdate].customStatus;
-            else cloudDatabase.metadata[tgKeyToUpdate].customStatus = statusType;
-
-            await saveToCloud();
-            playerInfoModalOverlay.classList.remove('active');
-            renderLocalRecruits();
-            applyLeaderStatusColors();
-        }
-
-        function applyLeaderStatusColors() {
-            const mitsoCard = document.querySelector('.player-card.leader[data-nick="Mitso"]');
-            if (mitsoCard && cloudDatabase.metadata['@bymitso']) {
-                mitsoCard.classList.remove('status-legend', 'status-hero');
-                const stat = cloudDatabase.metadata['@bymitso'].customStatus;
-                if (stat === 'legend') mitsoCard.classList.add('status-legend');
-                if (stat === 'hero') mitsoCard.classList.add('status-hero');
-            }
-        }
-
-        closePlayerInfoBtn.addEventListener('click', () => { playerInfoModalOverlay.classList.remove('active'); });
-
-        function renderLocalRecruits() {
-            document.querySelectorAll('.player-card.new-recruit-dynamic').forEach(c => c.remove());
-            const tenMinutesInMs = 10 * 60 * 1000;
-            const now = Date.now();
-
-            const renderedNicks = new Set();
-            document.querySelectorAll('.player-card').forEach(c => {
-                const n = c.getAttribute('data-nick'); if(n) renderedNicks.add(n);
-            });
-
-            const mySavedAvatar = localStorage.getItem('stage_user_avatar') || '';
-            const myRegisteredTg = (localStorage.getItem('stage_user_registered_tg') || '').trim().toLowerCase();
-
-            for (let nick in cloudDatabase.recruits) {
-                if (renderedNicks.has(nick)) continue;
-                renderedNicks.add(nick);
-
-                const approveTime = cloudDatabase.recruits[nick];
-                const card = document.createElement('div');
-                card.setAttribute('data-nick', nick);
-
-                let avatarStyle = ""; let isMe = false; let customStatusClass = ""; let userSpec = "Не назначена";
-                
-                for (let tgKey in cloudDatabase.metadata) {
-                    if (cloudDatabase.metadata[tgKey].nick === nick) {
-                        if (tgKey === myRegisteredTg) isMe = true;
-                        if (cloudDatabase.metadata[tgKey].customStatus === 'legend') customStatusClass = "status-legend";
-                        if (cloudDatabase.metadata[tgKey].customStatus === 'hero') customStatusClass = "status-hero";
-                        userSpec = cloudDatabase.metadata[tgKey].specialization || "Не назначена";
-                    }
-                }
-
-                if (isMe && mySavedAvatar) avatarStyle = `style="background-image: url('${mySavedAvatar}');"`;
-                else {
-                    for (let tgKey in cloudDatabase.metadata) {
-                        if (cloudDatabase.metadata[tgKey].nick === nick && cloudDatabase.metadata[tgKey].avatar) avatarStyle = `style="background-image: url('${cloudDatabase.metadata[tgKey].avatar}');"`;
-                    }
-                }
-                
-                const specIconHtml = SPEC_ICONS[userSpec] || '';
-                const tagHtml = (now - approveTime < tenMinutesInMs) ? `<span class="tag lang-txt" data-ru="Новобранец" data-en="Recruit" data-zh="新兵">${t("Новобранец", "Recruit", "新兵")}</span>` : '';
-                
-                card.className = `player-card new-recruit-dynamic animated-glow-border ${customStatusClass}`;
-                card.innerHTML = `
-                    <div class="name-wrapper">
-                        <div class="roster-avatar" ${avatarStyle}></div>
-                        <span>${nick}${specIconHtml}</span>
-                    </div>
-                    ${tagHtml}
-                    <i class="fa-solid fa-xmark kick-btn" onclick="kickPlayer(this, '${nick}', false)"></i>
-                `;
-                
-                card.onclick = (e) => { if(!e.target.classList.contains('kick-btn')) showPlayerInfo(nick); };
-                playersGrid.appendChild(card);
-
-                setTimeout(() => {
-                    const nameSpan = card.querySelector('.name-wrapper span');
-                    const wrapper = card.querySelector('.name-wrapper');
-                    if (nameSpan && wrapper && nameSpan.scrollWidth > wrapper.clientWidth + 2) nameSpan.classList.add('marquee-anim');
-                }, 50);
-            }
-            if (isLeaderMode) document.querySelectorAll('.kick-btn').forEach(btn => btn.style.display = 'inline-block'); 
-        }
-
-        window.kickPlayer = async function(element, nick, isStatic = true) {
-            if (!isLeaderMode) return;
-            if (confirm(t(`Удалить игрока ${nick} из состава?`, `Remove player ${nick}?`, `确认移除玩家 ${nick}？`))) {
-                delete cloudDatabase.recruits[nick];
-                let removedTg = null;
-                for(let key in cloudDatabase.metadata) {
-                    if(cloudDatabase.metadata[key].nick === nick) { removedTg = key; delete cloudDatabase.metadata[key]; break; }
-                }
-                await saveToCloud();
-                element.parentElement.remove(); 
-                showNotification(t("Игрок удален", "Player removed", "玩家已删除"), 'warning');
-            }
-        }
-
-        lawAgree.addEventListener('change', function() { submitBtn.disabled = !this.checked; });
-        openModalBtn.addEventListener('click', () => { 
-            document.getElementById('modalOverlay').classList.add('active'); 
-            recruitForm.style.display = 'block'; verifyBlock.style.display = 'none';
-            document.getElementById('successResult').style.display = 'none';
-            lawAgree.checked = false; submitBtn.disabled = true; 
-        });
-
-        const openLawModal = () => lawModalOverlay.classList.add('active');
-        const closeLawModal = () => lawModalOverlay.classList.remove('active');
-        navLawBtn.addEventListener('click', openLawModal);
-        closeLawModalBtn.addEventListener('click', closeLawModal); 
-        acceptLawBtn.addEventListener('click', closeLawModal);
-
-        recruitForm.addEventListener('submit', function(e) {
-            e.preventDefault(); submitBtn.textContent = t("Передача...", "Transferring...", "传输中...");
-            const gameNick = document.getElementById('gameNick').value.trim();
-            const gameId = document.getElementById('gameId').value.trim();
-            const gameChatId = document.getElementById('gameChatId').value.trim();
-            let tgLink = document.getElementById('tgLink').value.trim();
-            if(!tgLink.startsWith('@')) tgLink = '@' + tgLink;
-
-            const textMessage = `⚓️ <b>Новая заявка STAGE!</b>\n\n👤 <b>Ник:</b> ${gameNick}\n🆔 <b>ID:</b> ${gameId}\n✈️ <b>TG:</b> ${tgLink}\n🆔 <b>CID:</b> ${gameChatId}`;
-            
-            fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: TG_CHAT_ID, message_thread_id: TG_THREAD_ID, text: textMessage, parse_mode: 'html' })
-            }).then(response => {
-                if (response.ok) { 
-                    recruitForm.style.display = 'none'; document.getElementById('successResult').style.display = 'block'; 
-                    totalRequests++; localStorage.setItem('stage_requests_count', totalRequests.toString());
-                } else { alert(t("Ошибка отправки заявки!", "Error sending application!", "申请发送失败！")); }
-                submitBtn.textContent = t("Отправить заявку", "Submit Application", "提交申请");
-            });
-        });
-
-        window.sendMapToBoard = function(mapFileName, buttonElement) {
-            const fullMapUrl = window.location.origin + '/' + mapFileName;
-            const iframe = document.getElementById('excalidrawFrame');
-            if (iframe && iframe.contentWindow) {
-                iframe.contentWindow.postMessage({ type: "excalidraw-load-image", url: fullMapUrl }, "*");
-                const originalText = buttonElement.innerHTML;
-                buttonElement.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span class="lang-txt" data-ru="На доске!" data-en="On Board!" data-zh="在黑板上！">На доске!</span>`;
-                buttonElement.style.borderColor = "#22c55e"; buttonElement.style.color = "#22c55e";
-                document.getElementById('board').scrollIntoView({ behavior: 'smooth' });
-                setLang(currentLang);
-                setTimeout(() => {
-                    buttonElement.innerHTML = originalText; buttonElement.style.borderColor = "#a855f7"; buttonElement.style.color = "#a855f7"; setLang(currentLang);
-                }, 2000);
-            }
-        }
-
-        // ДИНАМИЧЕСКИЕ ИСКРЫ
-        const canvas = document.getElementById('sparksCanvas'); const ctx = canvas.getContext('2d'); let sparks = [];
-        function resizeSparksCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        window.addEventListener('resize', resizeSparksCanvas); resizeSparksCanvas();
-
-        class Spark {
-            constructor() { this.reset(); }
-            reset() {
-                this.x = Math.random() * canvas.width; this.y = canvas.height + Math.random() * 100;
-                this.size = Math.random() * 2 + 0.5; this.speedY = Math.random() * -1.5 - 0.5;
-                this.speedX = Math.random() * 1.5 - 0.75; this.life = Math.random() * 0.6 + 0.4;
-                this.color = Math.random() > 0.5 ? '#a855f7' : '#ff8c00'; this.fadeRate = Math.random() * 0.003 + 0.001;
-            }
-            update() {
-                this.y += this.speedY; this.x += this.speedX; this.life -= this.fadeRate;
-                if (this.life <= 0 || this.y < -10) { this.reset(); this.y = canvas.height + 10; }
-            }
-            draw() {
-                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = this.color; ctx.globalAlpha = Math.max(0, this.life);
-                ctx.shadowBlur = 8; ctx.shadowColor = this.color; ctx.fill();
-                ctx.globalAlpha = 1.0; ctx.shadowBlur = 0;
-            }
-        }
-        for (let i = 0; i < 35; i++) sparks.push(new Spark());
-        function animateSparks() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height); sparks.forEach(spark => { spark.update(); spark.draw(); });
-            requestAnimationFrame(animateSparks);
-        }
-        animateSparks();
-
-        function playTerminalSound() {
-            try {
-                const AudioContext = window.AudioContext || window.webkitAudioContext; if (!AudioContext) return;
-                const ctx = new AudioContext(); const osc = ctx.createOscillator(); const gain = ctx.createGain();
-                osc.connect(gain); gain.connect(ctx.destination); osc.type = 'square';
-                osc.frequency.setValueAtTime(600, ctx.currentTime); osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.1);
-                gain.gain.setValueAtTime(0.05, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
-                osc.start(); osc.stop(ctx.currentTime + 0.3);
-            } catch(e){}
-        }
-
-        function startCyberTerminalLoader() {
-            const bootScreen = document.getElementById('bootScreen');
-            const loaderBar = document.getElementById('loaderBar');
-            const loaderSubtext = document.getElementById('loaderSubtext');
-
-            let progress = 0;
-            const texts = [
-                t("УСТАНОВКА ЗАЩИЩЕННОГО СОЕДИНЕНИЯ...", "ESTABLISHING SECURE CONNECTION...", "正在建立安全连接..."),
-                t("ОБХОД СИСТЕМ БЕЗОПАСНОСТИ...", "BYPASSING SECURITY PROTOCOLS...", "正在绕过安全协议..."),
-                t("ДЕШИФРОВКА ТАКТИЧЕСКИХ ДАННЫХ...", "DECRYPTING TACTICAL DATA...", "正在解密战术数据..."),
-                t("ДОСТУП РАЗРЕШЕН", "ACCESS GRANTED", "访问已授权")
-            ];
-            let textIndex = 0; loaderSubtext.textContent = texts[0];
-
-            const interval = setInterval(() => {
-                progress += Math.random() * 12; if(progress >= 100) progress = 100;
-                loaderBar.style.width = progress + '%';
-
-                if(progress > 30 && textIndex === 0) { loaderSubtext.textContent = texts[1]; textIndex++; }
-                if(progress > 65 && textIndex === 1) { loaderSubtext.textContent = texts[2]; textIndex++; }
-                
-                if(progress >= 100) {
-                    loaderSubtext.textContent = texts[3]; loaderSubtext.style.color = "#22c55e"; 
-                    loaderBar.style.backgroundColor = "#22c55e"; loaderBar.style.boxShadow = "0 0 15px #22c55e";
-                    clearInterval(interval);
-                    setTimeout(() => { bootScreen.classList.add('hidden'); playTerminalSound(); }, 800);
-                }
-            }, 150);
-        }
-
-        // --- ЛОГИКА PUSH-УВЕДОМЛЕНИЙ ---
-        document.getElementById('enablePushBtn').addEventListener('click', async () => {
-            const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
-
-            if (isIos && !isStandalone) {
-                showNotification(t("Для пушей на iPhone добавьте сайт «На экран Домой» (Поделиться -> На экран Домой).", "For iPhone push, add site to Home Screen (Share -> Add to Home Screen).", "对于 iPhone 推送，请将网站添加到主屏幕 (分享 -> 添加到主屏幕)。"), "warning");
-                return;
-            }
-
-            if (window.OneSignal) {
-                try {
-                    await OneSignal.Notifications.requestPermission();
-                    if (OneSignal.Notifications.permission === "granted") {
-                        showNotification(t("Уведомления успешно подключены!", "Notifications successfully enabled!", "通知已成功启用！"), "success");
-                    } else {
-                        showNotification(t("Доступ к уведомлениям отклонен.", "Notification access denied.", "通知访问被拒绝。"), "warning");
-                    }
-                } catch (error) {
-                    console.error("Ошибка при запросе пушей:", error);
-                    showNotification(t("Ошибка настройки уведомлений.", "Error setting up notifications.", "设置通知时出错。"), "error");
-                }
-            } else {
-                showNotification(t("Система уведомлений еще загружается...", "Notification system is still loading...", "通知系统仍在加载..."), "info");
-            }
-        });
-    </script>
-
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('sw.js').then(registration => { console.log('ServiceWorker успешно запущен'); });
-        });
-      }
-    </script>
-</body>
-</html>
+            start
