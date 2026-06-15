@@ -22,8 +22,8 @@
       OneSignalDeferred.push(async function(OneSignal) {
         await OneSignal.init({
           appId: "188ed938-2fd2-4a4b-8749-a35ff44b8747",
-          serviceWorkerParam: { scope: '/ru/' },
-          serviceWorkerPath: '/ru/sw.js'
+          serviceWorkerParam: { scope: '/ru/' }, // Если сайт открывается как /ru/
+          serviceWorkerPath: 'icons/OneSignalSDKWorker.js' // Указываем путь к воркеру в папке
         });
       });
     </script>
