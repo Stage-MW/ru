@@ -20,12 +20,29 @@
 <script>
       window.OneSignalDeferred = window.OneSignalDeferred || [];
       OneSignalDeferred.push(async function(OneSignal) {
-       await OneSignal.init({
+        await OneSignal.init({
           appId: "188ed938-2fd2-4a4b-8749-a35ff44b8747",
           serviceWorkerParam: { scope: '/ru/' },
           serviceWorkerPath: 'sw.js'
         });
       });
+
+      async function sendPushNotification(messageText) {
+        const MY_REST_API_KEY = 'os_v2_app_dchnsobp2jfexb2junp7is4hi7cqhax75z3efk4gkqvz4etbotfykvtl74blndxunicykbwh5x765ohesfgf47eggp2kxysg7z6rm5y'; 
+        await fetch("https://onesignal.com/api/v1/notifications", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Basic " + MY_REST_API_KEY
+          },
+          body: JSON.stringify({
+            app_id: "188ed938-2fd2-4a4b-8749-a35ff44b8747",
+            contents: { "ru": "Новое сообщение в чате: " + messageText },
+            included_segments: ["All"]
+          })
+        });
+      }
+</script> ```
     </script>
       });
     </script>
