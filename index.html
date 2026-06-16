@@ -5,12 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>STAGE! | Официальный сайт клана</title>
 
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#02050a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="STAGE">
-    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    
+    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/Stage-MW/ru/main/icons/icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="https://raw.githubusercontent.com/Stage-MW/ru/main/icons/icon-192x192.png">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
@@ -20,8 +23,10 @@
     <script>
       window.OneSignalDeferred = window.OneSignalDeferred || [];
       OneSignalDeferred.push(async function(OneSignal) {
-        await OneSignal.init({
+       await OneSignal.init({
           appId: "188ed938-2fd2-4a4b-8749-a35ff44b8747",
+          serviceWorkerParam: { scope: '/ru/' },
+          serviceWorkerPath: '/ru/sw.js'
         });
       });
     </script>
@@ -473,7 +478,6 @@
         
         .cyber-loader-box { width: 100%; max-width: 350px; text-align: center; padding: 20px; }
         
-        /* Обновленный загрузчик */
         .loader-glitch {
             display: flex; 
             justify-content: center; 
@@ -588,9 +592,11 @@
                 padding-bottom: 20px;
                 border-top: 1px solid rgba(0, 242, 254, 0.3);
             }
+            
             #chat-page .chat-input-area input {
                 font-size: 16px !important;
             }
+            
             .chat-msg .text { padding-right: 40px; padding-bottom: 20px; font-size: 13px;}
             .chat-msg .chat-actions { right: 8px; bottom: 5px; }
         }
@@ -819,6 +825,7 @@
             <div class="founder-link"><div class="founder-tile animated-glow-border"><i class="fa-solid fa-shield-halved"></i><h3>Dark Control</h3><p class="lang-txt" data-ru="Основатель" data-en="Founder" data-zh="创始人">Основатель</p></div></div>
             <div class="founder-link"><div class="founder-tile animated-glow-border"><i class="fa-solid fa-bolt"></i><h3>Mr. PROper</h3><p class="lang-txt" data-ru="Основатель" data-en="Founder" data-zh="创始人">Основатель</p></div></div>
             <div class="founder-link"><div class="founder-tile animated-glow-border"><i class="fa-solid fa-satellite-dish"></i><h3>Banan</h3><p class="lang-txt" data-ru="Основатель" data-en="Founder" data-zh="创始人">Основатель</p></div></div>
+            <div class="founder-link"><div class="founder-tile animated-glow-border"><i class="fa-solid fa-meteor"></i><h3>Zandetetor</h3><p class="lang-txt" data-ru="Основатель" data-en="Founder" data-zh="创始人">Основатель</p></div></div>
         </div>
     </section>
 
@@ -1026,8 +1033,12 @@
                             <div id="cabRankInsigniaContainer"></div>
                         </div>
                     </div>
-
                 </div>
+                
+                <button type="button" class="btn-submit" id="enablePushBtn" style="background: #22c55e; color: #000; margin-top:10px; font-size:12px; padding:10px;">
+                    <i class="fa-solid fa-bell"></i> <span class="lang-txt" data-ru="Включить уведомления (КВ и Тренировки)" data-en="Enable Notifications (CW & Training)" data-zh="启用通知 (战队战与训练)">Включить уведомления (КВ и Тренировки)</span>
+                </button>
+
             </div>
             <button type="button" class="btn-submit lang-txt" onclick="resetUserAuth()" style="background:#ef4444; color:#fff; margin-top:15px; font-size:12px; padding:10px;" data-ru="Покинуть мостик (Выйти)" data-en="Leave the bridge (Logout)" data-zh="离开指挥桥 (注销)">Покинуть мостик (Выйти)</button>
         </div>
@@ -1097,13 +1108,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
     <div id="toastContainer" class="toast-container"></div>
 
     <script>
-        // Функция проверки: является ли пользователь верифицированным участником клана
-        window.isClanMember = function() {
-            return localStorage.getItem('stage_team_logged') === 'true' || 
-                   localStorage.getItem('stage_authorized') === 'true' || 
-                   localStorage.getItem('stage_leader_session') === 'true';
-        };
-
         // ИНИЦИАЛИЗАЦИЯ ИНТЕРНАЦИОНАЛИЗАЦИИ
         let currentLang = localStorage.getItem('stage_lang') || 'ru';
         const langs = ['ru', 'en', 'zh'];
@@ -1171,7 +1175,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
         const TG_CHAT_ID = "-1002619697984"; 
         const TG_THREAD_ID = 5264;          
         const CLAN_ID = "250489";
-        const TRAINING_THREAD_ID = 5264;
+        const TRAINING_THREAD_ID = 1;
         const FOUNDATION_DATE = new Date("2026-05-26T00:00:00"); 
 
         const SUPABASE_URL = "https://noxmicgoosxoqderhgdp.supabase.co/rest/v1/"; 
@@ -1397,6 +1401,14 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
 
             setLang(currentLang); 
 
+            // БАГФИКС: Безопасная инициализация выпадающего списка рангов, чтобы скрипт не падал
+            const infoRankSelectElem = document.getElementById('infoRankSelect');
+            if (infoRankSelectElem) {
+                NAVAL_RANKS.forEach(rank => {
+                    const opt = document.createElement('option'); opt.value = rank; opt.textContent = rank; infoRankSelectElem.appendChild(opt);
+                });
+            }
+
             applyGlobalKickedFilters();
             renderLocalRecruits();
             generateTacticalMapsGrid();
@@ -1610,7 +1622,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             } catch (err) { console.error("Ошибка сохранения:", err); }
         }
 
-        // ЧАТ СИСТЕМЫ И ПУШ-УВЕДОМЛЕНИЯ
+        // ЧАТ СИСТЕМЫ
         function renderChat() {
             const container = document.getElementById('chatMessages');
             if(!container) return;
@@ -1650,40 +1662,14 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             });
             container.scrollTop = container.scrollHeight;
 
-            // === СИСТЕМА УВЕДОМЛЕНИЙ ===
             if (currentCount > 0 && cloudDatabase.chat.length > currentCount) {
-                for (let i = currentCount; i < cloudDatabase.chat.length; i++) {
-                    const newMsg = cloudDatabase.chat[i];
-                    
-                    let currentAuthor = localStorage.getItem('stage_user_registered_tg') || localStorage.getItem('stage_guest_nick') || '';
-                    if (cloudDatabase.metadata && cloudDatabase.metadata[currentAuthor.toLowerCase()]) {
-                        currentAuthor = cloudDatabase.metadata[currentAuthor.toLowerCase()].nick;
-                    }
-                    
-                    // Если автор сообщения НЕ мы сами
-                    if (newMsg.author !== currentAuthor) {
-                        // Локальный тост на сайте
-                        showNotification(`${newMsg.author}: ${newMsg.text.substring(0, 30)}...`, 'chat');
-                        
-                        // ПОЛНОЦЕННЫЙ ПУШ ТОЛЬКО ДЛЯ УЧАСТНИКОВ КЛАНА
-                        // Срабатывает, если вкладка свернута или не в фокусе (document.hidden)
-                        if (isClanMember() && "Notification" in window && Notification.permission === "granted") {
-                            if (document.hidden) {
-                                const push = new Notification(`STAGE | Чат: ${newMsg.author}`, {
-                                    body: newMsg.text,
-                                    icon: '/icons/icon-192x192.png',
-                                    badge: '/icons/icon-192x192.png',
-                                    vibrate: [200, 100, 200]
-                                });
-                                
-                                push.onclick = function() {
-                                    window.focus();
-                                    document.getElementById('chat-page').scrollIntoView({ behavior: 'smooth' });
-                                    push.close();
-                                };
-                            }
-                        }
-                    }
+                const lastMsg = cloudDatabase.chat[cloudDatabase.chat.length - 1];
+                let currentAuthor = localStorage.getItem('stage_user_registered_tg') || localStorage.getItem('stage_guest_nick') || '';
+                if (cloudDatabase.metadata && cloudDatabase.metadata[currentAuthor.toLowerCase()]) {
+                    currentAuthor = cloudDatabase.metadata[currentAuthor.toLowerCase()].nick;
+                }
+                if (lastMsg.author !== currentAuthor) {
+                    showNotification(`${lastMsg.author}: ${lastMsg.text.substring(0, 30)}...`, 'chat');
                 }
             }
         }
@@ -1761,6 +1747,25 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             cloudDatabase.chat.push({ author, text, time: Date.now() });
             if (cloudDatabase.chat.length > 100) cloudDatabase.chat.shift();
             
+            // Отправка в Supabase для срабатывания SQL-триггера пуш-уведомлений
+            try {
+                await fetch(`${SUPABASE_URL}messages`, {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "apikey": SUPABASE_KEY,
+                        "Authorization": `Bearer ${SUPABASE_KEY}`,
+                        "Prefer": "return=minimal"
+                    },
+                    body: JSON.stringify({ 
+                        username: author, 
+                        content: text 
+                    })
+                });
+            } catch(e) {
+                console.error("Ошибка инициализации пуша в Supabase:", e);
+            }
+
             input.value = '';
             await saveToCloud();
             renderChat();
@@ -1826,6 +1831,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             mainAva.style.backgroundImage = `url('${avatarUrl}')`;
             document.getElementById('cabAvatarIconDefault').style.display = 'none';
             
+            // --- НОВОЕ: Синхронизация с карточкой Mitso в составе ---
             const myTg = (localStorage.getItem('stage_user_registered_tg') || '').trim().toLowerCase();
             if (isLeaderMode || myTg === '@bymitso' || myTg.includes('admin')) {
                 const mitsoCardAvatar = document.querySelector('.player-card[data-nick="Mitso"] .roster-avatar');
@@ -1833,6 +1839,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                     mitsoCardAvatar.style.backgroundImage = `url('${avatarUrl}')`;
                 }
             }
+            // ---------------------------------------------------------
             
             refreshMenuCabinetAvatar();
 
@@ -1856,6 +1863,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 navCabinetBtn.style.backgroundImage = `url('${savedAvatar}')`;
                 if(defaultIcon) defaultIcon.style.display = 'none';
 
+                // --- НОВОЕ: Применяем сохраненный аватар к карточке Mitso при загрузке ---
                 const myTg = (localStorage.getItem('stage_user_registered_tg') || '').trim().toLowerCase();
                 if (isLeaderMode || myTg === '@bymitso' || myTg.includes('admin')) {
                     const mitsoCardAvatar = document.querySelector('.player-card[data-nick="Mitso"] .roster-avatar');
@@ -1863,6 +1871,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                         mitsoCardAvatar.style.backgroundImage = `url('${savedAvatar}')`;
                     }
                 }
+                // -----------------------------------------------------------------------
             } else {
                 navCabinetBtn.style.backgroundImage = 'none';
                 if(defaultIcon) defaultIcon.style.display = 'inline-block';
@@ -1959,6 +1968,14 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             localStorage.removeItem('stage_leader_session');
             localStorage.removeItem('stage_cached_nick');
             localStorage.removeItem('stage_user_avatar'); 
+            
+            // Снимаем тег клана
+            if (window.OneSignal) {
+                window.OneSignalDeferred.push(function(OneSignal) {
+                    OneSignal.User.removeTag("clan_member");
+                });
+            }
+            
             location.reload();
         }
 
@@ -1966,14 +1983,19 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             if(confirm(t("Вы действительно хотите выйти из аккаунта клана? Карты и доска закроются.", "Do you really want to log out? Maps and board will be locked.", "确定要退出登录吗？地图和黑板将被锁定。"))) { forceAbsoluteLogout(); }
         }
 
+        // БАГФИКС ЛОГИНА: Добавляем безопасные обработчики кнопки "Вход"
         navLoginBtn.addEventListener('click', () => {
             if(isLeaderMode || localStorage.getItem('stage_team_logged') === 'true') {
-                if(confirm(t("Выйти из текущей учетной записи?", "Log out of current account?", "退出当前账号？"))) { forceAbsoluteLogout(); }
+                if(confirm(t("Выйти из текущей учетной записи?", "Log out of current account?", "退出当前账号？"))) { 
+                    forceAbsoluteLogout(); 
+                }
             } else {
-                adminEmailInput.value = ""; adminPasswordInput.value = "";
+                adminEmailInput.value = ""; 
+                adminPasswordInput.value = "";
                 loginModalOverlay.classList.add('active');
             }
         });
+        
         closeLoginModalBtn.addEventListener('click', () => loginModalOverlay.classList.remove('active'));
 
         document.getElementById('cabAvatarMain').addEventListener('click', () => {
@@ -2067,6 +2089,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
         });
         closeCabinetModalBtn.addEventListener('click', () => cabinetModalOverlay.classList.remove('active'));
 
+        // Функция проверки доступа к кнопке Тренировка
         function updateTrainingButtonVisibility() {
             const btn = document.getElementById('btnTrainingTrigger');
             if (!btn) return;
@@ -2095,6 +2118,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 if (spec && spec !== "Не назначена" && spec !== "") hasSpec = true;
             }
             
+            // Если не лидер и нет специализации — блокируем действие
             if (!isLeaderMode && !hasSpec) return;
 
             const todayStr = new Date().toISOString().split('T')[0];
@@ -2149,6 +2173,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
                         chat_id: TG_CHAT_ID, 
+                        message_thread_id: TRAINING_THREAD_ID, 
                         text: messageText, 
                         parse_mode: 'html',
                         reply_markup: replyMarkupButtons 
@@ -2317,7 +2342,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             try {
                 await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ chat_id: TG_CHAT_ID, text: messageText, parse_mode: 'html' })
+                    body: JSON.stringify({ chat_id: TG_CHAT_ID, message_thread_id: TRAINING_THREAD_ID, text: messageText, parse_mode: 'html' })
                 });
             } catch (err) { console.error("Ошибка уведомления КВ:", err); }
         }
@@ -2434,6 +2459,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             countdownIntervalId = setInterval(updateTimer, 1000);
         }
 
+        // БАГФИКС ЛОГИНА: Логика авторизации
         submitAdminLoginBtn.addEventListener('click', () => {
             let inputLogin = adminEmailInput.value.trim().toLowerCase();
             let inputPassword = adminPasswordInput.value.trim().toUpperCase();
@@ -2460,18 +2486,20 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             if (isApproved) {
                 localStorage.setItem('stage_team_logged', 'true');
                 if (localStorage.getItem('stage_leader_session') === 'true') activateLeaderMode();
+                
+                // Назначаем тег участника клана для пушей
+                if (window.OneSignal) {
+                    window.OneSignalDeferred.push(function(OneSignal) {
+                        OneSignal.User.addTag("clan_member", "true");
+                    });
+                }
+                
                 unlockTeamFeatures(); 
                 loginModalOverlay.classList.remove('active');
                 refreshMenuCabinetAvatar();
                 renderLocalRecruits();
                 initTrainingCountdown();
                 initCwCountdown();
-                
-                // ЗАПРОС РАЗРЕШЕНИЯ НА ПУШ-УВЕДОМЛЕНИЯ ПРИ ВХОДЕ
-                if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
-                    Notification.requestPermission();
-                }
-
                 showNotification(t("Успешная авторизация!", "Authorized successfully!", "授权成功！"), 'success');
             } else {
                 alert(t("Ошибка доступа!", "Access Error!", "访问错误！"));
@@ -2605,16 +2633,18 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             if(cloudDatabase.metadata && cloudDatabase.metadata[inputNick]) {
                 localStorage.setItem('stage_cached_nick', cloudDatabase.metadata[inputNick].nick);
             }
+            
+            // Назначаем тег участника клана для пушей
+            if (window.OneSignal) {
+                window.OneSignalDeferred.push(function(OneSignal) {
+                    OneSignal.User.addTag("clan_member", "true");
+                });
+            }
+
             secretTgBox.style.display = 'block'; recruitBoxBtn.style.display = 'none';
             refreshMenuCabinetAvatar();
             document.getElementById('modalOverlay').classList.remove('active');
             unlockTeamFeatures();
-            
-            // ЗАПРОС РАЗРЕШЕНИЯ НА ПУШ-УВЕДОМЛЕНИЯ ПРИ ВХОДЕ
-            if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
-                Notification.requestPermission();
-            }
-
             showNotification(t("Допуск подтвержден!", "Access granted!", "访问权限已确认！"), 'success');
         });
 
@@ -2629,6 +2659,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 if (cloudDatabase.metadata[tg].nick === nick) { playerMeta = cloudDatabase.metadata[tg]; break; }
             }
 
+            // Устанавливаем аватарку или убираем её, если не задана
             if (playerMeta && playerMeta.avatar) {
                 infoAvatar.style.backgroundImage = `url('${playerMeta.avatar}')`;
             } else if (nick === 'Mitso' && cloudDatabase.metadata['@bymitso'] && cloudDatabase.metadata['@bymitso'].avatar) {
@@ -2856,12 +2887,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             }
         }
 
-        if (infoRankSelect) {
-            NAVAL_RANKS.forEach(rank => {
-                const opt = document.createElement('option'); opt.value = rank; opt.textContent = rank; infoRankSelect.appendChild(opt);
-            });
-        }
-
         // ДИНАМИЧЕСКИЕ ИСКРЫ
         const canvas = document.getElementById('sparksCanvas'); const ctx = canvas.getContext('2d'); let sparks = [];
         function resizeSparksCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
@@ -2933,12 +2958,39 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 }
             }, 150);
         }
+
+        // --- ЛОГИКА PUSH-УВЕДОМЛЕНИЙ ---
+        document.getElementById('enablePushBtn').addEventListener('click', async () => {
+            const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+
+            if (isIos && !isStandalone) {
+                showNotification(t("Для пушей на iPhone добавьте сайт «На экран Домой» (Поделиться -> На экран Домой).", "For iPhone push, add site to Home Screen (Share -> Add to Home Screen).", "对于 iPhone 推送，请将网站添加到主屏幕 (分享 -> 添加到主屏幕)。"), "warning");
+                return;
+            }
+
+            if (window.OneSignal) {
+                try {
+                    await OneSignal.Notifications.requestPermission();
+                    if (OneSignal.Notifications.permission === "granted") {
+                        showNotification(t("Уведомления успешно подключены!", "Notifications successfully enabled!", "通知已成功启用！"), "success");
+                    } else {
+                        showNotification(t("Доступ к уведомлениям отклонен.", "Notification access denied.", "通知访问被拒绝。"), "warning");
+                    }
+                } catch (error) {
+                    console.error("Ошибка при запросе пушей:", error);
+                    showNotification(t("Ошибка настройки уведомлений.", "Error setting up notifications.", "设置通知时出错。"), "error");
+                }
+            } else {
+                showNotification(t("Система уведомлений еще загружается...", "Notification system is still loading...", "通知系统仍在加载..."), "info");
+            }
+        });
     </script>
 
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js').then(registration => { console.log('ServiceWorker успешно запущен'); });
+          navigator.serviceWorker.register('sw.js').then(registration => { console.log('ServiceWorker успешно запущен'); });
         });
       }
     </script>
