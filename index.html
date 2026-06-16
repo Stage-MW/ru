@@ -2156,25 +2156,15 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
 
             const messageText = `⚔️ <b>ВНИМАНИЕ! Назначена тренировка!</b>\n\n⚓️ <b>Событие:</b> Тренировка\n📅 <b>Время сбора:</b> ${formattedDate}\n\nВсем участникам быть ! Прямая связь в Яндекс Телемост или Discord. 🚢🔥`;
 
-            const replyMarkupButtons = {
-                inline_keyboard: [
-                    [
-                        { text: "⚓️ Прибуду в строй", callback_data: "verify" }, 
-                        { text: "❌ Не смогу", callback_data: "switchToForm" }
-                    ]
-                ]
-            };
-
             try {
-                // 1. Отправляем в Telegram (теперь в общую группу, как предложения КВ)
+                // 1. Отправляем в Telegram (теперь в общую группу и БЕЗ кнопок)
                 await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
                         chat_id: TG_CHAT_ID, 
                         text: messageText, 
-                        parse_mode: 'html',
-                        reply_markup: replyMarkupButtons 
+                        parse_mode: 'html'
                     })
                 });
 
@@ -2209,7 +2199,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 btnSubmitTraining.disabled = false;
             }
         });
-
         function getAutoCwEvent() {
             const now = new Date();
             const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
