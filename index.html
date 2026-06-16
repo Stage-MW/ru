@@ -2166,13 +2166,12 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             };
 
             try {
-                // 1. Отправляем в Telegram
+                // 1. Отправляем в Telegram (теперь в общую группу, как предложения КВ)
                 await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
                         chat_id: TG_CHAT_ID, 
-                        message_thread_id: TRAINING_THREAD_ID, 
                         text: messageText, 
                         parse_mode: 'html',
                         reply_markup: replyMarkupButtons 
@@ -2349,15 +2348,15 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             }
         }
 
-        async function triggerCwNotification() {
+       async function triggerCwNotification() {
             cloudDatabase.cwNotified = true;
             await saveToCloud();
             const messageText = `⚔️ <b>ВНИМАНИЕ, ФЛОТ STAGE!</b>\n\n🔥 <b>КЛАНОВЫЕ БОИ НАЧАЛИСЬ!</b> 🔥\n\nНе пропустите! 🚢💥`;
             
-            // 1. Отправка в Telegram
+            // 1. Отправка в Telegram (в общую группу)
             fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: TG_CHAT_ID, message_thread_id: TRAINING_THREAD_ID, text: messageText, parse_mode: 'html' })
+                body: JSON.stringify({ chat_id: TG_CHAT_ID, text: messageText, parse_mode: 'html' })
             }).catch(err => console.error("Ошибка уведомления КВ в ТГ:", err));
 
             // 2. Отправка Push-уведомления
