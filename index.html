@@ -11,6 +11,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="STAGE">
     
+    <!-- Обновленные иконки PWA напрямую с GitHub -->
     <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/Stage-MW/ru/main/icons/icon-192x192.png">
     <link rel="icon" type="image/png" sizes="192x192" href="https://raw.githubusercontent.com/Stage-MW/ru/main/icons/icon-192x192.png">
     
@@ -19,6 +20,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
+    <!-- Инициализация OneSignal -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
       window.OneSignalDeferred = window.OneSignalDeferred || [];
@@ -1517,6 +1519,20 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 document.getElementById('cwProposalModalOverlay').classList.remove('active');
                 btn.disabled = false; btn.textContent = t("Отправить вызов", "Send Challenge", "发送挑战");
                 this.reset();
+                
+                // --- ОТПРАВКА ПУША КЛАНУ О НОВОМ ВЫЗОВЕ ---
+                try {
+                    fetch(`${SUPABASE_URL}messages`, {
+                        method: 'POST',
+                        headers: { "Content-Type": "application/json", "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}`, "Prefer": "return=minimal" },
+                        body: JSON.stringify({ 
+                            username: "📩 ВЫЗОВ НА КВ", 
+                            content: `Клан ${clan} предлагает сыграть ${date} в ${time}!` 
+                        })
+                    });
+                } catch(e) {}
+                // ------------------------------------------
+
             }).catch(e => {
                 showNotification(t("Ошибка отправки!", "Send error!", "发送失败！"), 'error');
                 btn.disabled = false; btn.textContent = t("Отправить вызов", "Send Challenge", "发送挑战");
@@ -2188,6 +2204,24 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 trainingModalOverlay.classList.remove('active');
                 initTrainingCountdown(); 
 
+                // --- ОТПРАВКА ПУША О ТРЕНИРОВКЕ ---
+                try {
+                    await fetch(`${SUPABASE_URL}messages`, {
+                        method: 'POST',
+                        headers: {
+                            "Content-Type": "application/json",
+                            "apikey": SUPABASE_KEY,
+                            "Authorization": `Bearer ${SUPABASE_KEY}`,
+                            "Prefer": "return=minimal"
+                        },
+                        body: JSON.stringify({ 
+                            username: "⚓️ ШТАБ STAGE", 
+                            content: `Назначена тренировка! Сбор: ${formattedDate}` 
+                        })
+                    });
+                } catch(e) { console.error("Ошибка пуша тренировки", e); }
+                // ----------------------------------
+
                 showNotification(t("Тренировка запланирована!", "Training scheduled!", "训练已安排！"), 'success');
             } catch (err) {
                 alert("Ошибка связи: " + err.message);
@@ -2345,6 +2379,24 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                     body: JSON.stringify({ chat_id: TG_CHAT_ID, message_thread_id: TRAINING_THREAD_ID, text: messageText, parse_mode: 'html' })
                 });
             } catch (err) { console.error("Ошибка уведомления КВ:", err); }
+
+            // --- ОТПРАВКА ПУША О НАЧАЛЕ КВ ---
+            try {
+                await fetch(`${SUPABASE_URL}messages`, {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "apikey": SUPABASE_KEY,
+                        "Authorization": `Bearer ${SUPABASE_KEY}`,
+                        "Prefer": "return=minimal"
+                    },
+                    body: JSON.stringify({ 
+                        username: "⚔️ СИСТЕМА", 
+                        content: "🔥 КЛАНОВЫЕ БОИ НАЧАЛИСЬ! Ждем всех в строю!" 
+                    })
+                });
+            } catch(e) { console.error("Ошибка пуша КВ", e); }
+            // ---------------------------------
         }
 
         window.registerWebsiteVote = async function(type) {
