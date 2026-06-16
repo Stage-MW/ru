@@ -23,8 +23,6 @@
         await OneSignal.init({
           appId: "188ed938-2fd2-4a4b-8749-a35ff44b8747",
         });
-        // Заставляем OneSignal спросить подписку, если пользователь еще не подписан
-        OneSignal.Slidedown.promptPush();
       });
     </script>
     
@@ -51,7 +49,7 @@
         }
         .animated-glow-border::after {
             content: ""; position: absolute; inset: 0px; border-radius: inherit;
-            background: rgba(15, 23, 42, 0.85);
+            background: rgba(15, 23, 42, 0.85); /* Базовый темный фон карточки */
             z-index: -1;
         }
         .animated-glow-border:hover::before { opacity: 1; }
@@ -1099,6 +1097,13 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
     <div id="toastContainer" class="toast-container"></div>
 
     <script>
+        // Функция проверки: является ли пользователь верифицированным участником клана
+        window.isClanMember = function() {
+            return localStorage.getItem('stage_team_logged') === 'true' || 
+                   localStorage.getItem('stage_authorized') === 'true' || 
+                   localStorage.getItem('stage_leader_session') === 'true';
+        };
+
         // ИНИЦИАЛИЗАЦИЯ ИНТЕРНАЦИОНАЛИЗАЦИИ
         let currentLang = localStorage.getItem('stage_lang') || 'ru';
         const langs = ['ru', 'en', 'zh'];
@@ -1335,13 +1340,9 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             recruits: {}, banned: [], kickedNicks: [], metadata: {}, 
             trainingTime: null, trainingYes: [], trainingNo: [],
             cwTime: null, cwNotified: false, autoCwEnabled: false,
-            chatBanned: []
+            chat: [], chatBanned: [], chatMonth: new Date().getMonth()
         };
         let isCloudSynced = false; 
-        
-        // --- НОВАЯ СИСТЕМА ДЛЯ ТАБЛИЦЫ MESSAGES ---
-        let currentMessages = [];
-        let isChatLoading = false;
 
         function getClanPassword(tgLogin) {
             let clean = tgLogin.trim().toLowerCase();
@@ -1419,7 +1420,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             }, { threshold: 0.1 });
             sections.forEach(s => observer.observe(s));
 
-            // Загрузка основных данных клана
             syncWithCloud().then(() => {
                 if (checkBanAndLogout()) return;
                 applyGlobalKickedFilters();
@@ -1427,12 +1427,9 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 applyLeaderStatusColors();
                 initTrainingCountdown();
                 initCwCountdown();
+                renderChat();
             });
 
-            // Загрузка ЧАТА из таблицы messages
-            loadChatFromDatabase();
-
-            // Автообновление (поллинг)
             setInterval(() => {
                 syncWithCloud().then(() => {
                     if (checkBanAndLogout()) return;
@@ -1441,8 +1438,8 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                     applyLeaderStatusColors();
                     renderAttendanceListsOnSite();
                     initCwCountdown(); 
+                    renderChat();
                 });
-                loadChatFromDatabase(); // Регулярно стягиваем новые сообщения из БД
             }, 30000);
 
             setInterval(async () => {
@@ -1575,7 +1572,17 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                         cloudDatabase.cwTime = db.cwTime || null;
                         cloudDatabase.cwNotified = db.cwNotified || false;
                         cloudDatabase.autoCwEnabled = db.autoCwEnabled || false;
+                        
+                        cloudDatabase.chat = db.chat || [];
                         cloudDatabase.chatBanned = db.chatBanned || [];
+                        cloudDatabase.chatMonth = db.chatMonth !== undefined ? db.chatMonth : new Date().getMonth();
+                        
+                        const currentMonth = new Date().getMonth();
+                        if (cloudDatabase.chatMonth !== currentMonth) {
+                            cloudDatabase.chat = [];
+                            cloudDatabase.chatMonth = currentMonth;
+                            await saveToCloud();
+                        }
                     }
                     isCloudSynced = true; 
                     updateOnlineWidget();
@@ -1603,71 +1610,38 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             } catch (err) { console.error("Ошибка сохранения:", err); }
         }
 
-        // --- НОВАЯ СИСТЕМА ЧАТА (Через таблицу messages) ---
-        async function loadChatFromDatabase() {
-            if (isChatLoading) return;
-            isChatLoading = true;
-            try {
-                const res = await fetch(`${SUPABASE_URL}messages?select=*&order=created_at.asc&limit=150`, {
-                    headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}`, "Cache-Control": "no-cache" }
-                });
-                if (res.ok) {
-                    const newMessages = await res.json();
-                    
-                    // Уведомление, если пришло новое сообщение (и оно не от нас)
-                    if (currentMessages.length > 0 && newMessages.length > currentMessages.length) {
-                        let currentAuthor = localStorage.getItem('stage_user_registered_tg') || localStorage.getItem('stage_guest_nick') || '';
-                        if (cloudDatabase.metadata && cloudDatabase.metadata[currentAuthor.toLowerCase()]) {
-                            currentAuthor = cloudDatabase.metadata[currentAuthor.toLowerCase()].nick;
-                        }
-                        
-                        const lastMsg = newMessages[newMessages.length - 1];
-                        if (lastMsg.username !== currentAuthor) {
-                            showNotification(`${lastMsg.username}: ${lastMsg.content.substring(0, 30)}...`, 'chat');
-                        }
-                    }
-
-                    currentMessages = newMessages;
-                    renderChatUI();
-                }
-            } catch (e) {
-                console.error("Ошибка загрузки чата из БД:", e);
-            } finally {
-                isChatLoading = false;
-            }
-        }
-
-        function renderChatUI() {
+        // ЧАТ СИСТЕМЫ И ПУШ-УВЕДОМЛЕНИЯ
+        function renderChat() {
             const container = document.getElementById('chatMessages');
             if(!container) return;
             
+            const currentCount = container.children.length;
             container.innerHTML = '';
             
-            if (currentMessages.length === 0) {
+            if (cloudDatabase.chat.length === 0) {
                 container.innerHTML = `<div style="text-align:center; color:#94a3b8; font-size:12px; margin-top:20px;">${t("Сообщений пока нет...", "No messages yet...", "暂无消息...")}</div>`;
                 return;
             }
 
-            currentMessages.forEach((msg, idx) => {
-                const isBanned = cloudDatabase.chatBanned && cloudDatabase.chatBanned.includes(msg.username);
+            cloudDatabase.chat.forEach((msg, idx) => {
+                const isBanned = cloudDatabase.chatBanned.includes(msg.author);
                 if (isBanned && !isLeaderMode) return; 
 
                 let adminControls = '';
                 if (isLeaderMode) {
                     adminControls = `
-                        <button class="chat-btn del-btn" onclick="deleteChatMessage(${msg.id})" title="Удалить"><i class="fa-solid fa-trash"></i></button>
-                        <button class="chat-btn del-btn" onclick="banChatUser('${msg.username}')" title="Забанить автора"><i class="fa-solid fa-ban"></i></button>
+                        <button class="chat-btn del-btn" onclick="deleteChatMessage(${idx})" title="Удалить"><i class="fa-solid fa-trash"></i></button>
+                        <button class="chat-btn del-btn" onclick="banChatUser('${msg.author}')" title="Забанить автора"><i class="fa-solid fa-ban"></i></button>
                     `;
                 }
 
-                const msgDate = new Date(msg.created_at);
                 const html = `
                     <div class="chat-msg glassmorphism">
-                        <div class="author">${msg.username}</div>
-                        <div class="text" id="chat-text-${msg.id}">${msg.content}</div>
-                        <div class="timestamp">${msgDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                        <div class="author">${msg.author}</div>
+                        <div class="text" id="chat-text-${idx}">${msg.text}</div>
+                        <div class="timestamp">${new Date(msg.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
                         <div class="chat-actions">
-                            <button class="chat-btn" onclick="translateMessage(${msg.id}, '${encodeURIComponent(msg.content)}')" title="Перевести"><i class="fa-solid fa-language"></i></button>
+                            <button class="chat-btn" onclick="translateMessage(${idx})" title="Перевести (Translate)"><i class="fa-solid fa-language"></i></button>
                             ${adminControls}
                         </div>
                     </div>
@@ -1675,47 +1649,78 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 container.innerHTML += html;
             });
             container.scrollTop = container.scrollHeight;
+
+            // === СИСТЕМА УВЕДОМЛЕНИЙ ===
+            if (currentCount > 0 && cloudDatabase.chat.length > currentCount) {
+                for (let i = currentCount; i < cloudDatabase.chat.length; i++) {
+                    const newMsg = cloudDatabase.chat[i];
+                    
+                    let currentAuthor = localStorage.getItem('stage_user_registered_tg') || localStorage.getItem('stage_guest_nick') || '';
+                    if (cloudDatabase.metadata && cloudDatabase.metadata[currentAuthor.toLowerCase()]) {
+                        currentAuthor = cloudDatabase.metadata[currentAuthor.toLowerCase()].nick;
+                    }
+                    
+                    // Если автор сообщения НЕ мы сами
+                    if (newMsg.author !== currentAuthor) {
+                        // Локальный тост на сайте
+                        showNotification(`${newMsg.author}: ${newMsg.text.substring(0, 30)}...`, 'chat');
+                        
+                        // ПОЛНОЦЕННЫЙ ПУШ ТОЛЬКО ДЛЯ УЧАСТНИКОВ КЛАНА
+                        // Срабатывает, если вкладка свернута или не в фокусе (document.hidden)
+                        if (isClanMember() && "Notification" in window && Notification.permission === "granted") {
+                            if (document.hidden) {
+                                const push = new Notification(`STAGE | Чат: ${newMsg.author}`, {
+                                    body: newMsg.text,
+                                    icon: '/icons/icon-192x192.png',
+                                    badge: '/icons/icon-192x192.png',
+                                    vibrate: [200, 100, 200]
+                                });
+                                
+                                push.onclick = function() {
+                                    window.focus();
+                                    document.getElementById('chat-page').scrollIntoView({ behavior: 'smooth' });
+                                    push.close();
+                                };
+                            }
+                        }
+                    }
+                }
+            }
         }
 
-        window.translateMessage = async function(msgId, encodedText) {
-            const textDiv = document.getElementById(`chat-text-${msgId}`);
+        window.translateMessage = async function(idx) {
+            const msgObj = cloudDatabase.chat[idx];
+            const textDiv = document.getElementById(`chat-text-${idx}`);
             if (!textDiv) return;
             
-            const rawText = decodeURIComponent(encodedText);
             textDiv.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Translating...`;
             
-            const isCyrillic = /[а-яА-ЯЁё]/.test(rawText);
-            const isChinese = /[\u4e00-\u9fa5]/.test(rawText);
+            const isCyrillic = /[а-яА-ЯЁё]/.test(msgObj.text);
+            const isChinese = /[\u4e00-\u9fa5]/.test(msgObj.text);
             let langPair = isCyrillic ? 'ru|en' : 'en|ru';
             if (currentLang === 'zh') {
                  langPair = isChinese ? 'zh|en' : (isCyrillic ? 'ru|zh' : 'en|zh');
             }
             
             try {
-                const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(rawText)}&langpair=${langPair}`);
+                const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(msgObj.text)}&langpair=${langPair}`);
                 const data = await res.json();
                 if(data && data.responseData && data.responseData.translatedText) {
                     textDiv.innerHTML = `<span style="color:#a855f7;">[TR]</span> ${data.responseData.translatedText}`;
                 } else {
-                    textDiv.innerText = rawText;
+                    textDiv.innerText = msgObj.text;
                 }
             } catch(e) {
-                textDiv.innerText = rawText;
+                textDiv.innerText = msgObj.text;
                 showNotification(t("Ошибка сервиса перевода", "Translation failed", "翻译失败"), 'error');
             }
         }
 
-        window.deleteChatMessage = async function(id) {
+        window.deleteChatMessage = async function(idx) {
             if (!isLeaderMode) return;
-            if (confirm("Точно удалить это сообщение?")) {
-                try {
-                    await fetch(`${SUPABASE_URL}messages?id=eq.${id}`, {
-                        method: 'DELETE',
-                        headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` }
-                    });
-                    loadChatFromDatabase(); // Обновляем
-                } catch(e) { console.error("Ошибка удаления", e); }
-            }
+            cloudDatabase.chat.splice(idx, 1);
+            await saveToCloud();
+            renderChat();
         }
 
         window.banChatUser = async function(author) {
@@ -1724,7 +1729,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 if(!cloudDatabase.chatBanned.includes(author)) {
                     cloudDatabase.chatBanned.push(author);
                     await saveToCloud();
-                    renderChatUI();
+                    renderChat();
                     showNotification(t("Пользователь забанен в чате", "User banned from chat", "用户已被禁言"), 'warning');
                 }
             }
@@ -1753,25 +1758,12 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             }
 
             document.getElementById('sendChatBtn').disabled = true;
+            cloudDatabase.chat.push({ author, text, time: Date.now() });
+            if (cloudDatabase.chat.length > 100) cloudDatabase.chat.shift();
             
-            // ЗАПИСЫВАЕМ НАПРЯМУЮ В ТАБЛИЦУ MESSAGES
-            try {
-                await fetch(`${SUPABASE_URL}messages`, {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json', 
-                        'apikey': SUPABASE_KEY, 
-                        'Authorization': `Bearer ${SUPABASE_KEY}` 
-                    },
-                    body: JSON.stringify({ username: author, content: text })
-                });
-                input.value = '';
-                loadChatFromDatabase(); // Загружаем свежие данные
-            } catch(e) {
-                showNotification(t("Ошибка отправки", "Error sending", "发送错误"), 'error');
-                console.error(e);
-            }
-
+            input.value = '';
+            await saveToCloud();
+            renderChat();
             document.getElementById('sendChatBtn').disabled = false;
         });
         
@@ -2157,7 +2149,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
                         chat_id: TG_CHAT_ID, 
-                        message_thread_id: TRAINING_THREAD_ID, 
                         text: messageText, 
                         parse_mode: 'html',
                         reply_markup: replyMarkupButtons 
@@ -2326,7 +2317,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             try {
                 await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ chat_id: TG_CHAT_ID, message_thread_id: TRAINING_THREAD_ID, text: messageText, parse_mode: 'html' })
+                    body: JSON.stringify({ chat_id: TG_CHAT_ID, text: messageText, parse_mode: 'html' })
                 });
             } catch (err) { console.error("Ошибка уведомления КВ:", err); }
         }
@@ -2475,6 +2466,12 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 renderLocalRecruits();
                 initTrainingCountdown();
                 initCwCountdown();
+                
+                // ЗАПРОС РАЗРЕШЕНИЯ НА ПУШ-УВЕДОМЛЕНИЯ ПРИ ВХОДЕ
+                if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
+                    Notification.requestPermission();
+                }
+
                 showNotification(t("Успешная авторизация!", "Authorized successfully!", "授权成功！"), 'success');
             } else {
                 alert(t("Ошибка доступа!", "Access Error!", "访问错误！"));
@@ -2519,7 +2516,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             document.querySelectorAll('.kick-btn').forEach(btn => btn.style.display = 'inline-block');
             
             applyLeaderStatusColors();
-            renderChatUI(); 
+            renderChat(); 
             setLang(currentLang);
             if(typeof updateTrainingButtonVisibility === 'function') updateTrainingButtonVisibility();
         }
@@ -2612,6 +2609,12 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             refreshMenuCabinetAvatar();
             document.getElementById('modalOverlay').classList.remove('active');
             unlockTeamFeatures();
+            
+            // ЗАПРОС РАЗРЕШЕНИЯ НА ПУШ-УВЕДОМЛЕНИЯ ПРИ ВХОДЕ
+            if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
+                Notification.requestPermission();
+            }
+
             showNotification(t("Допуск подтвержден!", "Access granted!", "访问权限已确认！"), 'success');
         });
 
@@ -2758,7 +2761,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 if (isMe && mySavedAvatar) avatarStyle = `style="background-image: url('${mySavedAvatar}');"`;
                 else {
                     for (let tgKey in cloudDatabase.metadata) {
-                       .metadata[tgKey].avatar) avatarStyle = `style="background-image: url('${cloudDatabase.metadata[tgKey].avatar}');"`;
+                        if (cloudDatabase.metadata[tgKey].nick === nick && cloudDatabase.metadata[tgKey].avatar) avatarStyle = `style="background-image: url('${cloudDatabase.metadata[tgKey].avatar}');"`;
                     }
                 }
                 
@@ -2827,7 +2830,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             
             fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: TG_CHAT_ID, text: textMessage, parse_mode: 'html' })
+                body: JSON.stringify({ chat_id: TG_CHAT_ID, message_thread_id: TG_THREAD_ID, text: textMessage, parse_mode: 'html' })
             }).then(response => {
                 if (response.ok) { 
                     recruitForm.style.display = 'none'; document.getElementById('successResult').style.display = 'block'; 
@@ -2853,7 +2856,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             }
         }
 
-        if (window.infoRankSelect) {
+        if (infoRankSelect) {
             NAVAL_RANKS.forEach(rank => {
                 const opt = document.createElement('option'); opt.value = rank; opt.textContent = rank; infoRankSelect.appendChild(opt);
             });
