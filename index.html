@@ -11,7 +11,6 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="STAGE">
     
-    <!-- Обновленные иконки PWA напрямую с GitHub -->
     <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/Stage-MW/ru/main/icons/icon-192x192.png">
     <link rel="icon" type="image/png" sizes="192x192" href="https://raw.githubusercontent.com/Stage-MW/ru/main/icons/icon-192x192.png">
     
@@ -20,7 +19,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
-    <!-- Инициализация OneSignal -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
       window.OneSignalDeferred = window.OneSignalDeferred || [];
@@ -973,7 +971,7 @@
 
     <div class="modal-overlay" id="cwModalOverlay" style="z-index: 151;">
         <div class="modal-window glassmorphism" style="max-width: 400px; border-color: #ff0055; box-shadow: 0 0 40px rgba(255, 0, 85, 0.4); text-align: center;">
-            <span class="close-btn" id="closeCwModalBtn">&times;</span>
+            <span class="close-btn" id="closeCwModalBtn" onclick="document.getElementById('cwModalOverlay').classList.remove('active');">&times;</span>
             <div class="modal-title lang-txt" style="color: #ff0055; border-bottom-color: rgba(255, 0, 85, 0.2);" data-ru="Режим Клановых Боёв" data-en="Clan War Mode" data-zh="战队战模式">Режим Клановых Боёв</div>
             
             <i class="fa-solid fa-robot" style="font-size: 50px; color: #ff0055; margin: 20px 0;"></i>
@@ -988,7 +986,7 @@
 
     <div class="modal-overlay" id="trainingModalOverlay" style="z-index: 150;">
         <div class="modal-window glassmorphism" style="max-width: 400px; border-color: #a855f7; box-shadow: 0 0 40px rgba(168, 85, 247, 0.4);">
-            <span class="close-btn" id="closeTrainingModalBtn">&times;</span>
+            <span class="close-btn" id="closeTrainingModalBtn" onclick="document.getElementById('trainingModalOverlay').classList.remove('active');">&times;</span>
             <div class="modal-title lang-txt" style="color: #a855f7; border-bottom-color: rgba(168, 85, 247, 0.2);" data-ru="Планирование тренировки" data-en="Training Planning" data-zh="训练规划">Планирование тренировки</div>
             <div class="form-group">
                 <label class="lang-txt" data-ru="Выберите дату тренировки" data-en="Select Training Date" data-zh="选择训练日期">Выберите дату тренировки</label>
@@ -1498,7 +1496,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             document.getElementById('cwProposalModalOverlay').classList.add('active');
         });
 
-        document.getElementById('cwProposalForm').addEventListener('submit', function(e) {
+        document.getElementById('cwProposalForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const btn = document.getElementById('propSubmitBtn');
             btn.disabled = true; btn.textContent = t("Отправка...", "Sending...", "发送中...");
@@ -1511,32 +1509,26 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
 
             const msg = `⚔️ <b>ВЫЗОВ НА КЛАНОВЫЙ БОЙ!</b>\n\n🛡 <b>Клан:</b> ${clan}\n✈️ <b>Связь:</b> ${contact}\n📅 <b>Дата:</b> ${date}\n⏰ <b>Время:</b> ${time} (${timeZone})`;
 
+            // 1. Отправляем в Telegram
             fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ chat_id: TG_CHAT_ID, text: msg, parse_mode: 'html' })
-            }).then(r => {
-                showNotification(t("Ваш вызов отправлен!", "Challenge sent!", "挑战已发送！"), 'success');
-                document.getElementById('cwProposalModalOverlay').classList.remove('active');
-                btn.disabled = false; btn.textContent = t("Отправить вызов", "Send Challenge", "发送挑战");
-                this.reset();
-                
-                // --- ОТПРАВКА ПУША КЛАНУ О НОВОМ ВЫЗОВЕ ---
-                try {
-                    fetch(`${SUPABASE_URL}messages`, {
-                        method: 'POST',
-                        headers: { "Content-Type": "application/json", "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}`, "Prefer": "return=minimal" },
-                        body: JSON.stringify({ 
-                            username: "📩 ВЫЗОВ НА КВ", 
-                            content: `Клан ${clan} предлагает сыграть ${date} в ${time}!` 
-                        })
-                    });
-                } catch(e) {}
-                // ------------------------------------------
+            }).catch(e => console.error("Ошибка отправки вызова в ТГ", e));
 
-            }).catch(e => {
-                showNotification(t("Ошибка отправки!", "Send error!", "发送失败！"), 'error');
-                btn.disabled = false; btn.textContent = t("Отправить вызов", "Send Challenge", "发送挑战");
-            });
+            // 2. Отправляем Push-уведомление через Supabase
+            fetch(`${SUPABASE_URL}messages`, {
+                method: 'POST',
+                headers: { "Content-Type": "application/json", "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}`, "Prefer": "return=minimal" },
+                body: JSON.stringify({ 
+                    username: "📩 ВЫЗОВ НА КВ", 
+                    content: `Клан ${clan} предлагает сыграть ${date} в ${time}!` 
+                })
+            }).catch(e => console.error("Ошибка пуша вызова", e));
+
+            showNotification(t("Ваш вызов отправлен!", "Challenge sent!", "挑战已发送！"), 'success');
+            document.getElementById('cwProposalModalOverlay').classList.remove('active');
+            btn.disabled = false; btn.textContent = t("Отправить вызов", "Send Challenge", "发送挑战");
+            this.reset();
         });
 
         toggleFullscreenBtn.addEventListener('click', () => {
@@ -1765,7 +1757,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             
             // Отправка в Supabase для срабатывания SQL-триггера пуш-уведомлений
             try {
-                await fetch(`${SUPABASE_URL}messages`, {
+                fetch(`${SUPABASE_URL}messages`, {
                     method: 'POST',
                     headers: {
                         "Content-Type": "application/json",
@@ -1777,10 +1769,8 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                         username: author, 
                         content: text 
                     })
-                });
-            } catch(e) {
-                console.error("Ошибка инициализации пуша в Supabase:", e);
-            }
+                }).catch(e => console.error("Ошибка пуша", e));
+            } catch(e) {}
 
             input.value = '';
             await saveToCloud();
@@ -1847,7 +1837,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             mainAva.style.backgroundImage = `url('${avatarUrl}')`;
             document.getElementById('cabAvatarIconDefault').style.display = 'none';
             
-            // --- НОВОЕ: Синхронизация с карточкой Mitso в составе ---
             const myTg = (localStorage.getItem('stage_user_registered_tg') || '').trim().toLowerCase();
             if (isLeaderMode || myTg === '@bymitso' || myTg.includes('admin')) {
                 const mitsoCardAvatar = document.querySelector('.player-card[data-nick="Mitso"] .roster-avatar');
@@ -1855,7 +1844,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                     mitsoCardAvatar.style.backgroundImage = `url('${avatarUrl}')`;
                 }
             }
-            // ---------------------------------------------------------
             
             refreshMenuCabinetAvatar();
 
@@ -1879,7 +1867,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 navCabinetBtn.style.backgroundImage = `url('${savedAvatar}')`;
                 if(defaultIcon) defaultIcon.style.display = 'none';
 
-                // --- НОВОЕ: Применяем сохраненный аватар к карточке Mitso при загрузке ---
                 const myTg = (localStorage.getItem('stage_user_registered_tg') || '').trim().toLowerCase();
                 if (isLeaderMode || myTg === '@bymitso' || myTg.includes('admin')) {
                     const mitsoCardAvatar = document.querySelector('.player-card[data-nick="Mitso"] .roster-avatar');
@@ -1887,7 +1874,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                         mitsoCardAvatar.style.backgroundImage = `url('${savedAvatar}')`;
                     }
                 }
-                // -----------------------------------------------------------------------
             } else {
                 navCabinetBtn.style.backgroundImage = 'none';
                 if(defaultIcon) defaultIcon.style.display = 'inline-block';
@@ -1985,7 +1971,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             localStorage.removeItem('stage_cached_nick');
             localStorage.removeItem('stage_user_avatar'); 
             
-            // Снимаем тег клана
             if (window.OneSignal) {
                 window.OneSignalDeferred.push(function(OneSignal) {
                     OneSignal.User.removeTag("clan_member");
@@ -1999,7 +1984,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             if(confirm(t("Вы действительно хотите выйти из аккаунта клана? Карты и доска закроются.", "Do you really want to log out? Maps and board will be locked.", "确定要退出登录吗？地图和黑板将被锁定。"))) { forceAbsoluteLogout(); }
         }
 
-        // БАГФИКС ЛОГИНА: Добавляем безопасные обработчики кнопки "Вход"
         navLoginBtn.addEventListener('click', () => {
             if(isLeaderMode || localStorage.getItem('stage_team_logged') === 'true') {
                 if(confirm(t("Выйти из текущей учетной записи?", "Log out of current account?", "退出当前账号？"))) { 
@@ -2105,7 +2089,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
         });
         closeCabinetModalBtn.addEventListener('click', () => cabinetModalOverlay.classList.remove('active'));
 
-        // Функция проверки доступа к кнопке Тренировка
         function updateTrainingButtonVisibility() {
             const btn = document.getElementById('btnTrainingTrigger');
             if (!btn) return;
@@ -2134,7 +2117,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 if (spec && spec !== "Не назначена" && spec !== "") hasSpec = true;
             }
             
-            // Если не лидер и нет специализации — блокируем действие
             if (!isLeaderMode && !hasSpec) return;
 
             const todayStr = new Date().toISOString().split('T')[0];
@@ -2184,7 +2166,8 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             };
 
             try {
-                const response = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+                // 1. Отправляем в Telegram
+                await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
@@ -2196,6 +2179,21 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                     })
                 });
 
+                // 2. Отправляем Push-уведомление через Supabase
+                fetch(`${SUPABASE_URL}messages`, {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "apikey": SUPABASE_KEY,
+                        "Authorization": `Bearer ${SUPABASE_KEY}`,
+                        "Prefer": "return=minimal"
+                    },
+                    body: JSON.stringify({ 
+                        username: "⚓️ ШТАБ STAGE", 
+                        content: `Назначена тренировка! Сбор: ${formattedDate}` 
+                    })
+                }).catch(e => console.error("Ошибка пуша тренировки", e));
+
                 cloudDatabase.trainingTime = targetTimestamp;
                 cloudDatabase.trainingYes = [];
                 cloudDatabase.trainingNo = [];
@@ -2203,26 +2201,8 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
 
                 trainingModalOverlay.classList.remove('active');
                 initTrainingCountdown(); 
-
-                // --- ОТПРАВКА ПУША О ТРЕНИРОВКЕ ---
-                try {
-                    await fetch(`${SUPABASE_URL}messages`, {
-                        method: 'POST',
-                        headers: {
-                            "Content-Type": "application/json",
-                            "apikey": SUPABASE_KEY,
-                            "Authorization": `Bearer ${SUPABASE_KEY}`,
-                            "Prefer": "return=minimal"
-                        },
-                        body: JSON.stringify({ 
-                            username: "⚓️ ШТАБ STAGE", 
-                            content: `Назначена тренировка! Сбор: ${formattedDate}` 
-                        })
-                    });
-                } catch(e) { console.error("Ошибка пуша тренировки", e); }
-                // ----------------------------------
-
                 showNotification(t("Тренировка запланирована!", "Training scheduled!", "训练已安排！"), 'success');
+                
             } catch (err) {
                 alert("Ошибка связи: " + err.message);
             } finally {
@@ -2373,30 +2353,27 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             cloudDatabase.cwNotified = true;
             await saveToCloud();
             const messageText = `⚔️ <b>ВНИМАНИЕ, ФЛОТ STAGE!</b>\n\n🔥 <b>КЛАНОВЫЕ БОИ НАЧАЛИСЬ!</b> 🔥\n\nНе пропустите! 🚢💥`;
-            try {
-                await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ chat_id: TG_CHAT_ID, message_thread_id: TRAINING_THREAD_ID, text: messageText, parse_mode: 'html' })
-                });
-            } catch (err) { console.error("Ошибка уведомления КВ:", err); }
+            
+            // 1. Отправка в Telegram
+            fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: TG_CHAT_ID, message_thread_id: TRAINING_THREAD_ID, text: messageText, parse_mode: 'html' })
+            }).catch(err => console.error("Ошибка уведомления КВ в ТГ:", err));
 
-            // --- ОТПРАВКА ПУША О НАЧАЛЕ КВ ---
-            try {
-                await fetch(`${SUPABASE_URL}messages`, {
-                    method: 'POST',
-                    headers: {
-                        "Content-Type": "application/json",
-                        "apikey": SUPABASE_KEY,
-                        "Authorization": `Bearer ${SUPABASE_KEY}`,
-                        "Prefer": "return=minimal"
-                    },
-                    body: JSON.stringify({ 
-                        username: "⚔️ СИСТЕМА", 
-                        content: "🔥 КЛАНОВЫЕ БОИ НАЧАЛИСЬ! Ждем всех в строю!" 
-                    })
-                });
-            } catch(e) { console.error("Ошибка пуша КВ", e); }
-            // ---------------------------------
+            // 2. Отправка Push-уведомления
+            fetch(`${SUPABASE_URL}messages`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    "apikey": SUPABASE_KEY,
+                    "Authorization": `Bearer ${SUPABASE_KEY}`,
+                    "Prefer": "return=minimal"
+                },
+                body: JSON.stringify({ 
+                    username: "⚔️ СИСТЕМА", 
+                    content: "🔥 КЛАНОВЫЕ БОИ НАЧАЛИСЬ! Ждем всех в строю!" 
+                })
+            }).catch(e => console.error("Ошибка пуша КВ", e));
         }
 
         window.registerWebsiteVote = async function(type) {
@@ -3011,7 +2988,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             }, 150);
         }
 
-        // --- ЛОГИКА PUSH-УВЕДОМЛЕНИЙ ---
+       // --- ЛОГИКА PUSH-УВЕДОМЛЕНИЙ ---
         document.getElementById('enablePushBtn').addEventListener('click', async () => {
             const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
             const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
@@ -3042,7 +3019,9 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('sw.js').then(registration => { console.log('ServiceWorker успешно запущен'); });
+          navigator.serviceWorker.register('sw.js').then(registration => { 
+              console.log('ServiceWorker успешно запущен'); 
+          });
         });
       }
     </script>
