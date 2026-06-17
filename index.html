@@ -479,6 +479,46 @@
         @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; transform: translateY(-10px); } }
 
+        /* --- СИСТЕМА УПОМИНАНИЙ В ЧАТЕ --- */
+        .mention-dropdown {
+            position: absolute;
+            bottom: calc(100% + 5px); /* Всплывает над полем ввода */
+            left: 15px;
+            background: rgba(11, 18, 31, 0.95);
+            border: 1px solid #00f2fe;
+            border-radius: 6px;
+            max-height: 180px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+            min-width: 220px;
+            backdrop-filter: blur(10px);
+        }
+        .mention-dropdown::-webkit-scrollbar { width: 4px; }
+        .mention-dropdown::-webkit-scrollbar-thumb { background: #00f2fe; border-radius: 4px; }
+        
+        .mention-item {
+            padding: 8px 12px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 13px;
+            color: #fff;
+            cursor: pointer;
+            border-bottom: 1px dashed rgba(0, 242, 254, 0.2);
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .mention-item:last-child { border-bottom: none; }
+        .mention-item:hover { background: rgba(0, 242, 254, 0.2); }
+        
+        .mention-avatar {
+            width: 20px; height: 20px; border-radius: 50%;
+            background-size: cover; background-position: center; background-color: #050b14; flex-shrink: 0;
+            border: 1px solid rgba(0, 242, 254, 0.5);
+        }
+
         /* МОДАЛЬНЫЕ ОКНА */
         .modal-overlay { position: fixed; inset: 0; background: rgba(1, 4, 10, 0.85); z-index: 100; display: none; justify-content: center; align-items: center; backdrop-filter: blur(8px); padding: 15px; }
         .modal-overlay.active { display: flex; }
@@ -827,8 +867,10 @@
         
         <div class="chat-system-wrapper glassmorphism" id="chatSystemWrapper">
             <div class="chat-messages" id="chatMessages"></div>
-            <div class="chat-input-area">
-                <input type="text" id="chatInput" class="lang-txt" data-ru="Введите сообщение..." data-en="Type a message..." data-zh="输入消息..." placeholder="Введите сообщение...">
+            <!-- ОБНОВЛЕННАЯ ЗОНА ВВОДА С УПОМИНАНИЯМИ -->
+            <div class="chat-input-area" style="position: relative;">
+                <div id="mentionDropdown" class="mention-dropdown"></div>
+                <input type="text" id="chatInput" class="lang-txt" data-ru="Введите сообщение..." data-en="Type a message..." data-zh="输入消息..." placeholder="Введите сообщение..." autocomplete="off">
                 <button id="sendChatBtn"><i class="fa-solid fa-paper-plane"></i></button>
             </div>
         </div>
@@ -1223,7 +1265,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             }
         }
 
-        // Переключение языка по циклу
         document.getElementById('navLangBtn').addEventListener('click', () => {
             currentLangIdx = (currentLangIdx + 1) % langs.length;
             setLang(langs[currentLangIdx]);
@@ -1499,7 +1540,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 });
             }
 
-            // Автозакрытие при клике вне панели
             document.addEventListener('click', (e) => {
                 if (onlineWidget && onlineWidget.classList.contains('active')) {
                     if (!onlineWidget.contains(e.target) && !onlineToggleBtn.contains(e.target)) {
@@ -1507,7 +1547,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                     }
                 }
             });
-            // ------------------------------------------------
 
             applyGlobalKickedFilters();
             renderLocalRecruits();
@@ -1728,7 +1767,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             } catch (err) { console.error("Ошибка сохранения:", err); }
         }
 
-        // ЧАТ СИСТЕМЫ
+        // --- ОБНОВЛЕННЫЙ ЧАТ: Удаление своих сообщений и подсветка @упоминаний ---
         function renderChat() {
             const container = document.getElementById('chatMessages');
             if(!container) return;
@@ -1741,22 +1780,34 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 return;
             }
 
+            let currentAuthor = localStorage.getItem('stage_user_registered_tg') || localStorage.getItem('stage_guest_nick') || '';
+            if (cloudDatabase.metadata && cloudDatabase.metadata[currentAuthor.toLowerCase()]) {
+                currentAuthor = cloudDatabase.metadata[currentAuthor.toLowerCase()].nick;
+            }
+
             cloudDatabase.chat.forEach((msg, idx) => {
                 const isBanned = cloudDatabase.chatBanned.includes(msg.author);
                 if (isBanned && !isLeaderMode) return; 
 
                 let adminControls = '';
-                if (isLeaderMode) {
-                    adminControls = `
-                        <button class="chat-btn del-btn" onclick="deleteChatMessage(${idx})" title="Удалить"><i class="fa-solid fa-trash"></i></button>
-                        <button class="chat-btn del-btn" onclick="banChatUser('${msg.author}')" title="Забанить автора"><i class="fa-solid fa-ban"></i></button>
-                    `;
+                // Разрешаем удалить, если ты лидер ИЛИ это твое сообщение
+                if (isLeaderMode || msg.author === currentAuthor) {
+                    adminControls += `<button class="chat-btn del-btn" onclick="deleteChatMessage(${idx})" title="Удалить"><i class="fa-solid fa-trash"></i></button> `;
+                }
+                if (isLeaderMode && msg.author !== currentAuthor) {
+                    adminControls += `<button class="chat-btn del-btn" onclick="banChatUser('${msg.author}')" title="Забанить автора"><i class="fa-solid fa-ban"></i></button>`;
+                }
+
+                // Подсветка, если упомянули текущего игрока
+                let msgText = msg.text;
+                if (currentAuthor && msgText.includes('@' + currentAuthor)) {
+                    msgText = msgText.split('@' + currentAuthor).join(`<span style="color: #02050a; font-weight: bold; background: #22c55e; padding: 0 4px; border-radius: 4px;">@${currentAuthor}</span>`);
                 }
 
                 const html = `
                     <div class="chat-msg glassmorphism">
                         <div class="author">${msg.author}</div>
-                        <div class="text" id="chat-text-${idx}">${msg.text}</div>
+                        <div class="text" id="chat-text-${idx}">${msgText}</div>
                         <div class="timestamp">${new Date(msg.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
                         <div class="chat-actions">
                             <button class="chat-btn" onclick="translateMessage(${idx})" title="Перевести (Translate)"><i class="fa-solid fa-language"></i></button>
@@ -1770,10 +1821,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
 
             if (currentCount > 0 && cloudDatabase.chat.length > currentCount) {
                 const lastMsg = cloudDatabase.chat[cloudDatabase.chat.length - 1];
-                let currentAuthor = localStorage.getItem('stage_user_registered_tg') || localStorage.getItem('stage_guest_nick') || '';
-                if (cloudDatabase.metadata && cloudDatabase.metadata[currentAuthor.toLowerCase()]) {
-                    currentAuthor = cloudDatabase.metadata[currentAuthor.toLowerCase()].nick;
-                }
                 if (lastMsg.author !== currentAuthor) {
                     showNotification(`${lastMsg.author}: ${lastMsg.text.substring(0, 30)}...`, 'chat');
                 }
@@ -1809,7 +1856,15 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
         }
 
         window.deleteChatMessage = async function(idx) {
-            if (!isLeaderMode) return;
+            let currentAuthor = localStorage.getItem('stage_user_registered_tg') || localStorage.getItem('stage_guest_nick') || '';
+            if (cloudDatabase.metadata && cloudDatabase.metadata[currentAuthor.toLowerCase()]) {
+                currentAuthor = cloudDatabase.metadata[currentAuthor.toLowerCase()].nick;
+            }
+            
+            const msg = cloudDatabase.chat[idx];
+            // Блокируем удаление, если ты не лидер и это не твое сообщение
+            if (!isLeaderMode && msg.author !== currentAuthor) return; 
+
             cloudDatabase.chat.splice(idx, 1);
             await saveToCloud();
             renderChat();
@@ -1890,7 +1945,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             }
         });
 
-        // --- ОБНОВЛЕННАЯ ФУНКЦИЯ ДЛЯ ВИДЖЕТА ОНЛАЙНА ---
         function updateOnlineWidget() {
             const now = Date.now();
             const activeUsers = [];
@@ -1907,11 +1961,10 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             const countBadge = document.getElementById('onlineCountBadge');
 
             if(activeUsers.length > 0) {
-                widget.style.display = 'flex'; // или block
-                countBadge.textContent = activeUsers.length; // Обновляем цифру на триггере
+                widget.style.display = 'flex';
+                countBadge.textContent = activeUsers.length;
                 
                 let html = '';
-                // Выводим всех пользователей списком в шторке
                 activeUsers.forEach(u => {
                     let displayNick = u.nick;
                     if (u._tgKey === "@bymitso" || u._tgKey === "admin@stage.ru" || displayNick.toLowerCase() === "test" || displayNick.toLowerCase() === "тест" || u.rank === t("Глава", "Leader", "队长")) {
@@ -1929,7 +1982,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 widget.classList.remove('active');
             }
         }
-        // ------------------------------------------------
 
         window.selectProfileAvatar = async function(avatarUrl, element) {
             document.querySelectorAll('.avatar-picker-item').forEach(item => item.classList.remove('selected'));
@@ -3097,6 +3149,82 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 }
             } else {
                 showNotification(t("Система уведомлений еще загружается...", "Notification system is still loading...", "通知系统仍在加载..."), "info");
+            }
+        });
+
+        // --- ЛОГИКА ВЫПАДАЮЩЕГО СПИСКА УПОМИНАНИЙ (@) ---
+        const chatInputElement = document.getElementById('chatInput');
+        const mentionDropdown = document.getElementById('mentionDropdown');
+        let mentionStartIndex = -1;
+
+        chatInputElement.addEventListener('input', function(e) {
+            const val = this.value;
+            const cursorPos = this.selectionStart;
+            
+            const textBeforeCursor = val.substring(0, cursorPos);
+            const words = textBeforeCursor.split(/\s/);
+            const currentWord = words[words.length - 1];
+
+            if (currentWord.startsWith('@')) {
+                mentionStartIndex = cursorPos - currentWord.length;
+                const searchStr = currentWord.substring(1).toLowerCase();
+                showMentionDropdown(searchStr);
+            } else {
+                mentionDropdown.style.display = 'none';
+                mentionStartIndex = -1;
+            }
+        });
+
+        function showMentionDropdown(searchStr) {
+            let users = [];
+            for (let tg in cloudDatabase.metadata) {
+                users.push(cloudDatabase.metadata[tg]);
+            }
+            
+            // Если в БД еще нет админа, добавляем вручную для упоминаний
+            if(!users.find(u => u.nick === 'Mitso')) {
+                users.push({nick: 'Mitso', avatar: ''});
+            }
+
+            let filtered = users.filter(u => u.nick.toLowerCase().includes(searchStr));
+            
+            if (filtered.length === 0) {
+                mentionDropdown.style.display = 'none';
+                return;
+            }
+
+            let html = '';
+            filtered.slice(0, 8).forEach(u => {
+                const ava = u.avatar ? `style="background-image: url('${u.avatar}');"` : '';
+                html += `<div class="mention-item" onclick="insertMention('${u.nick}')">
+                            <div class="mention-avatar" ${ava}></div>
+                            <span>${u.nick}</span>
+                         </div>`;
+            });
+
+            mentionDropdown.innerHTML = html;
+            mentionDropdown.style.display = 'block';
+        }
+
+        window.insertMention = function(nick) {
+            if (mentionStartIndex === -1) return;
+            const val = chatInputElement.value;
+            const before = val.substring(0, mentionStartIndex);
+            const after = val.substring(chatInputElement.selectionStart);
+            
+            chatInputElement.value = before + '@' + nick + ' ' + after;
+            mentionDropdown.style.display = 'none';
+            chatInputElement.focus();
+            
+            const newCursorPos = mentionStartIndex + nick.length + 2;
+            chatInputElement.setSelectionRange(newCursorPos, newCursorPos);
+            mentionStartIndex = -1;
+        }
+
+        // Закрытие меню упоминаний при клике вне его
+        document.addEventListener('click', (e) => {
+            if (mentionDropdown && !mentionDropdown.contains(e.target) && e.target !== chatInputElement) {
+                mentionDropdown.style.display = 'none';
             }
         });
     </script>
