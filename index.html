@@ -73,9 +73,20 @@
         .nav-bar a, .nav-bar span.nav-link-btn {
             color: #ffffff; text-decoration: none; text-transform: uppercase; font-size: 13px;
             letter-spacing: 1.5px; transition: color 0.3s, text-shadow 0.3s; white-space: nowrap; cursor: pointer;
-            display: flex; align-items: center; gap: 5px; user-select: none;
+            display: flex; align-items: center; gap: 5px; user-select: none; position: relative;
         }
         .nav-bar a:hover, .nav-bar span.nav-link-btn:hover { color: #00f2fe; text-shadow: 0 0 10px rgba(0, 242, 254, 0.6); }
+
+        /* --- АКТИВНЫЙ ПУНКТ МЕНЮ НАВИГАЦИИ --- */
+        .nav-bar a.active-nav {
+            color: #00f2fe !important;
+            text-shadow: 0 0 12px rgba(0, 242, 254, 0.8) !important;
+        }
+        .nav-bar a.active-nav::after {
+            content: ''; position: absolute; bottom: -4px; left: 0;
+            width: 100%; height: 2px; background: #00f2fe;
+            box-shadow: 0 0 8px #00f2fe; border-radius: 2px;
+        }
 
         #navMapsLink, #navBoardLink { color: #a855f7; }
         #navMapsLink:hover, #navBoardLink:hover { color: #c084fc; text-shadow: 0 0 10px rgba(168, 85, 247, 0.6); }
@@ -98,6 +109,9 @@
             display: flex; align-items: center; gap: 8px; outline: none;
         }
         .btn-nav-login:hover { background: #0088cc; color: #02050a; box-shadow: 0 0 25px rgba(0, 136, 204, 0.8); transform: scale(1.05); }
+
+        /* Скрываем мобильную шапку чата на ПК */
+        .chat-mobile-header { display: none; }
 
         .welcome-screen, .roster-screen, .maps-screen, .board-screen, .chat-page-screen, .channels-screen, .creators-screen, .founders-screen {
             min-height: 100vh; width: 100vw; padding: 120px 20px 60px; position: relative;
@@ -675,16 +689,47 @@
             .online-widget.active { right: 0; }
             .online-toggle-btn { top: 10px; transform: none; left: -42px; width: 42px; height: 42px; }
             
-            #chat-page {
-                padding: 0 !important; 
-                height: 100vh;
-                display: flex;
-                flex-direction: column;
-                justify-content: flex-start;
+            #chat-page.mobile-fullscreen {
+                position: fixed !important;
+                top: 0; left: 0; width: 100vw; height: 100vh !important;
+                z-index: 99999;
+                background-color: #02050a;
+                background-image: none !important; 
+                padding: 0 !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: flex-start !important;
             }
-            #chat-page .section-title {
-                display: none;
+            
+            #chat-page.mobile-fullscreen .chat-desktop-logo,
+            #chat-page.mobile-fullscreen .chat-desktop-title {
+                display: none !important;
             }
+
+            .chat-mobile-header {
+                display: flex !important;
+                justify-content: space-between;
+                align-items: center;
+                padding: 15px 20px;
+                background: rgba(15, 23, 42, 0.95);
+                border-bottom: 1px solid #a855f7;
+                box-shadow: 0 4px 15px rgba(168, 85, 247, 0.2);
+                font-family: 'Orbitron', sans-serif;
+                color: #a855f7;
+                font-size: 14px;
+                letter-spacing: 2px;
+            }
+
+            #closeMobileChatBtn {
+                background: transparent; border: none; color: #ff0055;
+                font-size: 32px; cursor: pointer; line-height: 1;
+                text-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
+                transition: transform 0.2s;
+            }
+            #closeMobileChatBtn:active { transform: scale(0.9); }
+
+            body.chat-open .nav-bar { display: none !important; }
+            
             #chat-page .chat-system-wrapper {
                 height: calc(100vh - 65px) !important;
                 max-height: none !important;
@@ -860,10 +905,16 @@
     </section>
 
     <section id="chat-page" class="chat-page-screen">
-        <div style="text-align: center; margin-bottom: 10px;">
+        <!-- Новая мобильная шапка с крестиком справа -->
+        <div class="chat-mobile-header" id="chatMobileHeader">
+            <span class="lang-txt" data-ru="ЧАТ ФЛОТА STAGE" data-en="STAGE FLEET CHAT" data-zh="STAGE 舰队聊天">ЧАТ ФЛОТА STAGE</span>
+            <button id="closeMobileChatBtn" title="Закрыть чат">&times;</button>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 10px;" class="chat-desktop-logo">
             <img src="chat_logo.png" alt="STAGE Chat" style="width: 80px; height: auto; filter: drop-shadow(0 0 10px #a855f7);">
         </div>
-        <h2 class="section-title lang-txt" data-ru="Чат" data-en="Chat" data-zh="聊天">Чат</h2>
+        <h2 class="section-title lang-txt chat-desktop-title" data-ru="Чат" data-en="Chat" data-zh="聊天">Чат</h2>
         
         <div class="chat-system-wrapper glassmorphism" id="chatSystemWrapper">
             <div class="chat-messages" id="chatMessages"></div>
@@ -1603,6 +1654,48 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             }, 60000);
             
             startCyberTerminalLoader();
+
+            // 1. АВТОМАТИЧЕСКАЯ ПОДСВЕТКА НАВИГАЦИИ ПРИ СКРОЛЛЕ
+            const sectionsToTrack = document.querySelectorAll('section');
+            const navItems = document.querySelectorAll('.nav-links-left a');
+            const navObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navItems.forEach(link => link.classList.remove('active-nav'));
+                        const activeId = entry.target.id;
+                        const activeLink = document.querySelector(`.nav-links-left a[href="#${activeId}"]`);
+                        if (activeLink) activeLink.classList.add('active-nav');
+                    }
+                });
+            }, { threshold: 0.35 });
+            sectionsToTrack.forEach(sec => navObserver.observe(sec));
+
+            // 2. ЛОГИКА МОБИЛЬНОГО ПОЛНОЭКРАННОГО ЧАТА С КРЕСТИКОМ
+            const chatNavBtn = document.querySelector('.nav-links-left a[href="#chat-page"]');
+            const chatSection = document.getElementById('chat-page');
+            const closeChatBtn = document.getElementById('closeMobileChatBtn');
+
+            if (chatNavBtn && chatSection && closeChatBtn) {
+                chatNavBtn.addEventListener('click', function(e) {
+                    if (window.innerWidth <= 768) {
+                        e.preventDefault(); 
+                        chatSection.classList.add('mobile-fullscreen');
+                        document.body.classList.add('chat-open'); 
+                        document.body.style.overflow = 'hidden'; 
+                        
+                        const messagesContainer = document.getElementById('chatMessages');
+                        if(messagesContainer) messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    }
+                });
+
+                closeChatBtn.addEventListener('click', function() {
+                    chatSection.classList.remove('mobile-fullscreen');
+                    document.body.classList.remove('chat-open');
+                    document.body.style.overflow = ''; 
+                    
+                    document.getElementById('roster').scrollIntoView({ behavior: 'smooth' });
+                });
+            }
         });
 
         function initCabinetBg() {
@@ -1790,7 +1883,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 if (isBanned && !isLeaderMode) return; 
 
                 let adminControls = '';
-                // Разрешаем удалить, если ты лидер ИЛИ это твое сообщение
                 if (isLeaderMode || msg.author === currentAuthor) {
                     adminControls += `<button class="chat-btn del-btn" onclick="deleteChatMessage(${idx})" title="Удалить"><i class="fa-solid fa-trash"></i></button> `;
                 }
@@ -1798,7 +1890,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                     adminControls += `<button class="chat-btn del-btn" onclick="banChatUser('${msg.author}')" title="Забанить автора"><i class="fa-solid fa-ban"></i></button>`;
                 }
 
-                // Подсветка, если упомянули текущего игрока
                 let msgText = msg.text;
                 if (currentAuthor && msgText.includes('@' + currentAuthor)) {
                     msgText = msgText.split('@' + currentAuthor).join(`<span style="color: #02050a; font-weight: bold; background: #22c55e; padding: 0 4px; border-radius: 4px;">@${currentAuthor}</span>`);
@@ -1862,7 +1953,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             }
             
             const msg = cloudDatabase.chat[idx];
-            // Блокируем удаление, если ты не лидер и это не твое сообщение
             if (!isLeaderMode && msg.author !== currentAuthor) return; 
 
             cloudDatabase.chat.splice(idx, 1);
@@ -2492,16 +2582,18 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             }
         }
 
-       async function triggerCwNotification() {
+        window.triggerCwNotification = async function() {
             cloudDatabase.cwNotified = true;
             await saveToCloud();
             const messageText = `⚔️ <b>ВНИМАНИЕ, ФЛОТ STAGE!</b>\n\n🔥 <b>КЛАНОВЫЕ БОИ НАЧАЛИСЬ!</b> 🔥\n\nНе пропустите! 🚢💥`;
             
+            // Отправка в Telegram
             fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ chat_id: TG_CHAT_ID, text: messageText, parse_mode: 'html' })
             }).catch(err => console.error("Ошибка уведомления КВ в ТГ:", err));
 
+            // Отправка во внутренний чат Supabase
             fetch(`${SUPABASE_URL}messages`, {
                 method: 'POST',
                 headers: {
@@ -2515,7 +2607,21 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                     content: "🔥 КЛАНОВЫЕ БОИ НАЧАЛИСЬ! Ждем всех в строю!" 
                 })
             }).catch(e => console.error("Ошибка пуша КВ", e));
-        }
+
+            // Вызов нативного браузерного Push-уведомления
+            if ("Notification" in window && Notification.permission === "granted") {
+                const cwPush = new Notification("🔥 КЛАНОВЫЕ БОИ НАЧАЛИСЬ!", {
+                    body: "Флот STAGE собирается! Заходи в игру.",
+                    icon: "https://raw.githubusercontent.com/Stage-MW/ru/main/icons/icon-192x192.png",
+                    vibrate: [200, 100, 200, 100, 200]
+                });
+                
+                cwPush.onclick = function() {
+                    window.focus(); // Открывает вкладку с сайтом при клике на Push
+                    this.close();
+                };
+            }
+        };
 
         window.registerWebsiteVote = async function(type) {
             let sessionTg = localStorage.getItem('stage_user_registered_tg') || "";
@@ -3181,7 +3287,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 users.push(cloudDatabase.metadata[tg]);
             }
             
-            // Если в БД еще нет админа, добавляем вручную для упоминаний
             if(!users.find(u => u.nick === 'Mitso')) {
                 users.push({nick: 'Mitso', avatar: ''});
             }
@@ -3221,7 +3326,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             mentionStartIndex = -1;
         }
 
-        // Закрытие меню упоминаний при клике вне его
         document.addEventListener('click', (e) => {
             if (mentionDropdown && !mentionDropdown.contains(e.target) && e.target !== chatInputElement) {
                 mentionDropdown.style.display = 'none';
