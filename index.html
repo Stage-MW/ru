@@ -334,14 +334,20 @@
         .founders-screen { background-image: linear-gradient(rgba(2, 5, 10, 0.75), rgba(2, 5, 10, 0.95)), url('founders_bg.png'); }
 
         .founders-grid { display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; max-width: 1200px; width: 100%; }
-        .founder-link { text-decoration: none; color: inherit; display: block; flex: 1; max-width: 240px; min-width: 180px; }
+        .founder-link { text-decoration: none; color: inherit; display: block; flex: 1; max-width: 240px; min-width: 180px; cursor: pointer; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .founder-link:hover { transform: translateY(-8px); }
         .founder-tile { border-bottom: 4px solid #a855f7; border-radius: 6px; padding: 30px 20px; text-align: center; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); height: 100%; }
         .founder-tile.leader-tile { border-bottom-color: #ff0055; }
         .founder-tile i { font-size: 38px; color: #00f2fe; margin-bottom: 15px; }
         .founder-tile.leader-tile i { color: #ff0055; }
         .founder-tile h3 { font-family: 'Orbitron', sans-serif; font-size: 22px; margin-bottom: 8px; }
         .founder-tile p { color: #00f2fe; font-size: 13px; text-transform: uppercase; font-weight: bold; }
-        .founder-link:hover .founder-tile { transform: translateY(-8px); }
+        
+        /* Стили карточек основателей в зависимости от статуса */
+        .founder-tile.status-legend { box-shadow: 0 0 25px rgba(168, 85, 247, 0.6); border-color: #a855f7; background: rgba(168, 85, 247, 0.1); }
+        .founder-tile.status-legend h3 { color: #a855f7; text-shadow: 0 0 10px rgba(168, 85, 247, 0.8); }
+        .founder-tile.status-hero { box-shadow: 0 0 25px rgba(255, 140, 0, 0.6); border-color: #ff8c00; background: rgba(255, 140, 0, 0.1); }
+        .founder-tile.status-hero h3 { color: #ff8c00; text-shadow: 0 0 10px rgba(255, 140, 0, 0.8); }
 
         /* СТИЛИ ЛИЧНОГО КАБИНЕТА */
         .cabinet-profile-box { display: flex; flex-direction: column; align-items: center; gap: 20px; margin-top: 10px; }
@@ -760,6 +766,21 @@
             .chat-msg .text { padding-right: 40px; padding-bottom: 20px; font-size: 13px;}
             .chat-msg .chat-actions { right: 8px; bottom: 5px; }
         }
+
+        /* --- СТИЛИ ДЛЯ ДОСЬЕ ОСНОВАТЕЛЕЙ --- */
+        .dossier-row { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px dashed rgba(0, 242, 254, 0.2); 
+            padding: 10px 0; 
+            font-size: 14px; 
+        }
+        .dossier-row:last-child { border-bottom: none; }
+        .dossier-row .lbl { color: #94a3b8; text-transform: uppercase; font-size: 12px; font-weight: bold; }
+        .dossier-row .val { color: #fff; font-weight: bold; text-align: right; font-family: 'Orbitron', sans-serif; font-size: 13px;}
+        .founder-link { cursor: pointer; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .founder-link:hover { transform: translateY(-8px); }
     </style>
 </head>
 <body>
@@ -804,6 +825,7 @@
             <a href="#board" id="navBoardLink" class="lang-txt" data-ru="Доска" data-en="Board" data-zh="黑板">Доска</a>
             <a href="#channels" class="lang-txt" data-ru="Каналы" data-en="Channels" data-zh="频道">Каналы</a>
             <a href="#creators" class="lang-txt" data-ru="Креаторы" data-en="Creators" data-zh="创作者">Креаторы</a>
+            <a href="#founders" class="lang-txt" data-ru="Основатели" data-en="Founders" data-zh="创始人">Основатели</a>
         </div>
         <div class="nav-links-right">
             <span class="nav-link-btn" id="navLangBtn" title="Сменить язык / Change Language">
@@ -905,7 +927,6 @@
     </section>
 
     <section id="chat-page" class="chat-page-screen">
-        <!-- Новая мобильная шапка с крестиком справа -->
         <div class="chat-mobile-header" id="chatMobileHeader">
             <span class="lang-txt" data-ru="ЧАТ ФЛОТА STAGE" data-en="STAGE FLEET CHAT" data-zh="STAGE 舰队聊天">ЧАТ ФЛОТА STAGE</span>
             <button id="closeMobileChatBtn" title="Закрыть чат">&times;</button>
@@ -918,7 +939,6 @@
         
         <div class="chat-system-wrapper glassmorphism" id="chatSystemWrapper">
             <div class="chat-messages" id="chatMessages"></div>
-            <!-- ОБНОВЛЕННАЯ ЗОНА ВВОДА С УПОМИНАНИЯМИ -->
             <div class="chat-input-area" style="position: relative;">
                 <div id="mentionDropdown" class="mention-dropdown"></div>
                 <input type="text" id="chatInput" class="lang-txt" data-ru="Введите сообщение..." data-en="Type a message..." data-zh="输入消息..." placeholder="Введите сообщение..." autocomplete="off">
@@ -994,13 +1014,14 @@
 
     <section id="founders" class="founders-screen">
         <h2 class="section-title lang-txt" data-ru="Основатели" data-en="Founders" data-zh="创始人">Основатели</h2>
-       <div class="founders-grid">
-            <div class="founder-link"><div class="founder-tile leader-tile animated-glow-border"><i class="fa-solid fa-anchor"></i><h3>Mitso</h3><p class="lang-txt" data-ru="Основатель" data-en="Founder" data-zh="创始人">Основатель</p></div></div>
-            <div class="founder-link"><div class="founder-tile animated-glow-border"><i class="fa-solid fa-crosshairs"></i><h3>Mr. JOKER</h3><p class="lang-txt" data-ru="Основатель" data-en="Founder" data-zh="创始人">Основатель</p></div></div>
-            <div class="founder-link"><div class="founder-tile animated-glow-border"><i class="fa-solid fa-shield-halved"></i><h3>Dark Control</h3><p class="lang-txt" data-ru="Основатель" data-en="Founder" data-zh="创始人">Основатель</p></div></div>
-            <div class="founder-link"><div class="founder-tile animated-glow-border"><i class="fa-solid fa-bolt"></i><h3>Mr. PROper</h3><p class="lang-txt" data-ru="Основатель" data-en="Founder" data-zh="创始人">Основатель</p></div></div>
-            <div class="founder-link"><div class="founder-tile animated-glow-border"><i class="fa-solid fa-satellite-dish"></i><h3>Banan</h3><p class="lang-txt" data-ru="Основатель" data-en="Founder" data-zh="创始人">Основатель</p></div></div>
-            <div class="founder-link"><div class="founder-tile animated-glow-border"><i class="fa-solid fa-meteor"></i><h3>Zandetetor</h3><p class="lang-txt" data-ru="Основатель" data-en="Founder" data-zh="创始人">Основатель</p></div></div>
+       <div class="founders-grid" id="foundersGridContainer">
+            <!-- Карточки будут заполняться скриптом, чтобы статусы загружались из облака! -->
+            <div class="founder-link" onclick="openFounderDossier('Mitso')"><div id="founderCard_Mitso" class="founder-tile leader-tile animated-glow-border"><i class="fa-solid fa-anchor"></i><h3>Mitso</h3><p class="lang-txt" data-ru="Основатель" data-en="Founder" data-zh="创始人">Основатель</p></div></div>
+            <div class="founder-link" onclick="openFounderDossier('Mr. JOKER')"><div id="founderCard_Mr_JOKER" class="founder-tile animated-glow-border"><i class="fa-solid fa-crosshairs"></i><h3>Mr. JOKER</h3><p class="lang-txt" data-ru="Основатель" data-en="Founder" data-zh="创始人">Основатель</p></div></div>
+            <div class="founder-link" onclick="openFounderDossier('Dark Control')"><div id="founderCard_Dark_Control" class="founder-tile animated-glow-border"><i class="fa-solid fa-shield-halved"></i><h3>Dark Control</h3><p class="lang-txt" data-ru="Основатель" data-en="Founder" data-zh="创始人">Основатель</p></div></div>
+            <div class="founder-link" onclick="openFounderDossier('Mr. PROper')"><div id="founderCard_Mr_PROper" class="founder-tile animated-glow-border"><i class="fa-solid fa-bolt"></i><h3>Mr. PROper</h3><p class="lang-txt" data-ru="Основатель" data-en="Founder" data-zh="创始人">Основатель</p></div></div>
+            <div class="founder-link" onclick="openFounderDossier('Banan')"><div id="founderCard_Banan" class="founder-tile animated-glow-border"><i class="fa-solid fa-satellite-dish"></i><h3>Banan</h3><p class="lang-txt" data-ru="Основатель" data-en="Founder" data-zh="创始人">Основатель</p></div></div>
+            <div class="founder-link" onclick="openFounderDossier('Zandetetor')"><div id="founderCard_Zandetetor" class="founder-tile animated-glow-border"><i class="fa-solid fa-meteor"></i><h3>Zandetetor</h3><p class="lang-txt" data-ru="Основатель" data-en="Founder" data-zh="创始人">Основатель</p></div></div>
         </div>
     </section>
 
@@ -1280,8 +1301,199 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
         </div>
     </div>
 
+    <!-- ОКНО ДОСЬЕ ОСНОВАТЕЛЯ -->
+    <div class="modal-overlay" id="founderDossierModal" style="z-index: 170;">
+        <div class="modal-window glassmorphism" style="max-width: 500px; border-color: #00f2fe; box-shadow: 0 0 40px rgba(0, 242, 254, 0.3);">
+            <span class="close-btn" onclick="document.getElementById('founderDossierModal').classList.remove('active');">&times;</span>
+            <div class="modal-title lang-txt" style="color: #00f2fe; border-bottom-color: rgba(0, 242, 254, 0.2);" data-ru="Личное дело (Досье)" data-en="Personal Dossier" data-zh="个人档案">Личное дело (Досье)</div>
+            
+            <i class="fa-solid fa-pen" id="editDossierBtn" style="display: none; position: absolute; left: 20px; top: 25px; color: #ff0055; font-size: 18px; cursor: pointer;" title="Редактировать досье" onclick="toggleDossierEditMode()"></i>
+
+            <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 20px;">
+                <div id="dossierAvatar" style="width: 110px; height: 110px; border-radius: 8px; border: 2px solid #00f2fe; background-color: #02050a; background-size: cover; background-position: center; box-shadow: 0 0 15px rgba(0,242,254,0.3); flex-shrink: 0;"></div>
+                <div style="flex-grow: 1;">
+                    <h2 id="dossierName" style="font-family: 'Orbitron', sans-serif; font-size: 26px; color: #fff; text-shadow: 0 0 10px rgba(0,242,254,0.5); margin-bottom: 5px;">-</h2>
+                    <div id="dossierRole" style="color: #00f2fe; font-size: 13px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;">-</div>
+                    
+                    <div id="dossierAvatarEditWrap" style="display: none; margin-top: 10px;">
+                        <input type="text" id="editDossierAvatar" placeholder="Ссылка на аватарку (.png/.jpg)" style="width: 100%; font-size: 11px; padding: 5px; background: rgba(2,5,10,0.8); border: 1px solid #00f2fe; color: #fff; border-radius: 4px;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- РЕЖИМ ПРОСМОТРА -->
+            <div id="dossierViewMode" style="background: rgba(2, 5, 10, 0.6); padding: 15px; border-radius: 6px; border: 1px dashed rgba(0, 242, 254, 0.3); font-family: 'Oswald', sans-serif;">
+                <div class="dossier-row"><span class="lbl lang-txt" data-ru="Играет с года:" data-en="Playing since:" data-zh="游戏年份:">Играет с года:</span> <span class="val" id="dossierYear" style="color: #a855f7;">-</span></div>
+                <div class="dossier-row"><span class="lbl lang-txt" data-ru="Количество побед:" data-en="Total Wins:" data-zh="总胜场:">Количество побед:</span> <span class="val" id="dossierWins">-</span></div>
+                
+                <div class="dossier-row" style="flex-direction: column; align-items: flex-start; margin-top: 10px;">
+                    <span class="lbl lang-txt" style="margin-bottom: 5px;" data-ru="Призы в турнирах:" data-en="Tournament Prizes:" data-zh="锦标赛奖项:">Призы в турнирах:</span>
+                    <div class="val" id="dossierTournaments" style="width: 100%; text-align: left; white-space: pre-wrap; font-size: 13px; color: #eab308; background: rgba(234, 179, 8, 0.1); padding: 8px; border-radius: 4px; border-left: 2px solid #eab308;">-</div>
+                </div>
+                
+                <div class="dossier-row" style="flex-direction: column; align-items: flex-start; margin-top: 10px;">
+                    <span class="lbl lang-txt" style="margin-bottom: 5px;" data-ru="Досье:" data-en="Dossier:" data-zh="档案:">Досье:</span>
+                    <div class="val" id="dossierHistory" style="width: 100%; text-align: left; white-space: pre-wrap; font-size: 13px; color: #cbd5e1; background: rgba(0,0,0,0.5); padding: 12px; border-radius: 4px; font-weight: normal; line-height: 1.5; border-left: 2px solid #00f2fe;">-</div>
+                </div>
+            </div>
+
+            <!-- РЕЖИМ РЕДАКТИРОВАНИЯ (Скрыт) -->
+            <div id="dossierEditMode" style="display: none; background: rgba(2, 5, 10, 0.6); padding: 15px; border-radius: 6px; border: 1px dashed #ff0055; margin-top: 10px;">
+                <div class="form-group" style="margin-bottom: 10px;">
+                    <label>Статус (Оформление карточки):</label>
+                    <select id="editDossierStatus" style="width: 100%; background: rgba(2,5,10,0.8); color: #fff; padding: 8px; border: 1px solid #ff0055; border-radius: 4px;">
+                        <option value="none">Обычный</option>
+                        <option value="legend">Легенда (1 место)</option>
+                        <option value="hero">Герой (2 место)</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 10px;">
+                    <label>Играет с года:</label>
+                    <input type="text" id="editDossierYear">
+                </div>
+                <div class="form-group" style="margin-bottom: 10px;">
+                    <label>Количество побед:</label>
+                    <input type="text" id="editDossierWins">
+                </div>
+                <div class="form-group" style="margin-bottom: 10px;">
+                    <label>Призы в турнирах (можно списком):</label>
+                    <textarea id="editDossierTournaments" rows="3" style="resize: vertical;"></textarea>
+                </div>
+                <div class="form-group" style="margin-bottom: 10px;">
+                    <label>Досье (История):</label>
+                    <textarea id="editDossierHistory" rows="4" style="resize: vertical;"></textarea>
+                </div>
+                
+                <button type="button" class="btn-submit" onclick="saveFounderDossier()" style="background: #22c55e; color: #000;">Сохранить изменения</button>
+            </div>
+
+        </div>
+    </div>
+
     <div id="toastContainer" class="toast-container"></div>
 <script>
+        // --- БАЗА ДАННЫХ ДОСЬЕ ОСНОВАТЕЛЕЙ (ПО УМОЛЧАНИЮ) ---
+        // Эти данные загрузятся, пока вы не отредактируете их на сайте
+        const defaultFounders = {
+            "Mitso": { role: "Основатель / Глава", avatar: "", year: "2020", wins: "1540", tournaments: "1 место (MW Cup 2023)\nMVP 2023", history: "С 2023 года основал клан STAGE.", status: "legend" },
+            "Mr. JOKER": { role: "Основатель", avatar: "", year: "2021", wins: "1200", tournaments: "Топ 10 Global", history: "С 2023 года в STAGE.", status: "hero" },
+            "Dark Control": { role: "Основатель", avatar: "", year: "2019", wins: "2100", tournaments: "-", history: "-", status: "none" },
+            "Mr. PROper": { role: "Основатель", avatar: "", year: "2020", wins: "850", tournaments: "-", history: "-", status: "none" },
+            "Banan": { role: "Основатель", avatar: "", year: "2022", wins: "600", tournaments: "-", history: "-", status: "none" },
+            "Zandetetor": { role: "Основатель", avatar: "", year: "2018", wins: "3000", tournaments: "-", history: "-", status: "none" }
+        };
+
+        const founderCardIds = {
+            "Mitso": "founderCard_Mitso",
+            "Mr. JOKER": "founderCard_Mr_JOKER",
+            "Dark Control": "founderCard_Dark_Control",
+            "Mr. PROper": "founderCard_Mr_PROper",
+            "Banan": "founderCard_Banan",
+            "Zandetetor": "founderCard_Zandetetor"
+        };
+
+        let currentEditingFounder = null;
+
+        window.openFounderDossier = function(name) {
+            currentEditingFounder = name;
+            const data = (cloudDatabase.founders && cloudDatabase.founders[name]) ? cloudDatabase.founders[name] : defaultFounders[name];
+
+            document.getElementById('dossierName').textContent = name;
+            
+            let roleHtml = data.role;
+            if (data.status === 'legend') roleHtml += ' <i class="fa-solid fa-trophy" style="color: #a855f7; margin-left: 5px; font-size: 15px;" title="Легенда"></i>';
+            if (data.status === 'hero') roleHtml += ' <i class="fa-solid fa-medal" style="color: #ff8c00; margin-left: 5px; font-size: 15px;" title="Герой"></i>';
+            document.getElementById('dossierRole').innerHTML = roleHtml;
+            
+            const avatarEl = document.getElementById('dossierAvatar');
+            if (data.avatar && data.avatar.trim() !== "") {
+                avatarEl.style.backgroundImage = `url('${data.avatar}')`;
+                avatarEl.innerHTML = '';
+            } else {
+                avatarEl.style.backgroundImage = 'none';
+                avatarEl.innerHTML = '<i class="fa-solid fa-user-secret" style="font-size: 50px; color: #00f2fe; margin-top: 25px; display: block; text-align: center;"></i>'; 
+            }
+
+            document.getElementById('dossierYear').textContent = data.year || "-";
+            document.getElementById('dossierWins').textContent = data.wins || "-";
+            document.getElementById('dossierTournaments').textContent = data.tournaments || "-";
+            document.getElementById('dossierHistory').textContent = data.history || "-";
+
+            // Показываем карандаш только Админу
+            document.getElementById('editDossierBtn').style.display = isLeaderMode ? 'block' : 'none';
+            
+            // Включаем режим просмотра
+            document.getElementById('dossierViewMode').style.display = 'block';
+            document.getElementById('dossierEditMode').style.display = 'none';
+            document.getElementById('dossierAvatarEditWrap').style.display = 'none';
+
+            document.getElementById('founderDossierModal').classList.add('active');
+        }
+
+        window.toggleDossierEditMode = function() {
+            const isEditing = document.getElementById('dossierEditMode').style.display === 'block';
+            if (isEditing) {
+                document.getElementById('dossierViewMode').style.display = 'block';
+                document.getElementById('dossierEditMode').style.display = 'none';
+                document.getElementById('dossierAvatarEditWrap').style.display = 'none';
+            } else {
+                const data = (cloudDatabase.founders && cloudDatabase.founders[currentEditingFounder]) ? cloudDatabase.founders[currentEditingFounder] : defaultFounders[currentEditingFounder];
+                
+                document.getElementById('editDossierAvatar').value = data.avatar || "";
+                document.getElementById('editDossierStatus').value = data.status || "none";
+                document.getElementById('editDossierYear').value = data.year || "";
+                document.getElementById('editDossierWins').value = data.wins || "";
+                document.getElementById('editDossierTournaments').value = data.tournaments || "";
+                document.getElementById('editDossierHistory').value = data.history || "";
+
+                document.getElementById('dossierViewMode').style.display = 'none';
+                document.getElementById('dossierEditMode').style.display = 'block';
+                document.getElementById('dossierAvatarEditWrap').style.display = 'block';
+            }
+        }
+
+        window.saveFounderDossier = async function() {
+            if (!isLeaderMode || !currentEditingFounder) return;
+            
+            if (!cloudDatabase.founders) {
+                cloudDatabase.founders = JSON.parse(JSON.stringify(defaultFounders));
+            }
+
+            const data = cloudDatabase.founders[currentEditingFounder];
+            data.avatar = document.getElementById('editDossierAvatar').value.trim();
+            data.status = document.getElementById('editDossierStatus').value;
+            data.year = document.getElementById('editDossierYear').value.trim();
+            data.wins = document.getElementById('editDossierWins').value.trim();
+            data.tournaments = document.getElementById('editDossierTournaments').value.trim();
+            data.history = document.getElementById('editDossierHistory').value.trim();
+
+            document.getElementById('editDossierBtn').style.pointerEvents = "none";
+            showNotification(t("Синхронизация с облаком...", "Syncing to cloud...", "同步到云端..."), "info");
+            
+            await saveToCloud();
+            
+            showNotification(t("Досье обновлено!", "Dossier updated!", "档案已更新！"), "success");
+            document.getElementById('editDossierBtn').style.pointerEvents = "auto";
+            
+            renderFoundersGrid();
+            toggleDossierEditMode(); 
+            openFounderDossier(currentEditingFounder); 
+        }
+
+        window.renderFoundersGrid = function() {
+            const foundersData = cloudDatabase.founders || defaultFounders;
+            for (let name in foundersData) {
+                const data = foundersData[name];
+                const cardId = founderCardIds[name];
+                const cardEl = document.getElementById(cardId);
+                if (cardEl) {
+                    cardEl.classList.remove('status-legend', 'status-hero');
+                    if (data.status === 'legend') cardEl.classList.add('status-legend');
+                    if (data.status === 'hero') cardEl.classList.add('status-hero');
+                }
+            }
+        }
+
         // ИНИЦИАЛИЗАЦИЯ ИНТЕРНАЦИОНАЛИЗАЦИИ
         let currentLang = localStorage.getItem('stage_lang') || 'ru';
         const langs = ['ru', 'en', 'zh'];
@@ -1517,7 +1729,8 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             recruits: {}, banned: [], kickedNicks: [], metadata: {}, 
             trainingTime: null, trainingYes: [], trainingNo: [],
             cwTime: null, cwNotified: false, autoCwEnabled: false,
-            chat: [], chatBanned: [], chatMonth: new Date().getMonth()
+            chat: [], chatBanned: [], chatMonth: new Date().getMonth(),
+            founders: {} // Новая база для основателей
         };
         let isCloudSynced = false; 
 
@@ -1552,6 +1765,9 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
         }
 
         window.addEventListener('DOMContentLoaded', () => {
+            // Подгружаем дефолтные данные до сихронизации
+            cloudDatabase.founders = JSON.parse(JSON.stringify(defaultFounders));
+
             const avatarPickerGrid = document.getElementById('avatarPickerGrid');
             if(avatarPickerGrid) {
                 let avatarsHtml = '';
@@ -1573,6 +1789,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             }
 
             setLang(currentLang); 
+            renderFoundersGrid(); // Отрисовываем карточки основателей
 
             const infoRankSelectElem = document.getElementById('infoRankSelect');
             if (infoRankSelectElem) {
@@ -1581,7 +1798,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 });
             }
 
-            // --- ЛОГИКА ОТКРЫТИЯ/ЗАКРЫТИЯ ШТОРКИ ОНЛАЙНА ---
             const onlineToggleBtn = document.getElementById('onlineToggleBtn');
             const onlineWidget = document.getElementById('onlineWidget');
             if(onlineToggleBtn && onlineWidget) {
@@ -1655,7 +1871,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             
             startCyberTerminalLoader();
 
-            // 1. АВТОМАТИЧЕСКАЯ ПОДСВЕТКА НАВИГАЦИИ ПРИ СКРОЛЛЕ
             const sectionsToTrack = document.querySelectorAll('section');
             const navItems = document.querySelectorAll('.nav-links-left a');
             const navObserver = new IntersectionObserver((entries) => {
@@ -1670,7 +1885,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             }, { threshold: 0.35 });
             sectionsToTrack.forEach(sec => navObserver.observe(sec));
 
-            // 2. ЛОГИКА МОБИЛЬНОГО ПОЛНОЭКРАННОГО ЧАТА С КРЕСТИКОМ
             const chatNavBtn = document.querySelector('.nav-links-left a[href="#chat-page"]');
             const chatSection = document.getElementById('chat-page');
             const closeChatBtn = document.getElementById('closeMobileChatBtn');
@@ -1833,6 +2047,10 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                             cloudDatabase.chatMonth = currentMonth;
                             await saveToCloud();
                         }
+                        
+                        // Синхронизация досье основателей
+                        cloudDatabase.founders = db.founders || defaultFounders;
+                        renderFoundersGrid();
                     }
                     isCloudSynced = true; 
                     updateOnlineWidget();
@@ -1860,7 +2078,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             } catch (err) { console.error("Ошибка сохранения:", err); }
         }
 
-        // --- ОБНОВЛЕННЫЙ ЧАТ: Удаление своих сообщений и подсветка @упоминаний ---
         function renderChat() {
             const container = document.getElementById('chatMessages');
             if(!container) return;
@@ -3332,15 +3549,3 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             }
         });
     </script>
-
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('sw.js').then(registration => { 
-              console.log('ServiceWorker успешно запущен'); 
-          });
-        });
-      }
-    </script>
-</body>
-</html>
