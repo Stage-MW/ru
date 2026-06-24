@@ -28,6 +28,11 @@
           serviceWorkerParam: { scope: '/ru/' },
           serviceWorkerPath: '/ru/sw.js'
         });
+        
+        // Перенаправление при клике на пуш
+        OneSignal.Notifications.addEventListener('click', function(event) {
+            window.location.href = "https://stage-mw.github.io/ru/#welcome";
+        });
       });
     </script>
     
@@ -2821,7 +2826,9 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
         window.triggerCwNotification = async function() {
             cloudDatabase.cwNotified = true;
             await saveToCloud();
-            const messageText = `⚔️ <b>ВНИМАНИЕ, ФЛОТ STAGE!</b>\n\n🔥 <b>КЛАНОВЫЕ БОИ НАЧАЛИСЬ!</b> 🔥\n\nНе пропустите! 🚢💥`;
+            
+            // Текст, который уйдет в Telegram, когда таймер обнулится
+            const messageText = `⚔️ <b>ВНИМАНИЕ, ФЛОТ STAGE!</b>\n\n🔥 <b>КЛАНОВЫЕ БОИ НАЧАЛИСЬ!</b> 🔥\n\nТаймер окончен. Ждем всех в строю! 🚢💥`;
             
             // Отправка в Telegram
             fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
@@ -2854,6 +2861,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 
                 cwPush.onclick = function() {
                     window.focus(); // Открывает вкладку с сайтом при клике на Push
+                    window.location.href = "https://stage-mw.github.io/ru/#welcome"; // Редирект на главную
                     this.close();
                 };
             }
