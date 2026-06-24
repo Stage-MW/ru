@@ -1015,7 +1015,6 @@
     <section id="founders" class="founders-screen">
         <h2 class="section-title lang-txt" data-ru="Основатели" data-en="Founders" data-zh="创始人">Основатели</h2>
        <div class="founders-grid" id="foundersGridContainer">
-            <!-- Карточки будут заполняться скриптом, чтобы статусы загружались из облака! -->
             <div class="founder-link" onclick="openFounderDossier('Mitso')"><div id="founderCard_Mitso" class="founder-tile leader-tile animated-glow-border"><i class="fa-solid fa-anchor"></i><h3>Mitso</h3><p class="lang-txt" data-ru="Основатель" data-en="Founder" data-zh="创始人">Основатель</p></div></div>
             <div class="founder-link" onclick="openFounderDossier('Mr. JOKER')"><div id="founderCard_Mr_JOKER" class="founder-tile animated-glow-border"><i class="fa-solid fa-crosshairs"></i><h3>Mr. JOKER</h3><p class="lang-txt" data-ru="Основатель" data-en="Founder" data-zh="创始人">Основатель</p></div></div>
             <div class="founder-link" onclick="openFounderDossier('Dark Control')"><div id="founderCard_Dark_Control" class="founder-tile animated-glow-border"><i class="fa-solid fa-shield-halved"></i><h3>Dark Control</h3><p class="lang-txt" data-ru="Основатель" data-en="Founder" data-zh="创始人">Основатель</p></div></div>
@@ -1275,7 +1274,15 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                 <div class="stats-item"><div class="num" id="statTotalViews">0</div><div class="label lang-txt" data-ru="Всего просмотров" data-en="Total Views" data-zh="总浏览量">Всего просмотров</div></div>
                 <div class="stats-item"><div class="num" id="statUniqueVisits">0</div><div class="label lang-txt" data-ru="Уникальные люди" data-en="Unique Visitors" data-zh="独立访客">Уникальные люди</div></div>
                 <div class="stats-item"><div class="num" id="statTotalRequests">0</div><div class="label lang-txt" data-ru="Поданные заявки" data-en="Applications" data-zh="提交的申请">Поданные заявки</div></div>
-                <div class="stats-item"><div class="num" id="statConversionRate">0%</div><div class="label lang-txt" data-ru="Конверсия штаба" data-en="HQ Conversion" data-zh="总部转化率">Конверсия штаба</div></div>
+                <div class="stats-item"><div class="num" id="statConversionRate">0.0%</div><div class="label lang-txt" data-ru="Конверсия штаба" data-en="HQ Conversion" data-zh="总部转化率">Конверсия штаба</div></div>
+                <!-- Добавлена детальная статистика по устройствам -->
+                <div class="stats-item" style="grid-column: span 2;">
+                    <div class="num" style="font-size: 20px;" id="statDevices">
+                        <i class="fa-solid fa-mobile-screen" style="color: #00f2fe;"></i> <span id="statMobile">0%</span> &nbsp;|&nbsp; 
+                        <i class="fa-solid fa-desktop" style="color: #a855f7;"></i> <span id="statPC">0%</span>
+                    </div>
+                    <div class="label lang-txt" data-ru="Устройства (Телефоны / ПК)" data-en="Devices (Mobile / PC)" data-zh="设备 (手机 / 电脑)">Устройства (Телефоны / ПК)</div>
+                </div>
             </div>
 
             <button type="button" class="btn-submit lang-txt" id="resetStatsBtn" style="background:#ef4444; color:#fff; margin-top:10px; font-size:11px;" data-ru="Сбросить статистику" data-en="Reset Stats" data-zh="重置统计">Сбросить статистику</button>
@@ -1642,14 +1649,6 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             return `<div class="rank-insignia" title="${NAVAL_RANKS[index]}">${html}</div>`;
         }
 
-        let views = parseInt(localStorage.getItem('stage_views') || '0');
-        let isUnique = localStorage.getItem('stage_unique_user');
-        let uniqueVisits = parseInt(localStorage.getItem('stage_uniques') || '0');
-        let totalRequests = parseInt(localStorage.getItem('stage_requests_count') || '0');
-
-        views++; localStorage.setItem('stage_views', views.toString());
-        if (!isUnique) { localStorage.setItem('stage_unique_user', 'true'); uniqueVisits++; localStorage.setItem('stage_uniques', uniqueVisits.toString()); }
-
         const openModalBtn = document.getElementById('openModalBtn');
         const recruitForm = document.getElementById('recruitForm');
         const verifyBlock = document.getElementById('verifyBlock');
@@ -1730,7 +1729,8 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             trainingTime: null, trainingYes: [], trainingNo: [],
             cwTime: null, cwNotified: false, autoCwEnabled: false,
             chat: [], chatBanned: [], chatMonth: new Date().getMonth(),
-            founders: {} // Новая база для основателей
+            founders: {},
+            stats: { views: 0, uniques: 0, requests: 0, mobile: 0, pc: 0 }
         };
         let isCloudSynced = false; 
 
@@ -1789,7 +1789,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             }
 
             setLang(currentLang); 
-            renderFoundersGrid(); // Отрисовываем карточки основателей
+            renderFoundersGrid(); 
 
             const infoRankSelectElem = document.getElementById('infoRankSelect');
             if (infoRankSelectElem) {
@@ -1838,7 +1838,25 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             }, { threshold: 0.1 });
             sections.forEach(s => observer.observe(s));
 
-            syncWithCloud().then(() => {
+            // Основная загрузка и инкремент статистики (один раз за сессию)
+            syncWithCloud().then(async () => {
+                if (!cloudDatabase.stats) cloudDatabase.stats = { views: 0, uniques: 0, requests: 0, mobile: 0, pc: 0 };
+                
+                cloudDatabase.stats.views++;
+                
+                if (!localStorage.getItem('stage_unique_user')) {
+                    localStorage.setItem('stage_unique_user', 'true');
+                    cloudDatabase.stats.uniques++;
+                    
+                    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                        cloudDatabase.stats.mobile++;
+                    } else {
+                        cloudDatabase.stats.pc++;
+                    }
+                }
+                
+                await saveToCloud(); // Сохраняем обновленную статистику
+                
                 if (checkBanAndLogout()) return;
                 applyGlobalKickedFilters();
                 renderLocalRecruits();
@@ -2048,8 +2066,9 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
                             await saveToCloud();
                         }
                         
-                        // Синхронизация досье основателей
                         cloudDatabase.founders = db.founders || defaultFounders;
+                        cloudDatabase.stats = db.stats || { views: 0, uniques: 0, requests: 0, mobile: 0, pc: 0 };
+                        
                         renderFoundersGrid();
                     }
                     isCloudSynced = true; 
@@ -3040,30 +3059,50 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             if(typeof updateTrainingButtonVisibility === 'function') updateTrainingButtonVisibility();
         }
 
+        // ОБНОВЛЕННАЯ СТАТИСТИКА
         navStatsBtn.addEventListener('click', () => {
             if(!isLeaderMode) return;
-            const totalV = parseInt(localStorage.getItem('stage_views') || '0');
-            const uniqueV = parseInt(localStorage.getItem('stage_uniques') || '0');
-            const totalR = parseInt(localStorage.getItem('stage_requests_count') || '0');
-            let conversion = uniqueV > 0 ? Math.round((totalR / uniqueV) * 100) : 0;
+            const stats = cloudDatabase.stats || { views: 0, uniques: 0, requests: 0, mobile: 0, pc: 0 };
+            
+            // Расчет конверсии с точностью до 1 знака после запятой
+            let conversion = stats.uniques > 0 ? ((stats.requests / stats.uniques) * 100).toFixed(1) : "0.0";
 
-            document.getElementById('statTotalViews').textContent = totalV;
-            document.getElementById('statUniqueVisits').textContent = uniqueV;
-            document.getElementById('statTotalRequests').textContent = totalR;
+            document.getElementById('statTotalViews').textContent = stats.views;
+            document.getElementById('statUniqueVisits').textContent = stats.uniques;
+            document.getElementById('statTotalRequests').textContent = stats.requests;
             document.getElementById('statConversionRate').textContent = conversion + "%";
+
+            // Расчет ПК / Телефон
+            let totalDevices = stats.mobile + stats.pc;
+            let mobilePerc = totalDevices > 0 ? Math.round((stats.mobile / totalDevices) * 100) : 0;
+            let pcPerc = totalDevices > 0 ? Math.round((stats.pc / totalDevices) * 100) : 0;
+
+            document.getElementById('statMobile').textContent = mobilePerc + "%";
+            document.getElementById('statPC').textContent = pcPerc + "%";
+
             statsModalOverlay.classList.add('active');
         });
         
         closeStatsModalBtn.addEventListener('click', () => statsModalOverlay.classList.remove('active'));
 
-        resetStatsBtn.addEventListener('click', () => {
+        resetStatsBtn.addEventListener('click', async () => {
             if (confirm(t("Сбросить статистику?", "Reset stats?", "重置统计？"))) {
-                localStorage.removeItem('stage_uniques');
-                localStorage.removeItem('stage_requests_count');
-                uniqueVisits = 1; totalRequests = 0;
-                document.getElementById('statUniqueVisits').textContent = uniqueVisits;
-                document.getElementById('statTotalRequests').textContent = totalRequests;
-                document.getElementById('statConversionRate').textContent = "0%";
+                cloudDatabase.stats = { views: 1, uniques: 1, requests: 0, mobile: 0, pc: 0 };
+                
+                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                    cloudDatabase.stats.mobile = 1;
+                } else {
+                    cloudDatabase.stats.pc = 1;
+                }
+
+                await saveToCloud();
+
+                document.getElementById('statTotalViews').textContent = cloudDatabase.stats.views;
+                document.getElementById('statUniqueVisits').textContent = cloudDatabase.stats.uniques;
+                document.getElementById('statTotalRequests').textContent = cloudDatabase.stats.requests;
+                document.getElementById('statConversionRate').textContent = "0.0%";
+                document.getElementById('statMobile').textContent = cloudDatabase.stats.mobile > 0 ? "100%" : "0%";
+                document.getElementById('statPC').textContent = cloudDatabase.stats.pc > 0 ? "100%" : "0%";
             }
         });
 
@@ -3338,6 +3377,7 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
         closeLawModalBtn.addEventListener('click', closeLawModal); 
         acceptLawBtn.addEventListener('click', closeLawModal);
 
+        // ОБНОВЛЕННАЯ СТАТИСТИКА ЗАЯВОК (В ОБЛАКО)
         recruitForm.addEventListener('submit', function(e) {
             e.preventDefault(); submitBtn.textContent = t("Передача...", "Transferring...", "传输中...");
             const gameNick = document.getElementById('gameNick').value.trim();
@@ -3354,7 +3394,10 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             }).then(response => {
                 if (response.ok) { 
                     recruitForm.style.display = 'none'; document.getElementById('successResult').style.display = 'block'; 
-                    totalRequests++; localStorage.setItem('stage_requests_count', totalRequests.toString());
+                    
+                    if (!cloudDatabase.stats) cloudDatabase.stats = { views: 0, uniques: 0, requests: 0, mobile: 0, pc: 0 };
+                    cloudDatabase.stats.requests++;
+                    saveToCloud();
                 } else { alert(t("Ошибка отправки заявки!", "Error sending application!", "申请发送失败！")); }
                 submitBtn.textContent = t("Отправить заявку", "Submit Application", "提交申请");
             });
@@ -3549,3 +3592,5 @@ Telegram username (тег Telegram); Telegram ID; игровой ID; игров�
             }
         });
     </script>
+</body>
+</html>
