@@ -29,7 +29,6 @@
           serviceWorkerPath: '/ru/sw.js'
         });
         
-        // Перенаправление при клике на пуш
         OneSignal.Notifications.addEventListener('click', function(event) {
             window.location.href = "https://stage-mw.github.io/ru/#welcome";
         });
@@ -40,7 +39,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body, html { background-color: #02050a; color: #ffffff; font-family: 'Oswald', sans-serif; scroll-behavior: smooth; overflow-x: hidden; touch-action: manipulation; }
 
-        /* Улучшенный стекломорфизм с бликами */
         .glassmorphism {
             background: rgba(15, 23, 42, 0.45) !important;
             backdrop-filter: blur(12px) !important;
@@ -49,7 +47,6 @@
             box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3), 0 8px 32px rgba(0, 0, 0, 0.6) !important;
         }
 
-        /* Бегущие световые рамки при наведении */
         .animated-glow-border { position: relative; z-index: 1; }
         .animated-glow-border::before {
             content: ""; position: absolute; inset: -2px; border-radius: inherit;
@@ -59,13 +56,12 @@
         }
         .animated-glow-border::after {
             content: ""; position: absolute; inset: 0px; border-radius: inherit;
-            background: rgba(15, 23, 42, 0.85); /* Базовый темный фон карточки */
+            background: rgba(15, 23, 42, 0.85); 
             z-index: -1;
         }
         .animated-glow-border:hover::before { opacity: 1; }
         @keyframes borderMove { 0% { background-position: 0% 0%; } 100% { background-position: 100% 0%; } }
 
-        /* Навигационная панель */
         .nav-bar {
             position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 10;
             display: flex; justify-content: space-between; align-items: center;
@@ -82,7 +78,6 @@
         }
         .nav-bar a:hover, .nav-bar span.nav-link-btn:hover { color: #00f2fe; text-shadow: 0 0 10px rgba(0, 242, 254, 0.6); }
 
-        /* --- АКТИВНЫЙ ПУНКТ МЕНЮ НАВИГАЦИИ --- */
         .nav-bar a.active-nav {
             color: #00f2fe !important;
             text-shadow: 0 0 12px rgba(0, 242, 254, 0.8) !important;
@@ -115,17 +110,17 @@
         }
         .btn-nav-login:hover { background: #0088cc; color: #02050a; box-shadow: 0 0 25px rgba(0, 136, 204, 0.8); transform: scale(1.05); }
 
-        .welcome-screen, .roster-screen, .maps-screen, .board-screen, .channels-screen, .creators-screen, .founders-screen {
+        .welcome-screen, .roster-screen, .squads-screen, .maps-screen, .board-screen, .channels-screen, .creators-screen, .founders-screen {
             min-height: 100vh; width: 100vw; padding: 120px 20px 60px; position: relative;
             display: flex; flex-direction: column; align-items: center;
             background-position: center; background-size: cover; background-repeat: no-repeat; background-attachment: fixed;
         }
 
-        .welcome-screen > *, .roster-container, .social-container, .founders-grid, .section-title, .recruit-box, .secret-tg-box, .sub-section-title, .maps-grid, .board-container, .btn-fullscreen-toggle, .lock-overlay-box {
+        .welcome-screen > *, .roster-container, .squads-gallery, .social-container, .founders-grid, .section-title, .recruit-box, .secret-tg-box, .sub-section-title, .maps-grid, .board-container, .btn-fullscreen-toggle, .lock-overlay-box {
             opacity: 0; transform: translateY(30px); transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        .section-active > *, .section-active .roster-container, .section-active .social-container, .section-active .founders-grid, .section-active .section-title, .section-active .recruit-box, .section-active .secret-tg-box, .section-active .sub-section-title, .section-active .maps-grid, .section-active .board-container, .section-active .btn-fullscreen-toggle, .section-active .lock-overlay-box {
+        .section-active > *, .section-active .roster-container, .section-active .squads-gallery, .section-active .social-container, .section-active .founders-grid, .section-active .section-title, .section-active .recruit-box, .section-active .secret-tg-box, .section-active .sub-section-title, .section-active .maps-grid, .section-active .board-container, .section-active .btn-fullscreen-toggle, .section-active .lock-overlay-box {
             opacity: 1; transform: translateY(0);
         }
 
@@ -258,6 +253,47 @@
             display: flex; align-items: center; justify-content: center; gap: 12px; outline: none;
         }
         .btn-join-neon:hover { background: #0088cc; color: #02050a; box-shadow: 0 0 35px rgba(0, 136, 204, 0.8); transform: scale(1.03); }
+
+        /* --- БОЕВЫЕ СОСТАВЫ (НОВЫЙ ДИЗАЙН: ГАЛЕРЕЯ КАРТ) --- */
+        .squads-screen { background-image: linear-gradient(rgba(2, 5, 10, 0.75), rgba(2, 5, 10, 0.95)), url('chat_bg.png'); }
+        .squads-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; width: 100%; max-width: 1200px; z-index: 2; margin-top: 20px; }
+        .squad-card { position: relative; border-radius: 8px; overflow: hidden; border: 1px solid rgba(0, 242, 254, 0.3); cursor: pointer; transition: all 0.3s; min-height: 200px; display: flex; flex-direction: column; justify-content: flex-end; }
+        .squad-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0, 242, 254, 0.4); border-color: #00f2fe; }
+        .squad-card-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; z-index: 1; transition: transform 0.5s; opacity: 0.5; background-color: #02050a; }
+        .squad-card:hover .squad-card-bg { transform: scale(1.1); opacity: 0.7; }
+        .squad-card-content { position: relative; z-index: 2; background: linear-gradient(transparent, rgba(2, 5, 10, 0.95) 50%, rgba(2, 5, 10, 1)); padding: 30px 20px 20px; width: 100%; }
+        .squad-card-title { font-family: 'Orbitron', sans-serif; font-size: 20px; color: #fff; text-shadow: 0 0 10px #00f2fe; margin-bottom: 5px; text-transform: uppercase; font-weight: 900; }
+        .squad-card-subtitle { font-size: 12px; color: #94a3b8; font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .btn-add-squad { display: none; background: rgba(0, 242, 254, 0.15); border: 2px dashed #00f2fe; color: #00f2fe; padding: 14px 25px; border-radius: 8px; font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: bold; text-transform: uppercase; cursor: pointer; transition: all 0.3s; margin-bottom: 10px; width: 100%; max-width: 400px; text-align: center; }
+        .btn-add-squad:hover { background: #00f2fe; color: #02050a; box-shadow: 0 0 25px rgba(0, 242, 254, 0.6); transform: translateY(-2px); }
+        
+        /* Стили полей внутри модалки состава */
+        .squad-slot-row { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; background: rgba(0,0,0,0.4); padding: 10px; border-radius: 4px; border-left: 2px solid #a855f7; }
+        .squad-slot-row.reserve { border-left-color: #eab308; opacity: 0.9; margin-top: 20px; position: relative; }
+        .squad-slot-row.reserve::before { content: 'РЕЗЕРВ'; position: absolute; top: -18px; left: 0; font-size: 10px; color: #eab308; font-family: 'Orbitron', sans-serif; }
+        
+        .squad-slot-row input.spawn-input { width: 50px; text-align: center; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(0, 242, 254, 0.3); color: #00f2fe; font-family: 'Orbitron', sans-serif; font-weight: bold; font-size: 14px; border-radius: 4px; padding: 8px 5px; outline: none; transition: 0.3s; }
+        .squad-slot-row input.spawn-input:focus { border-color: #00f2fe; box-shadow: 0 0 10px rgba(0,242,254,0.5); }
+        .squad-slot-row select { flex: 1; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255,255,255,0.1); color: #fff; border-radius: 4px; padding: 8px; font-family: 'Oswald', sans-serif; outline: none; font-size: 14px; }
+        .squad-slot-row select:focus { border-color: #a855f7; box-shadow: 0 0 10px rgba(168,85,247,0.5); }
+        
+        /* Стили просмотра состава (зрительский режим) */
+        .squad-view-image { width: 100%; max-height: 300px; object-fit: contain; border-radius: 6px; border: 1px solid rgba(0,242,254,0.3); margin-bottom: 20px; background-color: #02050a; cursor: pointer; }
+        .squad-view-list { display: flex; flex-direction: column; gap: 10px; }
+        .squad-view-item { display: flex; align-items: center; gap: 15px; background: rgba(2, 5, 10, 0.6); padding: 12px 15px; border-radius: 6px; border-left: 3px solid #00f2fe; transition: transform 0.2s; }
+        .squad-view-item:hover { transform: translateX(5px); background: rgba(15, 23, 42, 0.8); }
+        .squad-view-item.reserve { border-left-color: #eab308; }
+        .squad-view-item .spawn-badge { background: #00f2fe; color: #02050a; font-family: 'Orbitron', sans-serif; font-weight: bold; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 4px; flex-shrink: 0; font-size: 15px; box-shadow: 0 0 10px rgba(0,242,254,0.4); }
+        .squad-view-item.reserve .spawn-badge { background: #eab308; box-shadow: 0 0 10px rgba(234,179,8,0.4); }
+        .squad-view-item .player-name { flex: 1; font-weight: bold; color: #fff; font-size: 16px; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
+        .squad-view-item .ship-info { color: #94a3b8; font-size: 14px; display: flex; align-items: center; gap: 8px; font-family: 'Oswald', sans-serif; text-transform: uppercase; }
+        .squad-view-item .ship-info i { font-size: 16px; }
+
+        /* Полноэкранный просмотр карты */
+        #fullscreenMapOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 200; display: none; justify-content: center; align-items: center; flex-direction: column; }
+        #fullscreenMapOverlay.active { display: flex; }
+        #fullscreenMapImg { max-width: 95vw; max-height: 90vh; border-radius: 8px; border: 2px solid #00f2fe; box-shadow: 0 0 30px rgba(0,242,254,0.3); }
 
         /* КАРТЫ И ДОСКА */
         .maps-screen { background-image: linear-gradient(rgba(2, 5, 10, 0.75), rgba(2, 5, 10, 0.9)), url('maps_bg.png'); }
@@ -529,16 +565,13 @@
         .stats-item .num { font-family: 'Orbitron', sans-serif; font-size: 26px; color: #a855f7; font-weight: 900; text-shadow: 0 0 10px rgba(168,85,247,0.4); }
         .stats-item .label { font-size: 10px; color: #94a3b8; text-transform: uppercase; margin-top: 3px; letter-spacing: 0.5px; }
 
-        /* ШТАБ МОДЕРАЦИИ */
         .terminal-box { border: 1px solid rgba(0, 242, 254, 0.3); background: rgba(2, 5, 10, 0.8); padding: 12px; border-radius: 4px; margin-top: 10px; text-align: left; }
         .terminal-actions { display: flex; gap: 10px; margin-top: 10px; }
         .btn-terminal-accept { flex: 1; padding: 8px; background: #22c55e; border: none; font-family: 'Orbitron', sans-serif; font-weight: 900; color: #000; border-radius: 4px; cursor: pointer; text-transform: uppercase; font-size: 12px; text-align: center; }
         .btn-terminal-reject { flex: 1; padding: 8px; background: #ef4444; border: none; font-family: 'Orbitron', sans-serif; font-weight: 900; color: #fff; border-radius: 4px; cursor: pointer; text-transform: uppercase; font-size: 12px; text-align: center; }
 
-        /* --- ЭФФЕКТ ИСКР --- */
         #sparksCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 5; }
 
-        /* --- НОВЫЙ ЭКРАН ПРЕДЗАГРУЗКИ: КИБЕР-ТЕРМИНАЛ --- */
         #bootScreen {
             position: fixed; inset: 0; background-color: #02050a; z-index: 99999;
             display: flex; justify-content: center; align-items: center; flex-direction: column;
@@ -549,23 +582,11 @@
         .cyber-loader-box { width: 100%; max-width: 350px; text-align: center; padding: 20px; }
         
         .loader-glitch {
-            display: flex; 
-            justify-content: center; 
-            gap: 4px;
-            font-family: 'Orbitron', sans-serif; 
-            font-size: clamp(40px, 10vw, 60px); 
-            font-weight: 900; 
-            color: #fff;
-            margin-bottom: 25px; 
-            text-transform: uppercase;
+            display: flex; justify-content: center; gap: 4px;
+            font-family: 'Orbitron', sans-serif; font-size: clamp(40px, 10vw, 60px); font-weight: 900; color: #fff;
+            margin-bottom: 25px; text-transform: uppercase;
         }
-
-        .loader-glitch span {
-            display: inline-block;
-            opacity: 0;
-            animation: flyInLetter 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards, cyberGlitch 4s infinite 1.5s;
-        }
-
+        .loader-glitch span { display: inline-block; opacity: 0; animation: flyInLetter 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards, cyberGlitch 4s infinite 1.5s; }
         .loader-glitch span.fly-l { transform: translateX(-150px) scale(1.5); }
         .loader-glitch span.fly-r { transform: translateX(150px) scale(1.5); }
         .loader-glitch span.fly-c { transform: translateY(-100px) scale(1.5); }
@@ -576,31 +597,18 @@
         .loader-glitch span:nth-child(4) { animation-delay: 0.3s, 1.5s; }
         .loader-glitch span:nth-child(5) { animation-delay: 0.1s, 1.5s; }
 
-        @keyframes flyInLetter {
-            to {
-                opacity: 1;
-                transform: translate(0, 0) scale(1);
-                text-shadow: 0 0 25px #00f2fe;
-            }
-        }
+        @keyframes flyInLetter { to { opacity: 1; transform: translate(0, 0) scale(1); text-shadow: 0 0 25px #00f2fe; } }
 
-        .loader-subtext {
-            font-family: 'Orbitron', sans-serif; font-size: 13px; color: #00f2fe;
-            margin-bottom: 15px; letter-spacing: 2px; height: 20px; text-transform: uppercase;
-        }
-        .loader-progress-wrap {
-            width: 100%; height: 4px; background: rgba(0, 242, 254, 0.2); border-radius: 2px; overflow: hidden;
-            position: relative; box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
-        }
-        .loader-progress-bar {
-            height: 100%; background: #00f2fe; width: 0%;
-            box-shadow: 0 0 15px #00f2fe; transition: width 0.15s ease-out;
+        .loader-subtext { font-family: 'Orbitron', sans-serif; font-size: 13px; color: #00f2fe; margin-bottom: 15px; letter-spacing: 2px; height: 20px; text-transform: uppercase; }
+        .loader-progress-wrap { width: 100%; height: 4px; background: rgba(0, 242, 254, 0.2); border-radius: 2px; overflow: hidden; position: relative; box-shadow: inset 0 0 5px rgba(0,0,0,0.5); }
+        .loader-progress-bar { height: 100%; background: #00f2fe; width: 0%; box-shadow: 0 0 15px #00f2fe; transition: width 0.15s ease-out; }
+
+        @media (max-width: 900px) {
+            .squads-gallery { grid-template-columns: 1fr; }
         }
 
         @media (max-width: 768px) {
-            .nav-bar { 
-                top: auto; bottom: 15px; padding: 8px 15px; gap: 12px; width: 95%; left: 50%; transform: translateX(-50%); overflow-x: auto; justify-content: flex-start; -webkit-overflow-scrolling: touch;
-            }
+            .nav-bar { top: auto; bottom: 15px; padding: 8px 15px; gap: 12px; width: 95%; left: 50%; transform: translateX(-50%); overflow-x: auto; justify-content: flex-start; -webkit-overflow-scrolling: touch; }
             .nav-bar::-webkit-scrollbar { display: none; }
             .nav-links-left, .nav-links-right { flex-shrink: 0; }
             .nav-links-left { gap: 8px; }
@@ -610,7 +618,7 @@
             #navCabinetBtn { width: 26px; height: 26px; line-height: 22px; flex-shrink: 0; }
             #navCabinetBtn i { font-size: 11px; }
 
-            .welcome-screen, .roster-screen, .maps-screen, .board-screen, .channels-screen, .creators-screen, .founders-screen { 
+            .welcome-screen, .roster-screen, .squads-screen, .maps-screen, .board-screen, .channels-screen, .creators-screen, .founders-screen { 
                 padding: 60px 10px 80px !important; background-attachment: scroll !important; background-size: cover !important; background-position: center !important;
             }
             .players-grid { display: flex; flex-direction: column; flex-wrap: nowrap; gap: 10px; max-height: 280px; overflow-y: auto; overflow-x: hidden; padding-right: 5px; justify-content: flex-start; }
@@ -634,15 +642,7 @@
             .online-toggle-btn { top: 10px; transform: none; left: -42px; width: 42px; height: 42px; }
         }
 
-        /* --- СТИЛИ ДЛЯ ДОСЬЕ ОСНОВАТЕЛЕЙ --- */
-        .dossier-row { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            border-bottom: 1px dashed rgba(0, 242, 254, 0.2); 
-            padding: 10px 0; 
-            font-size: 14px; 
-        }
+        .dossier-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed rgba(0, 242, 254, 0.2); padding: 10px 0; font-size: 14px; }
         .dossier-row:last-child { border-bottom: none; }
         .dossier-row .lbl { color: #94a3b8; text-transform: uppercase; font-size: 12px; font-weight: bold; }
         .dossier-row .val { color: #fff; font-weight: bold; text-align: right; font-family: 'Orbitron', sans-serif; font-size: 13px;}
@@ -687,7 +687,7 @@
         <div class="nav-links-left">
             <a href="#welcome" class="lang-txt" data-ru="Главная" data-en="Home" data-zh="首页">Главная</a>
             <a href="#roster" class="lang-txt" data-ru="Состав" data-en="Roster" data-zh="阵容">Состав</a>
-            <!-- Чат удален отсюда -->
+            <a href="#squads" class="lang-txt" data-ru="Составы" data-en="Squads" data-zh="阵容">Составы</a>
             <a href="#maps" id="navMapsLink" class="lang-txt" data-ru="Карты" data-en="Maps" data-zh="地图">Карты</a>
             <a href="#board" id="navBoardLink" class="lang-txt" data-ru="Доска" data-en="Board" data-zh="黑板">Доска</a>
             <a href="#channels" class="lang-txt" data-ru="Каналы" data-en="Channels" data-zh="频道">Каналы</a>
@@ -792,15 +792,23 @@
             <button class="btn-join-neon lang-txt" id="openModalBtn" data-ru='<i class="fa-solid fa-paper-plane"></i> Подать заявку / Верификация' data-en='<i class="fa-solid fa-paper-plane"></i> Apply / Verify' data-zh='<i class="fa-solid fa-paper-plane"></i> 申请 / 验证'><i class="fa-solid fa-paper-plane"></i> Подать заявку / Верификация</button>
         </div>
     </section>
-
-    <!-- Секция чата полностью удалена -->
+<!-- НОВАЯ СЕКЦИЯ: БОЕВЫЕ СОСТАВЫ (ГАЛЕРЕЯ КАРТ) -->
+    <section id="squads" class="squads-screen">
+        <h2 class="section-title lang-txt" data-ru="Боевые составы" data-en="Battle Squads" data-zh="战斗阵容">Боевые составы</h2>
+        
+        <button type="button" id="btnAddSquadMap" class="btn-add-squad lang-txt" data-ru="+ Добавить тактическую карту" data-en="+ Add Tactical Map" data-zh="+ 添加战术地图">+ Добавить тактическую карту</button>
+        
+        <div class="squads-gallery" id="squadsGalleryContainer">
+            <!-- Сюда JavaScript будет вставлять карточки созданных карт с составами -->
+        </div>
+    </section>
 
     <section id="maps" class="maps-screen">
         <h2 class="section-title lang-txt" data-ru="Карты" data-en="Maps" data-zh="地图">Карты</h2>
         <div class="lock-overlay-box glassmorphism" id="mapsLockBox">
             <i class="fa-solid fa-building-shield"></i>
             <h3 class="lang-txt" data-ru="Доступ Ограничен" data-en="Access Restricted" data-zh="访问受限">Доступ Ограничен</h3>
-            <p class="lang-txt" data-ru="Тактические карты доступны исключительно действующим членам клана STAGE. Пожалуйста, авторизуйтесь через terminal 'Вход' в верхнем меню." data-en="Tactical maps are available exclusively to active STAGE clan members. Please authorize via the 'Login' terminal in the top menu." data-zh="战术地图仅供 STAGE 现役成员使用。请通过顶部菜单的“登录”终端进行授权。">Тактические карты доступны исключительно действующим членам клана STAGE. Пожалуйста, авторизуйтесь через терминал "Вход" в верхнем меню.</p>
+            <p class="lang-txt" data-ru="Тактические карты доступны исключительно действующим членам клана STAGE. Пожалуйста, авторизуйтесь через терминал 'Вход' в верхнем меню." data-en="Tactical maps are available exclusively to active STAGE clan members. Please authorize via the 'Login' terminal in the top menu." data-zh="战术地图仅供 STAGE 现役成员使用。请通过顶部菜单的“登录”终端进行授权。">Тактические карты доступны исключительно действующим членам клана STAGE. Пожалуйста, авторизуйтесь через терминал "Вход" в верхнем меню.</p>
         </div>
         <div class="maps-grid collapsed" id="mapsActualGrid" style="display: none; width: 100%;"></div>
         <button type="button" class="toggle-roster-btn lang-txt" id="toggleMapsBtn" data-ru="Показать все карты" data-en="Show all maps" data-zh="显示所有地图" style="display: none; margin-top: 20px;">Показать все карты</button>
@@ -872,7 +880,42 @@
         </div>
     </section>
 
-    <!-- Модалка ввода ника для чата тоже удалена -->
+    <!-- НОВОЕ МОДАЛЬНОЕ ОКНО ДЛЯ РЕДАКТИРОВАНИЯ И ПРОСМОТРА БОЕВОГО СОСТАВА -->
+    <div class="modal-overlay" id="squadModalOverlay" style="z-index: 155;">
+        <div class="modal-window glassmorphism" style="max-width: 550px; border-color: #00f2fe; box-shadow: 0 0 40px rgba(0, 242, 254, 0.3);">
+            <span class="close-btn" onclick="document.getElementById('squadModalOverlay').classList.remove('active');">&times;</span>
+            <div class="modal-title" id="squadModalTitle" style="color: #00f2fe; border-bottom-color: rgba(0, 242, 254, 0.2);">Карта</div>
+            
+            <img src="" id="squadModalImg" class="squad-view-image" alt="Map" style="display: none;" onclick="document.getElementById('fullscreenMapOverlay').classList.add('active'); document.getElementById('fullscreenMapImg').src = this.src;">
+            
+            <!-- Блок редактирования (только для Главы) -->
+            <div id="squadLeaderEditArea" style="display: none;">
+                <input type="text" id="squadEditMapName" placeholder="Название карты (например: Арктика)" style="width: 100%; margin-bottom: 10px; background: rgba(0,0,0,0.5); color: #fff; border: 1px solid #00f2fe; padding: 10px; border-radius: 4px; font-family: 'Orbitron', sans-serif;">
+                <input type="text" id="squadEditMapUrl" placeholder="Ссылка на картинку (url)" style="width: 100%; margin-bottom: 15px; background: rgba(0,0,0,0.5); color: #fff; border: 1px solid #00f2fe; padding: 10px; border-radius: 4px; font-family: 'Oswald', sans-serif;">
+                
+                <div id="squadEditSlotsContainer">
+                    <!-- JS сгенерирует 7 слотов (5 основа + 2 резерв) сюда -->
+                </div>
+                
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="btn-submit" style="background: #22c55e; color: #000; flex: 1;" onclick="saveCurrentSquad()">Сохранить состав</button>
+                    <button class="btn-submit" style="background: #ef4444; color: #fff; flex: 1;" onclick="deleteCurrentSquad()">Удалить карточку</button>
+                </div>
+            </div>
+
+            <!-- Блок просмотра (для всех остальных) -->
+            <div id="squadViewerArea" style="display: none;">
+                <div class="squad-view-list" id="squadViewListContainer">
+                    <!-- JS сгенерирует красивый список состава сюда -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ПОЛНОЭКРАННЫЙ ПРОСМОТР КАРТЫ -->
+    <div id="fullscreenMapOverlay" onclick="this.classList.remove('active')">
+        <img id="fullscreenMapImg" src="" alt="Fullscreen Map">
+    </div>
 
     <!-- МОДАЛЬНОЕ ОКНО ПОДАЧИ ЗАЯВКИ -->
     <div class="modal-overlay" id="modalOverlay">
@@ -885,7 +928,7 @@
                 <div class="form-group"><label class="lang-txt" data-ru="Игровой ID" data-en="Game ID" data-zh="游戏 ID">Игровой ID</label><input type="text" id="gameId" class="lang-txt" data-ru="Например: 49284729" data-en="Example: 49284729" data-zh="例如: 49284729" placeholder="Например: 49284729" required></div>
                 <div class="form-group"><label class="lang-txt" data-ru="Никнейм в игре" data-en="In-game Nickname" data-zh="游戏内昵称">Никнейм в игре</label><input type="text" id="gameNick" class="lang-txt" data-ru="Твой ник" data-en="Your nick" data-zh="你的昵称" placeholder="Твой ник" required></div>
                 
-                <!-- НОВОЕ: Предпочитаемый класс корабля -->
+                <!-- Предпочитаемый класс корабля -->
                 <div class="form-group">
                     <label class="lang-txt" data-ru="Предпочитаемый класс корабля" data-en="Preferred Ship Class" data-zh="首选船级">Предпочитаемый класс корабля</label>
                     <select id="appShipClass" required style="width: 100%; background: rgba(2, 5, 10, 0.6); border: 1px solid rgba(0, 242, 254, 0.3); padding: 10px; color: #fff; border-radius: 4px; font-family: 'Oswald', sans-serif;">
@@ -1080,7 +1123,6 @@
                     <div class="cabinet-info-item"><span class="lbl lang-txt" data-ru="Дата призыва:" data-en="Enlistment Date:" data-zh="入伍日期:">Дата призыва:</span><span class="val" id="cabDate">-</span></div>
                     <div class="cabinet-info-item"><span class="lbl lang-txt" data-ru="Специализация:" data-en="Specialization:" data-zh="专业:">Специализация:</span><span class="val" id="cabSpec" style="color: #a855f7;">-</span></div>
                     
-                    <!-- НОВОЕ: Смена предпочитаемого класса корабля в Кабинете -->
                     <div class="cabinet-info-item" style="flex-direction: column; align-items: flex-start; gap: 5px;">
                         <span class="lbl lang-txt" data-ru="Класс корабля:" data-en="Ship Class:">Класс корабля:</span>
                         <select id="cabShipClassSelect" style="background: rgba(2,5,10,0.8); color: #00f2fe; border: 1px dashed #00f2fe; border-radius: 4px; padding: 4px; font-family: 'Oswald', sans-serif; font-size: 13px; width: 100%; outline: none;">
@@ -1165,13 +1207,11 @@
                 <div class="rank-title lang-txt" style="color:#00f2fe; font-size:14px; border:none; margin-bottom:5px; text-align:left;" data-ru="Обработка запросов Telegram" data-en="Process Telegram Requests" data-zh="处理 Telegram 请求">Обработка запросов Telegram</div>
                 <div class="form-group">
                     <label class="lang-txt" data-ru="Вставьте скопированный текст заявки из чата ТГ:" data-en="Paste the copied application text from TG chat:" data-zh="粘贴从 TG 聊天复制的申请文本:">Вставьте скопированный текст заявки из чата ТГ:</label>
-                    <!-- НОВОЕ: Обновлен плейсхолдер -->
                     <textarea id="rawTelegramInput" rows="3" placeholder="⚓️ Новая заявка STAGE!&#10;👤 Имя: Иван&#10;🎮 Ник: Vanya_STAGE&#10;🚢 Класс: Фрегат&#10;🆔 ID: 74928421" style="resize:none; font-size:12px; border-color:rgba(0,242,254,0.2);"></textarea>
                 </div>
                 
                 <div class="terminal-box" id="terminalStatusBox" style="display:none;">
                     <div>📝 <b class="lang-txt" data-ru="Боец:" data-en="Fighter:" data-zh="战士:">Боец:</b> <span id="parsedNickText" style="color:#00f2fe; font-weight:bold;">-</span></div>
-                    <!-- НОВОЕ: Поле для отображения класса при приеме заявки -->
                     <div>🚢 <b class="lang-txt" data-ru="Класс:" data-en="Class:">Класс:</b> <span id="parsedShipText" style="color:#22c55e;">-</span></div>
                     <div>🎮 <b class="lang-txt" data-ru="Игровой ID:" data-en="Game ID:" data-zh="游戏 ID:">Игровой ID:</b> <span id="parsedGameIdText" style="color:#00f2fe;">-</span></div>
                     <div>✈️ <b class="lang-txt" data-ru="Логин ТГ:" data-en="TG Login:" data-zh="TG 账号:">Логин ТГ:</b> <span id="parsedTgText" style="color:#a855f7;">-</span></div>
@@ -1221,7 +1261,7 @@
                 </div>
             </div>
 
-            <!-- РЕЖИМ РЕДАКТИРОВАНИЯ (Скрыт) -->
+            <!-- РЕЖИМ РЕДАКТИРОВАНИЯ -->
             <div id="dossierEditMode" style="display: none; background: rgba(2, 5, 10, 0.6); padding: 15px; border-radius: 6px; border: 1px dashed #ff0055; margin-top: 10px;">
                 <div class="form-group" style="margin-bottom: 10px;">
                     <label>Статус (Оформление карточки):</label>
@@ -1250,7 +1290,6 @@
                 
                 <button type="button" class="btn-submit" onclick="saveFounderDossier()" style="background: #22c55e; color: #000;">Сохранить изменения</button>
             </div>
-
         </div>
     </div>
 
@@ -1406,6 +1445,7 @@
             if (document.fullscreenElement || document.webkitFullscreenElement) {
                 document.getElementById('fullscreenBtnText').textContent = t("Свернуть доску", "Collapse Board", "收起黑板");
             }
+            renderSquadsGallery(); // Перевод галереи составов
         }
 
         document.getElementById('navLangBtn').addEventListener('click', () => {
@@ -1461,7 +1501,6 @@
             "Поддержка": '<i class="fa-solid fa-handshake-angle" title="Поддержка" style="font-size: 14px; margin-left: 6px; color: #22c55e;"></i>'
         };
 
-        // ИКОНКИ КЛАССОВ КОРАБЛЕЙ
         const SHIP_ICONS = {
             "Фрегат": '<i class="fa-solid fa-ship" title="Фрегат" style="color: #00f2fe; margin-left: 6px;"></i>',
             "Эсминец": '<i class="fa-solid fa-bolt" title="Эсминец" style="color: #ff8c00; margin-left: 6px;"></i>',
@@ -1602,15 +1641,275 @@
         let cwCountdownIntervalId = null;
         let currentSelectedPlayerNick = "";
         
-        // ОБНОВЛЕННАЯ СТРУКТУРА БД (убран чат)
         let cloudDatabase = { 
             recruits: {}, banned: [], kickedNicks: [], metadata: {}, 
             trainingTime: null, trainingYes: [], trainingNo: [],
             cwTime: null, cwNotified: false, autoCwEnabled: false,
             founders: {},
+            squads: [], // Массив составов для новой галереи
             stats: { views: 0, uniques: 0, requests: 0, mobile: 0, pc: 0 }
         };
         let isCloudSynced = false; 
+
+        // --- ЛОГИКА НОВЫХ БОЕВЫХ СОСТАВОВ (ГАЛЕРЕЯ) ---
+        let currentEditingSquadId = null;
+
+        function renderSquadsGallery() {
+            const container = document.getElementById('squadsGalleryContainer');
+            if (!container) return;
+            container.innerHTML = '';
+            
+            const squads = cloudDatabase.squads || [];
+            
+            if(squads.length === 0) {
+                container.innerHTML = `<div style="color: #94a3b8; font-size: 14px; grid-column: 1 / -1; text-align: center;">${t("Тактические карты еще не созданы.", "No tactical maps created yet.", "尚未创建战术地图。")}</div>`;
+                return;
+            }
+
+            squads.forEach(squad => {
+                const card = document.createElement('div');
+                card.className = 'squad-card animated-glow-border';
+                card.onclick = () => openSquadModal(squad.id);
+                
+                // Если картинки нет, ставим дефолтный фон
+                const bgUrl = squad.mapUrl ? squad.mapUrl : 'maps_bg.png';
+                
+                card.innerHTML = `
+                    <div class="squad-card-bg" style="background-image: url('${bgUrl}');"></div>
+                    <div class="squad-card-content">
+                        <div class="squad-card-title">${squad.mapName || t('Без названия', 'Unnamed', '未命名')}</div>
+                        <div class="squad-card-subtitle lang-txt" data-ru="Бойцов: ${squad.slots.length + squad.reserves.length}" data-en="Fighters: ${squad.slots.length + squad.reserves.length}">Бойцов: ${squad.slots.length + squad.reserves.length}</div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        document.getElementById('btnAddSquadMap')?.addEventListener('click', () => {
+            openSquadModal(null); // null означает создание новой карты
+        });
+
+        function openSquadModal(squadId) {
+            currentEditingSquadId = squadId;
+            const modal = document.getElementById('squadModalOverlay');
+            const title = document.getElementById('squadModalTitle');
+            const img = document.getElementById('squadModalImg');
+            const editArea = document.getElementById('squadLeaderEditArea');
+            const viewArea = document.getElementById('squadViewerArea');
+            
+            const squads = cloudDatabase.squads || [];
+            const squad = squads.find(s => s.id === squadId);
+
+            // Если Глава, спрашиваем режим (если это уже созданная карта)
+            if (isLeaderMode && (!squadId || confirm(t("Открыть режим редактирования состава? (Отмена - режим просмотра)", "Open in edit mode? (Cancel - view mode)", "在编辑模式下打开？（取消 - 查看模式）")))) {
+                // РЕЖИМ РЕДАКТИРОВАНИЯ
+                title.textContent = squadId ? t("Редактирование состава", "Edit Squad", "编辑阵容") : t("Новая карта состава", "New Squad Map", "新阵容地图");
+                img.style.display = 'none';
+                viewArea.style.display = 'none';
+                editArea.style.display = 'block';
+                
+                document.getElementById('squadEditMapName').value = squad ? squad.mapName : '';
+                document.getElementById('squadEditMapUrl').value = squad ? squad.mapUrl : '';
+                
+                // Кнопка удаления видна только если мы редактируем существующий состав
+                const delBtn = editArea.querySelectorAll('.btn-submit')[1];
+                if (delBtn) {
+                    delBtn.style.display = squadId ? 'block' : 'none';
+                }
+                
+                renderSquadEditSlots(squad);
+            } else {
+                // РЕЖИМ ПРОСМОТРА
+                if (!squad) return;
+                title.textContent = squad.mapName || t("Тактическая карта", "Tactical Map", "战术地图");
+                
+                if (squad.mapUrl) {
+                    img.src = squad.mapUrl;
+                    img.style.display = 'block';
+                } else {
+                    img.style.display = 'none';
+                }
+                
+                editArea.style.display = 'none';
+                viewArea.style.display = 'block';
+                
+                renderSquadViewList(squad);
+            }
+            
+            modal.classList.add('active');
+        }
+
+        function getPlayerOptionsHtml(selectedNick) {
+            const players = [];
+            for (let tg in cloudDatabase.metadata) {
+                if (cloudDatabase.metadata[tg].nick) players.push(cloudDatabase.metadata[tg].nick);
+            }
+            players.sort();
+            
+            let html = `<option value="">-- Боец --</option>`;
+            players.forEach(p => {
+                const sel = (p === selectedNick) ? 'selected' : '';
+                html += `<option value="${p}" ${sel}>${p}</option>`;
+            });
+            return html;
+        }
+
+        function getShipOptionsHtml(selectedShip) {
+            const classes = ["Фрегат", "Эсминец", "Крейсер", "Линкор", "Хаверкрафт", "Субмарина", "Авианосец", "Экраноплан"];
+            let html = `<option value="">-- Класс --</option>`;
+            classes.forEach(c => {
+                const sel = (c === selectedShip) ? 'selected' : '';
+                html += `<option value="${c}" ${sel}>${c}</option>`;
+            });
+            return html;
+        }
+
+        function renderSquadEditSlots(squad) {
+            const container = document.getElementById('squadEditSlotsContainer');
+            let html = '';
+            
+            // 5 слотов для Основы
+            for(let i=0; i<5; i++) {
+                const slot = squad && squad.slots[i] ? squad.slots[i] : { spawn: (i+1).toString(), player: '', ship: '' };
+                html += `
+                <div class="squad-slot-row">
+                    <input type="text" class="spawn-input" id="sq-edit-spawn-${i}" value="${slot.spawn}" title="Номер спавна (можно буквы)">
+                    <select id="sq-edit-player-${i}">${getPlayerOptionsHtml(slot.player)}</select>
+                    <select id="sq-edit-ship-${i}">${getShipOptionsHtml(slot.ship)}</select>
+                </div>`;
+            }
+            
+            // 2 слота для Резерва
+            for(let i=0; i<2; i++) {
+                const slot = squad && squad.reserves[i] ? squad.reserves[i] : { spawn: 'З'+(i+1), player: '', ship: '' };
+                html += `
+                <div class="squad-slot-row reserve">
+                    <input type="text" class="spawn-input" id="sq-edit-r-spawn-${i}" value="${slot.spawn}" title="Номер спавна резерва">
+                    <select id="sq-edit-r-player-${i}">${getPlayerOptionsHtml(slot.player)}</select>
+                    <select id="sq-edit-r-ship-${i}">${getShipOptionsHtml(slot.ship)}</select>
+                </div>`;
+            }
+            
+            container.innerHTML = html;
+        }
+
+        window.saveCurrentSquad = async function() {
+            if (!isLeaderMode) return;
+            
+            const mapName = document.getElementById('squadEditMapName').value.trim();
+            const mapUrl = document.getElementById('squadEditMapUrl').value.trim();
+            
+            if(!mapName) { alert(t("Введите название карты!", "Enter map name!", "请输入地图名称！")); return; }
+            
+            const newSquad = {
+                id: currentEditingSquadId || 'sq_' + Date.now(),
+                mapName: mapName,
+                mapUrl: mapUrl,
+                slots: [],
+                reserves: []
+            };
+            
+            for(let i=0; i<5; i++) {
+                const player = document.getElementById(`sq-edit-player-${i}`).value;
+                if(player) {
+                    newSquad.slots.push({
+                        spawn: document.getElementById(`sq-edit-spawn-${i}`).value.trim() || (i+1).toString(),
+                        player: player,
+                        ship: document.getElementById(`sq-edit-ship-${i}`).value
+                    });
+                }
+            }
+            
+            for(let i=0; i<2; i++) {
+                const player = document.getElementById(`sq-edit-r-player-${i}`).value;
+                if(player) {
+                    newSquad.reserves.push({
+                        spawn: document.getElementById(`sq-edit-r-spawn-${i}`).value.trim() || 'З'+(i+1),
+                        player: player,
+                        ship: document.getElementById(`sq-edit-r-ship-${i}`).value
+                    });
+                }
+            }
+            
+            if(!cloudDatabase.squads) cloudDatabase.squads = [];
+            
+            if (currentEditingSquadId) {
+                const idx = cloudDatabase.squads.findIndex(s => s.id === currentEditingSquadId);
+                if(idx !== -1) cloudDatabase.squads[idx] = newSquad;
+            } else {
+                cloudDatabase.squads.push(newSquad);
+            }
+            
+            await saveToCloud();
+            document.getElementById('squadModalOverlay').classList.remove('active');
+            showNotification(t("Карта состава сохранена!", "Squad map saved!", "阵容地图已保存！"), "success");
+            renderSquadsGallery();
+        }
+
+        window.deleteCurrentSquad = async function() {
+            if (!isLeaderMode || !currentEditingSquadId) return;
+            if(confirm(t("Точно удалить эту карту состава?", "Delete this squad map?", "确定删除此阵容地图？"))) {
+                cloudDatabase.squads = cloudDatabase.squads.filter(s => s.id !== currentEditingSquadId);
+                await saveToCloud();
+                document.getElementById('squadModalOverlay').classList.remove('active');
+                showNotification(t("Состав удален", "Squad deleted", "阵容已删除"), "warning");
+                renderSquadsGallery();
+            }
+        }
+
+        function renderSquadViewList(squad) {
+            const container = document.getElementById('squadViewListContainer');
+            let html = '';
+            
+            if (squad.slots.length === 0 && squad.reserves.length === 0) {
+                container.innerHTML = `<div style="color: #94a3b8; text-align: center; padding: 20px;">${t("Состав пуст", "Squad is empty", "阵容为空")}</div>`;
+                return;
+            }
+
+            squad.slots.forEach(slot => {
+                let spec = "";
+                for (let tg in cloudDatabase.metadata) {
+                    if (cloudDatabase.metadata[tg].nick === slot.player) {
+                        spec = cloudDatabase.metadata[tg].specialization || "";
+                        break;
+                    }
+                }
+                const specHtml = SPEC_ICONS[spec] || '';
+                const shipHtml = SHIP_ICONS[slot.ship] || '';
+                
+                html += `
+                <div class="squad-view-item">
+                    <div class="spawn-badge" title="Точка высадки">${slot.spawn}</div>
+                    <div class="player-name">${slot.player} ${specHtml}</div>
+                    <div class="ship-info">${slot.ship} ${shipHtml}</div>
+                </div>`;
+            });
+            
+            if(squad.reserves.length > 0) {
+                html += `<div style="margin-top: 15px; margin-bottom: 5px; color: #eab308; font-size: 12px; font-family: 'Orbitron', sans-serif; letter-spacing: 2px;">РЕЗЕРВ ФЛОТА</div>`;
+                squad.reserves.forEach(slot => {
+                    let spec = "";
+                    for (let tg in cloudDatabase.metadata) {
+                        if (cloudDatabase.metadata[tg].nick === slot.player) {
+                            spec = cloudDatabase.metadata[tg].specialization || "";
+                            break;
+                        }
+                    }
+                    const specHtml = SPEC_ICONS[spec] || '';
+                    const shipHtml = SHIP_ICONS[slot.ship] || '';
+                    
+                    html += `
+                    <div class="squad-view-item reserve">
+                        <div class="spawn-badge" title="Резерв">${slot.spawn}</div>
+                        <div class="player-name">${slot.player} ${specHtml}</div>
+                        <div class="ship-info">${slot.ship} ${shipHtml}</div>
+                    </div>`;
+                });
+            }
+            
+            container.innerHTML = html;
+        }
+        // --- КОНЕЦ ЛОГИКИ БОЕВЫХ СОСТАВОВ ---
 
         function getClanPassword(tgLogin) {
             let clean = tgLogin.trim().toLowerCase();
@@ -1664,9 +1963,6 @@
                 });
                 bgPickerGrid.innerHTML = bgHtml;
             }
-
-            setLang(currentLang); 
-            renderFoundersGrid(); 
 
             const infoRankSelectElem = document.getElementById('infoRankSelect');
             if (infoRankSelectElem) {
@@ -1739,6 +2035,10 @@
                 applyLeaderStatusColors();
                 initTrainingCountdown();
                 initCwCountdown();
+                
+                // Рендерим и переводим после загрузки базы
+                renderFoundersGrid(); 
+                setLang(currentLang);
             });
 
             setInterval(() => {
@@ -1894,9 +2194,11 @@
                         cloudDatabase.cwNotified = db.cwNotified || false;
                         cloudDatabase.autoCwEnabled = db.autoCwEnabled || false;
                         cloudDatabase.founders = db.founders || defaultFounders;
+                        cloudDatabase.squads = db.squads || []; // Подгружаем составы
                         cloudDatabase.stats = db.stats || { views: 0, uniques: 0, requests: 0, mobile: 0, pc: 0 };
                         
                         renderFoundersGrid();
+                        renderSquadsGallery(); // Отрисовываем галерею составов после загрузки из базы
                     }
                     isCloudSynced = true; 
                     updateOnlineWidget();
@@ -2021,7 +2323,6 @@
             }
         }
 
-        // ОБНОВЛЕННЫЙ ПАРСЕР ТЕРМИНАЛА
         rawTelegramInput.addEventListener('input', function() {
             const val = this.value;
             if(!val) { terminalStatusBox.style.display = 'none'; return; }
@@ -2143,14 +2444,13 @@
             document.getElementById('avatarPickerGrid').classList.toggle('active');
         });
 
-        // СМЕНА КЛАССА В ЛИЧНОМ КАБИНЕТЕ
         cabShipClassSelect.addEventListener('change', async function() {
             let sessionTg = localStorage.getItem('stage_user_registered_tg') || "";
             let cleanTg = sessionTg.trim().toLowerCase();
             if (cleanTg && cloudDatabase.metadata[cleanTg]) {
                 cloudDatabase.metadata[cleanTg].shipClass = this.value;
                 await saveToCloud();
-                renderLocalRecruits(); // Перерисовываем список, чтобы показать новую иконку
+                renderLocalRecruits(); 
                 showNotification(t("Предпочитаемый класс корабля обновлен!", "Preferred ship class updated!", "首选船级已更新！"), 'success');
             }
         });
@@ -2280,7 +2580,6 @@
         });
         closeTrainingModalBtn.addEventListener('click', () => trainingModalOverlay.classList.remove('active'));
 
-        // ДВУЯЗЫЧНОЕ СООБЩЕНИЕ О ТРЕНИРОВКЕ
         btnSubmitTraining.addEventListener('click', async () => {
             const dateVal = inputTrainingDate.value;
             const timeVal = inputTrainingTime.value.trim();
@@ -2309,7 +2608,6 @@
                 day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
             });
 
-            // Формируем текст на двух языках (Русский и Английский)
             const messageText = `⚔️ <b>ВНИМАНИЕ! Назначена тренировка! / ATTENTION! Training scheduled!</b>\n\n⚓️ <b>Событие / Event:</b> Тренировка / Training\n📅 <b>Время сбора / Time:</b> ${formattedDate}\n\nВсем участникам быть! Прямая связь в Яндекс Телемост или Discord.\nAll members must attend! Direct comms in Yandex Telemost or Discord. 🚢🔥`;
 
             try {
@@ -2694,6 +2992,10 @@
             if(btnCloseTimer) btnCloseTimer.style.display = 'block'; 
             if(btnCloseCwTimer) btnCloseCwTimer.style.display = 'block';
             
+            // Открываем кнопку создания новых карт составов
+            const addSquadBtn = document.getElementById('btnAddSquadMap');
+            if(addSquadBtn) addSquadBtn.style.display = 'block';
+            
             navLoginBtn.innerHTML = `<i class="fa-solid fa-user-gear" style="color:#ff0055;"></i> <span class="lang-txt" data-ru="Админ" data-en="Admin" data-zh="管理员">Админ</span>`;
             navLoginBtn.style.background = "rgba(255, 0, 85, 0.15)"; navLoginBtn.style.borderColor = "#ff0055";
             document.querySelectorAll('.kick-btn').forEach(btn => btn.style.display = 'inline-block');
@@ -2926,7 +3228,6 @@
 
         closePlayerInfoBtn.addEventListener('click', () => { playerInfoModalOverlay.classList.remove('active'); });
 
-        // ОБНОВЛЕННАЯ ФУНКЦИЯ ВЫВОДА СОСТАВА (ДОБАВЛЕНЫ ИКОНКИ КОРАБЛЕЙ)
         function renderLocalRecruits() {
             document.querySelectorAll('.player-card.new-recruit-dynamic').forEach(c => c.remove());
             const tenMinutesInMs = 10 * 60 * 1000;
@@ -2949,7 +3250,7 @@
                 card.setAttribute('data-nick', nick);
 
                 let avatarStyle = ""; let isMe = false; let customStatusClass = ""; let userSpec = "Не назначена";
-                let userShipClass = ""; // Новая переменная для класса корабля
+                let userShipClass = ""; 
                 
                 for (let tgKey in cloudDatabase.metadata) {
                     if (cloudDatabase.metadata[tgKey].nick === nick) {
@@ -2957,7 +3258,7 @@
                         if (cloudDatabase.metadata[tgKey].customStatus === 'legend') customStatusClass = "status-legend";
                         if (cloudDatabase.metadata[tgKey].customStatus === 'hero') customStatusClass = "status-hero";
                         userSpec = cloudDatabase.metadata[tgKey].specialization || "Не назначена";
-                        userShipClass = cloudDatabase.metadata[tgKey].shipClass || ""; // Получаем класс из базы
+                        userShipClass = cloudDatabase.metadata[tgKey].shipClass || "";
                     }
                 }
 
@@ -2969,7 +3270,6 @@
                 }
                 
                 const specIconHtml = SPEC_ICONS[userSpec] || '';
-                // Вставляем иконку корабля, если она выбрана
                 const shipIconHtml = userShipClass && SHIP_ICONS[userShipClass] ? SHIP_ICONS[userShipClass] : '';
                 
                 const tagHtml = (now - approveTime < tenMinutesInMs) ? `<span class="tag lang-txt" data-ru="Новобранец" data-en="Recruit" data-zh="新兵">${t("Новобранец", "Recruit", "新兵")}</span>` : '';
@@ -3024,7 +3324,6 @@
         closeLawModalBtn.addEventListener('click', closeLawModal); 
         acceptLawBtn.addEventListener('click', closeLawModal);
 
-        // ОБНОВЛЕННАЯ СТАТИСТИКА ЗАЯВОК (С ПОЛЯМИ ИМЯ И КЛАСС КОРАБЛЯ)
         recruitForm.addEventListener('submit', function(e) {
             e.preventDefault(); submitBtn.textContent = t("Передача...", "Transferring...", "传输中...");
             const realName = document.getElementById('realName').value.trim();
@@ -3068,7 +3367,6 @@
             }
         }
 
-        // ДИНАМИЧЕСКИЕ ИСКРЫ
         const canvas = document.getElementById('sparksCanvas'); const ctx = canvas.getContext('2d'); let sparks = [];
         function resizeSparksCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         window.addEventListener('resize', resizeSparksCanvas); resizeSparksCanvas();
