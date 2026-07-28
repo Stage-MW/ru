@@ -1677,23 +1677,34 @@
             container.innerHTML = '';
             
             let squads = cloudDatabase.squads || [];
-            const myNick = localStorage.getItem('stage_cached_nick');
+            
+            // Надежно получаем ник текущего пользователя напрямую из базы, а не только из кэша
+            let sessionTg = (localStorage.getItem('stage_user_registered_tg') || "").trim().toLowerCase();
+            let myNick = null;
+            if (sessionTg && cloudDatabase.metadata && cloudDatabase.metadata[sessionTg]) {
+                myNick = cloudDatabase.metadata[sessionTg].nick;
+            }
+            if (!myNick) myNick = localStorage.getItem('stage_cached_nick');
 
             // Защита доступа: Фильтр отображения карт только для участников составов (если не лидер)
-            if (!isLeaderMode && myNick) {
-                squads = squads.filter(squad => {
-                    const checkPlayer = (slot) => slot && slot.player === myNick;
-                    return (squad.alphaSlots && squad.alphaSlots.some(checkPlayer)) ||
-                           (squad.alphaReserves && squad.alphaReserves.some(checkPlayer)) ||
-                           (squad.bravoSlots && squad.bravoSlots.some(checkPlayer)) ||
-                           (squad.bravoReserves && squad.bravoReserves.some(checkPlayer)) ||
-                           // На случай обратной совместимости старых данных
-                           (squad.slots && squad.slots.some(checkPlayer)) ||
-                           (squad.reserves && squad.reserves.some(checkPlayer));
-                });
-            } else if (!isLeaderMode && !myNick) {
-                // Если не лидер и не авторизован
-                squads = [];
+            if (!isLeaderMode) {
+                if (myNick) {
+                    const safeNick = myNick.trim().toLowerCase(); // Убираем случайные пробелы и регистр
+                    squads = squads.filter(squad => {
+                        const checkPlayer = (slot) => slot && slot.player && slot.player.trim().toLowerCase() === safeNick;
+                        
+                        return (squad.alphaSlots && squad.alphaSlots.some(checkPlayer)) ||
+                               (squad.alphaReserves && squad.alphaReserves.some(checkPlayer)) ||
+                               (squad.bravoSlots && squad.bravoSlots.some(checkPlayer)) ||
+                               (squad.bravoReserves && squad.bravoReserves.some(checkPlayer)) ||
+                               // На случай обратной совместимости старых данных
+                               (squad.slots && squad.slots.some(checkPlayer)) ||
+                               (squad.reserves && squad.reserves.some(checkPlayer));
+                    });
+                } else {
+                    // Если ник вообще не найден (или пользователь не авторизован), прячем всё
+                    squads = [];
+                }
             }
 
             if(squads.length === 0) {
