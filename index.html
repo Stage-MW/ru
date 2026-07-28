@@ -254,7 +254,7 @@
         }
         .btn-join-neon:hover { background: #0088cc; color: #02050a; box-shadow: 0 0 35px rgba(0, 136, 204, 0.8); transform: scale(1.03); }
 
-        /* --- БОЕВЫЕ СОСТАВЫ (НОВЫЙ ДИЗАЙН: ГАЛЕРЕЯ КАРТ) --- */
+        /* --- БОЕВЫЕ СОСТАВЫ (АЛЬФА И БРАВО) --- */
         .squads-screen { background-image: linear-gradient(rgba(2, 5, 10, 0.75), rgba(2, 5, 10, 0.95)), url('chat_bg.png'); }
         .squads-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; width: 100%; max-width: 1200px; z-index: 2; margin-top: 20px; }
         .squad-card { position: relative; border-radius: 8px; overflow: hidden; border: 1px solid rgba(0, 242, 254, 0.3); cursor: pointer; transition: all 0.3s; min-height: 200px; display: flex; flex-direction: column; justify-content: flex-end; }
@@ -268,24 +268,38 @@
         .btn-add-squad { display: none; background: rgba(0, 242, 254, 0.15); border: 2px dashed #00f2fe; color: #00f2fe; padding: 14px 25px; border-radius: 8px; font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: bold; text-transform: uppercase; cursor: pointer; transition: all 0.3s; margin-bottom: 10px; width: 100%; max-width: 400px; text-align: center; }
         .btn-add-squad:hover { background: #00f2fe; color: #02050a; box-shadow: 0 0 25px rgba(0, 242, 254, 0.6); transform: translateY(-2px); }
         
-        /* Стили полей внутри модалки состава */
-        .squad-slot-row { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; background: rgba(0,0,0,0.4); padding: 10px; border-radius: 4px; border-left: 2px solid #a855f7; }
-        .squad-slot-row.reserve { border-left-color: #eab308; opacity: 0.9; margin-top: 20px; position: relative; }
+        /* Стили колонок и полей составов */
+        .squad-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; align-items: start; }
+        .squad-col-title { font-family: 'Orbitron', sans-serif; font-size: 16px; text-transform: uppercase; text-align: center; margin-bottom: 12px; font-weight: 900; letter-spacing: 1px; }
+        .squad-col-alpha .squad-col-title { color: #00f2fe; text-shadow: 0 0 10px rgba(0, 242, 254, 0.5); }
+        .squad-col-bravo .squad-col-title { color: #ff0055; text-shadow: 0 0 10px rgba(255, 0, 85, 0.5); }
+
+        .squad-slot-row { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; background: rgba(0,0,0,0.4); padding: 10px; border-radius: 4px; border-left: 2px solid #00f2fe; }
+        .squad-col-bravo .squad-slot-row { border-left-color: #ff0055; }
+        
+        .squad-slot-row.reserve { opacity: 0.9; margin-top: 20px; position: relative; border-left-color: #eab308 !important; }
         .squad-slot-row.reserve::before { content: 'РЕЗЕРВ'; position: absolute; top: -18px; left: 0; font-size: 10px; color: #eab308; font-family: 'Orbitron', sans-serif; }
         
         .squad-slot-row input.spawn-input { width: 50px; text-align: center; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(0, 242, 254, 0.3); color: #00f2fe; font-family: 'Orbitron', sans-serif; font-weight: bold; font-size: 14px; border-radius: 4px; padding: 8px 5px; outline: none; transition: 0.3s; }
+        .squad-col-bravo .squad-slot-row input.spawn-input { color: #ff0055; border-color: rgba(255,0,85,0.3); }
+        
         .squad-slot-row input.spawn-input:focus { border-color: #00f2fe; box-shadow: 0 0 10px rgba(0,242,254,0.5); }
+        .squad-col-bravo .squad-slot-row input.spawn-input:focus { border-color: #ff0055; box-shadow: 0 0 10px rgba(255,0,85,0.5); }
+        
         .squad-slot-row select { flex: 1; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255,255,255,0.1); color: #fff; border-radius: 4px; padding: 8px; font-family: 'Oswald', sans-serif; outline: none; font-size: 14px; }
         .squad-slot-row select:focus { border-color: #a855f7; box-shadow: 0 0 10px rgba(168,85,247,0.5); }
         
         /* Стили просмотра состава (зрительский режим) */
         .squad-view-image { width: 100%; max-height: 300px; object-fit: contain; border-radius: 6px; border: 1px solid rgba(0,242,254,0.3); margin-bottom: 20px; background-color: #02050a; cursor: pointer; }
-        .squad-view-list { display: flex; flex-direction: column; gap: 10px; }
-        .squad-view-item { display: flex; align-items: center; gap: 15px; background: rgba(2, 5, 10, 0.6); padding: 12px 15px; border-radius: 6px; border-left: 3px solid #00f2fe; transition: transform 0.2s; }
+        .squad-view-item { display: flex; align-items: center; gap: 15px; background: rgba(2, 5, 10, 0.6); padding: 12px 15px; border-radius: 6px; border-left: 3px solid #00f2fe; margin-bottom: 10px; transition: transform 0.2s; }
+        .squad-col-bravo .squad-view-item { border-left-color: #ff0055; }
         .squad-view-item:hover { transform: translateX(5px); background: rgba(15, 23, 42, 0.8); }
         .squad-view-item.reserve { border-left-color: #eab308; }
+        
         .squad-view-item .spawn-badge { background: #00f2fe; color: #02050a; font-family: 'Orbitron', sans-serif; font-weight: bold; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 4px; flex-shrink: 0; font-size: 15px; box-shadow: 0 0 10px rgba(0,242,254,0.4); }
+        .squad-col-bravo .squad-view-item .spawn-badge { background: #ff0055; box-shadow: 0 0 10px rgba(255,0,85,0.4); }
         .squad-view-item.reserve .spawn-badge { background: #eab308; box-shadow: 0 0 10px rgba(234,179,8,0.4); }
+        
         .squad-view-item .player-name { flex: 1; font-weight: bold; color: #fff; font-size: 16px; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
         .squad-view-item .ship-info { color: #94a3b8; font-size: 14px; display: flex; align-items: center; gap: 8px; font-family: 'Oswald', sans-serif; text-transform: uppercase; }
         .squad-view-item .ship-info i { font-size: 16px; }
@@ -640,6 +654,8 @@
             .online-widget { top: auto; bottom: 85px; transform: none; right: -200px; width: 200px; padding: 15px 10px; }
             .online-widget.active { right: 0; }
             .online-toggle-btn { top: 10px; transform: none; left: -42px; width: 42px; height: 42px; }
+            
+            .squad-columns { grid-template-columns: 1fr; }
         }
 
         .dossier-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed rgba(0, 242, 254, 0.2); padding: 10px 0; font-size: 14px; }
@@ -792,7 +808,8 @@
             <button class="btn-join-neon lang-txt" id="openModalBtn" data-ru='<i class="fa-solid fa-paper-plane"></i> Подать заявку / Верификация' data-en='<i class="fa-solid fa-paper-plane"></i> Apply / Verify' data-zh='<i class="fa-solid fa-paper-plane"></i> 申请 / 验证'><i class="fa-solid fa-paper-plane"></i> Подать заявку / Верификация</button>
         </div>
     </section>
-<!-- НОВАЯ СЕКЦИЯ: БОЕВЫЕ СОСТАВЫ (ГАЛЕРЕЯ КАРТ) -->
+
+    <!-- СЕКЦИЯ: БОЕВЫЕ СОСТАВЫ (АЛЬФА/БРАВО) -->
     <section id="squads" class="squads-screen">
         <h2 class="section-title lang-txt" data-ru="Боевые составы" data-en="Battle Squads" data-zh="战斗阵容">Боевые составы</h2>
         
@@ -880,9 +897,9 @@
         </div>
     </section>
 
-    <!-- НОВОЕ МОДАЛЬНОЕ ОКНО ДЛЯ РЕДАКТИРОВАНИЯ И ПРОСМОТРА БОЕВОГО СОСТАВА -->
+    <!-- МОДАЛЬНОЕ ОКНО ДЛЯ РЕДАКТИРОВАНИЯ И ПРОСМОТРА БОЕВОГО СОСТАВА -->
     <div class="modal-overlay" id="squadModalOverlay" style="z-index: 155;">
-        <div class="modal-window glassmorphism" style="max-width: 550px; border-color: #00f2fe; box-shadow: 0 0 40px rgba(0, 242, 254, 0.3);">
+        <div class="modal-window glassmorphism" style="max-width: 850px; border-color: #00f2fe; box-shadow: 0 0 40px rgba(0, 242, 254, 0.3);">
             <span class="close-btn" onclick="document.getElementById('squadModalOverlay').classList.remove('active');">&times;</span>
             <div class="modal-title" id="squadModalTitle" style="color: #00f2fe; border-bottom-color: rgba(0, 242, 254, 0.2);">Карта</div>
             
@@ -891,14 +908,14 @@
             <!-- Блок редактирования (только для Главы) -->
             <div id="squadLeaderEditArea" style="display: none;">
                 <input type="text" id="squadEditMapName" placeholder="Название карты (например: Арктика)" style="width: 100%; margin-bottom: 10px; background: rgba(0,0,0,0.5); color: #fff; border: 1px solid #00f2fe; padding: 10px; border-radius: 4px; font-family: 'Orbitron', sans-serif;">
-                <input type="text" id="squadEditMapUrl" placeholder="Ссылка на картинку (url)" style="width: 100%; margin-bottom: 15px; background: rgba(0,0,0,0.5); color: #fff; border: 1px solid #00f2fe; padding: 10px; border-radius: 4px; font-family: 'Oswald', sans-serif;">
+                <input type="text" id="squadEditMapUrl" placeholder="Ссылка на общую картинку карты (url)" style="width: 100%; margin-bottom: 15px; background: rgba(0,0,0,0.5); color: #fff; border: 1px solid #00f2fe; padding: 10px; border-radius: 4px; font-family: 'Oswald', sans-serif;">
                 
                 <div id="squadEditSlotsContainer">
-                    <!-- JS сгенерирует 7 слотов (5 основа + 2 резерв) сюда -->
+                    <!-- JS сгенерирует 2 колонки (Альфа и Браво) сюда -->
                 </div>
                 
-                <div style="display: flex; gap: 10px; margin-top: 15px;">
-                    <button class="btn-submit" style="background: #22c55e; color: #000; flex: 1;" onclick="saveCurrentSquad()">Сохранить состав</button>
+                <div style="display: flex; gap: 10px; margin-top: 25px;">
+                    <button class="btn-submit" style="background: #22c55e; color: #000; flex: 1;" onclick="saveCurrentSquad()">Сохранить составы</button>
                     <button class="btn-submit" style="background: #ef4444; color: #fff; flex: 1;" onclick="deleteCurrentSquad()">Удалить карточку</button>
                 </div>
             </div>
@@ -906,7 +923,7 @@
             <!-- Блок просмотра (для всех остальных) -->
             <div id="squadViewerArea" style="display: none;">
                 <div class="squad-view-list" id="squadViewListContainer">
-                    <!-- JS сгенерирует красивый список состава сюда -->
+                    <!-- JS сгенерирует 2 колонки сюда -->
                 </div>
             </div>
         </div>
@@ -1646,12 +1663,12 @@
             trainingTime: null, trainingYes: [], trainingNo: [],
             cwTime: null, cwNotified: false, autoCwEnabled: false,
             founders: {},
-            squads: [], // Массив составов для новой галереи
+            squads: [], // Массив для карт составов Альфа и Браво
             stats: { views: 0, uniques: 0, requests: 0, mobile: 0, pc: 0 }
         };
         let isCloudSynced = false; 
 
-        // --- ЛОГИКА НОВЫХ БОЕВЫХ СОСТАВОВ (ГАЛЕРЕЯ) ---
+        // --- ЛОГИКА ДВУХ СОСТАВОВ (АЛЬФА И БРАВО) С ПРОВЕРКОЙ ДОСТУПА ---
         let currentEditingSquadId = null;
 
         function renderSquadsGallery() {
@@ -1659,10 +1676,28 @@
             if (!container) return;
             container.innerHTML = '';
             
-            const squads = cloudDatabase.squads || [];
-            
+            let squads = cloudDatabase.squads || [];
+            const myNick = localStorage.getItem('stage_cached_nick');
+
+            // Защита доступа: Фильтр отображения карт только для участников составов (если не лидер)
+            if (!isLeaderMode && myNick) {
+                squads = squads.filter(squad => {
+                    const checkPlayer = (slot) => slot && slot.player === myNick;
+                    return (squad.alphaSlots && squad.alphaSlots.some(checkPlayer)) ||
+                           (squad.alphaReserves && squad.alphaReserves.some(checkPlayer)) ||
+                           (squad.bravoSlots && squad.bravoSlots.some(checkPlayer)) ||
+                           (squad.bravoReserves && squad.bravoReserves.some(checkPlayer)) ||
+                           // На случай обратной совместимости старых данных
+                           (squad.slots && squad.slots.some(checkPlayer)) ||
+                           (squad.reserves && squad.reserves.some(checkPlayer));
+                });
+            } else if (!isLeaderMode && !myNick) {
+                // Если не лидер и не авторизован
+                squads = [];
+            }
+
             if(squads.length === 0) {
-                container.innerHTML = `<div style="color: #94a3b8; font-size: 14px; grid-column: 1 / -1; text-align: center;">${t("Тактические карты еще не созданы.", "No tactical maps created yet.", "尚未创建战术地图。")}</div>`;
+                container.innerHTML = `<div style="color: #94a3b8; font-size: 14px; grid-column: 1 / -1; text-align: center;">${t("Доступных боевых составов нет или вы не добавлены в них.", "No battle squads available or you are not in them.", "没有可用的战斗阵容或您未加入。")}</div>`;
                 return;
             }
 
@@ -1671,14 +1706,18 @@
                 card.className = 'squad-card animated-glow-border';
                 card.onclick = () => openSquadModal(squad.id);
                 
-                // Если картинки нет, ставим дефолтный фон
                 const bgUrl = squad.mapUrl ? squad.mapUrl : 'maps_bg.png';
+                
+                const aCount = (squad.alphaSlots ? squad.alphaSlots.length : 0) + (squad.alphaReserves ? squad.alphaReserves.length : 0);
+                const bCount = (squad.bravoSlots ? squad.bravoSlots.length : 0) + (squad.bravoReserves ? squad.bravoReserves.length : 0);
+                const oldCount = (squad.slots ? squad.slots.length : 0) + (squad.reserves ? squad.reserves.length : 0);
+                const total = aCount + bCount + oldCount;
                 
                 card.innerHTML = `
                     <div class="squad-card-bg" style="background-image: url('${bgUrl}');"></div>
                     <div class="squad-card-content">
                         <div class="squad-card-title">${squad.mapName || t('Без названия', 'Unnamed', '未命名')}</div>
-                        <div class="squad-card-subtitle lang-txt" data-ru="Бойцов: ${squad.slots.length + squad.reserves.length}" data-en="Fighters: ${squad.slots.length + squad.reserves.length}">Бойцов: ${squad.slots.length + squad.reserves.length}</div>
+                        <div class="squad-card-subtitle lang-txt" data-ru="Бойцов: ${total}" data-en="Fighters: ${total}">Бойцов: ${total}</div>
                     </div>
                 `;
                 container.appendChild(card);
@@ -1686,7 +1725,7 @@
         }
 
         document.getElementById('btnAddSquadMap')?.addEventListener('click', () => {
-            openSquadModal(null); // null означает создание новой карты
+            openSquadModal(null); // null = создание новой карты
         });
 
         function openSquadModal(squadId) {
@@ -1700,10 +1739,9 @@
             const squads = cloudDatabase.squads || [];
             const squad = squads.find(s => s.id === squadId);
 
-            // Если Глава, спрашиваем режим (если это уже созданная карта)
             if (isLeaderMode && (!squadId || confirm(t("Открыть режим редактирования состава? (Отмена - режим просмотра)", "Open in edit mode? (Cancel - view mode)", "在编辑模式下打开？（取消 - 查看模式）")))) {
-                // РЕЖИМ РЕДАКТИРОВАНИЯ
-                title.textContent = squadId ? t("Редактирование состава", "Edit Squad", "编辑阵容") : t("Новая карта состава", "New Squad Map", "新阵容地图");
+                // РЕЖИМ РЕДАКТИРОВАНИЯ (Только для Главы)
+                title.textContent = squadId ? t("Редактирование состава", "Edit Squad", "编辑阵容") : t("Новая карта составов", "New Squad Map", "新阵容地图");
                 img.style.display = 'none';
                 viewArea.style.display = 'none';
                 editArea.style.display = 'block';
@@ -1711,11 +1749,8 @@
                 document.getElementById('squadEditMapName').value = squad ? squad.mapName : '';
                 document.getElementById('squadEditMapUrl').value = squad ? squad.mapUrl : '';
                 
-                // Кнопка удаления видна только если мы редактируем существующий состав
                 const delBtn = editArea.querySelectorAll('.btn-submit')[1];
-                if (delBtn) {
-                    delBtn.style.display = squadId ? 'block' : 'none';
-                }
+                if (delBtn) delBtn.style.display = squadId ? 'block' : 'none';
                 
                 renderSquadEditSlots(squad);
             } else {
@@ -1766,30 +1801,52 @@
 
         function renderSquadEditSlots(squad) {
             const container = document.getElementById('squadEditSlotsContainer');
-            let html = '';
-            
-            // 5 слотов для Основы
+            let html = '<div class="squad-columns">';
+
+            // КОЛОНКА: АЛЬФА
+            html += '<div class="squad-col-alpha"><div class="squad-col-title">Состав АЛЬФА</div>';
             for(let i=0; i<5; i++) {
-                const slot = squad && squad.slots[i] ? squad.slots[i] : { spawn: (i+1).toString(), player: '', ship: '' };
+                const slot = squad && (squad.alphaSlots ? squad.alphaSlots[i] : (squad.slots ? squad.slots[i] : null)) || { spawn: 'A'+(i+1), player: '', ship: '' };
                 html += `
                 <div class="squad-slot-row">
-                    <input type="text" class="spawn-input" id="sq-edit-spawn-${i}" value="${slot.spawn}" title="Номер спавна (можно буквы)">
-                    <select id="sq-edit-player-${i}">${getPlayerOptionsHtml(slot.player)}</select>
-                    <select id="sq-edit-ship-${i}">${getShipOptionsHtml(slot.ship)}</select>
+                    <input type="text" class="spawn-input" id="sq-edit-a-spawn-${i}" value="${slot.spawn}">
+                    <select id="sq-edit-a-player-${i}">${getPlayerOptionsHtml(slot.player)}</select>
+                    <select id="sq-edit-a-ship-${i}">${getShipOptionsHtml(slot.ship)}</select>
                 </div>`;
             }
-            
-            // 2 слота для Резерва
             for(let i=0; i<2; i++) {
-                const slot = squad && squad.reserves[i] ? squad.reserves[i] : { spawn: 'З'+(i+1), player: '', ship: '' };
+                const slot = squad && (squad.alphaReserves ? squad.alphaReserves[i] : (squad.reserves ? squad.reserves[i] : null)) || { spawn: 'РА'+(i+1), player: '', ship: '' };
                 html += `
                 <div class="squad-slot-row reserve">
-                    <input type="text" class="spawn-input" id="sq-edit-r-spawn-${i}" value="${slot.spawn}" title="Номер спавна резерва">
-                    <select id="sq-edit-r-player-${i}">${getPlayerOptionsHtml(slot.player)}</select>
-                    <select id="sq-edit-r-ship-${i}">${getShipOptionsHtml(slot.ship)}</select>
+                    <input type="text" class="spawn-input" id="sq-edit-ar-spawn-${i}" value="${slot.spawn}">
+                    <select id="sq-edit-ar-player-${i}">${getPlayerOptionsHtml(slot.player)}</select>
+                    <select id="sq-edit-ar-ship-${i}">${getShipOptionsHtml(slot.ship)}</select>
                 </div>`;
             }
-            
+            html += '</div>';
+
+            // КОЛОНКА: БРАВО
+            html += '<div class="squad-col-bravo"><div class="squad-col-title">Состав БРАВО</div>';
+            for(let i=0; i<5; i++) {
+                const slot = squad && squad.bravoSlots && squad.bravoSlots[i] ? squad.bravoSlots[i] : { spawn: 'B'+(i+1), player: '', ship: '' };
+                html += `
+                <div class="squad-slot-row">
+                    <input type="text" class="spawn-input" id="sq-edit-b-spawn-${i}" value="${slot.spawn}">
+                    <select id="sq-edit-b-player-${i}">${getPlayerOptionsHtml(slot.player)}</select>
+                    <select id="sq-edit-b-ship-${i}">${getShipOptionsHtml(slot.ship)}</select>
+                </div>`;
+            }
+            for(let i=0; i<2; i++) {
+                const slot = squad && squad.bravoReserves && squad.bravoReserves[i] ? squad.bravoReserves[i] : { spawn: 'РБ'+(i+1), player: '', ship: '' };
+                html += `
+                <div class="squad-slot-row reserve">
+                    <input type="text" class="spawn-input" id="sq-edit-br-spawn-${i}" value="${slot.spawn}">
+                    <select id="sq-edit-br-player-${i}">${getPlayerOptionsHtml(slot.player)}</select>
+                    <select id="sq-edit-br-ship-${i}">${getShipOptionsHtml(slot.ship)}</select>
+                </div>`;
+            }
+            html += '</div></div>';
+
             container.innerHTML = html;
         }
 
@@ -1805,30 +1862,24 @@
                 id: currentEditingSquadId || 'sq_' + Date.now(),
                 mapName: mapName,
                 mapUrl: mapUrl,
-                slots: [],
-                reserves: []
+                alphaSlots: [], alphaReserves: [],
+                bravoSlots: [], bravoReserves: []
             };
             
             for(let i=0; i<5; i++) {
-                const player = document.getElementById(`sq-edit-player-${i}`).value;
-                if(player) {
-                    newSquad.slots.push({
-                        spawn: document.getElementById(`sq-edit-spawn-${i}`).value.trim() || (i+1).toString(),
-                        player: player,
-                        ship: document.getElementById(`sq-edit-ship-${i}`).value
-                    });
-                }
+                const pA = document.getElementById(`sq-edit-a-player-${i}`).value;
+                if(pA) newSquad.alphaSlots.push({ spawn: document.getElementById(`sq-edit-a-spawn-${i}`).value.trim() || 'A'+(i+1), player: pA, ship: document.getElementById(`sq-edit-a-ship-${i}`).value });
+                
+                const pB = document.getElementById(`sq-edit-b-player-${i}`).value;
+                if(pB) newSquad.bravoSlots.push({ spawn: document.getElementById(`sq-edit-b-spawn-${i}`).value.trim() || 'B'+(i+1), player: pB, ship: document.getElementById(`sq-edit-b-ship-${i}`).value });
             }
             
             for(let i=0; i<2; i++) {
-                const player = document.getElementById(`sq-edit-r-player-${i}`).value;
-                if(player) {
-                    newSquad.reserves.push({
-                        spawn: document.getElementById(`sq-edit-r-spawn-${i}`).value.trim() || 'З'+(i+1),
-                        player: player,
-                        ship: document.getElementById(`sq-edit-r-ship-${i}`).value
-                    });
-                }
+                const rA = document.getElementById(`sq-edit-ar-player-${i}`).value;
+                if(rA) newSquad.alphaReserves.push({ spawn: document.getElementById(`sq-edit-ar-spawn-${i}`).value.trim() || 'РА'+(i+1), player: rA, ship: document.getElementById(`sq-edit-ar-ship-${i}`).value });
+                
+                const rB = document.getElementById(`sq-edit-br-player-${i}`).value;
+                if(rB) newSquad.bravoReserves.push({ spawn: document.getElementById(`sq-edit-br-spawn-${i}`).value.trim() || 'РБ'+(i+1), player: rB, ship: document.getElementById(`sq-edit-br-ship-${i}`).value });
             }
             
             if(!cloudDatabase.squads) cloudDatabase.squads = [];
@@ -1842,7 +1893,7 @@
             
             await saveToCloud();
             document.getElementById('squadModalOverlay').classList.remove('active');
-            showNotification(t("Карта состава сохранена!", "Squad map saved!", "阵容地图已保存！"), "success");
+            showNotification(t("Карта составов сохранена!", "Squad map saved!", "阵容地图已保存！"), "success");
             renderSquadsGallery();
         }
 
@@ -1859,57 +1910,68 @@
 
         function renderSquadViewList(squad) {
             const container = document.getElementById('squadViewListContainer');
-            let html = '';
+            let html = '<div class="squad-columns">';
             
-            if (squad.slots.length === 0 && squad.reserves.length === 0) {
-                container.innerHTML = `<div style="color: #94a3b8; text-align: center; padding: 20px;">${t("Состав пуст", "Squad is empty", "阵容为空")}</div>`;
-                return;
-            }
-
-            squad.slots.forEach(slot => {
-                let spec = "";
-                for (let tg in cloudDatabase.metadata) {
-                    if (cloudDatabase.metadata[tg].nick === slot.player) {
-                        spec = cloudDatabase.metadata[tg].specialization || "";
-                        break;
-                    }
-                }
-                const specHtml = SPEC_ICONS[spec] || '';
-                const shipHtml = SHIP_ICONS[slot.ship] || '';
+            const renderColumn = (title, slots, reserves, itemClass) => {
+                let colHtml = `<div class="squad-col-${itemClass}"><div class="squad-col-title">${title}</div>`;
                 
-                html += `
-                <div class="squad-view-item">
-                    <div class="spawn-badge" title="Точка высадки">${slot.spawn}</div>
-                    <div class="player-name">${slot.player} ${specHtml}</div>
-                    <div class="ship-info">${slot.ship} ${shipHtml}</div>
-                </div>`;
-            });
-            
-            if(squad.reserves.length > 0) {
-                html += `<div style="margin-top: 15px; margin-bottom: 5px; color: #eab308; font-size: 12px; font-family: 'Orbitron', sans-serif; letter-spacing: 2px;">РЕЗЕРВ ФЛОТА</div>`;
-                squad.reserves.forEach(slot => {
-                    let spec = "";
-                    for (let tg in cloudDatabase.metadata) {
-                        if (cloudDatabase.metadata[tg].nick === slot.player) {
-                            spec = cloudDatabase.metadata[tg].specialization || "";
-                            break;
+                if ((!slots || slots.length === 0) && (!reserves || reserves.length === 0)) {
+                    colHtml += `<div style="color: #94a3b8; text-align: center; padding: 20px; font-size: 13px;">${t("Состав пуст", "Squad is empty", "阵容为空")}</div></div>`;
+                    return colHtml;
+                }
+                
+                if(slots) {
+                    slots.forEach(slot => {
+                        let spec = "";
+                        for (let tg in cloudDatabase.metadata) {
+                            if (cloudDatabase.metadata[tg].nick === slot.player) {
+                                spec = cloudDatabase.metadata[tg].specialization || "";
+                                break;
+                            }
                         }
-                    }
-                    const specHtml = SPEC_ICONS[spec] || '';
-                    const shipHtml = SHIP_ICONS[slot.ship] || '';
-                    
-                    html += `
-                    <div class="squad-view-item reserve">
-                        <div class="spawn-badge" title="Резерв">${slot.spawn}</div>
-                        <div class="player-name">${slot.player} ${specHtml}</div>
-                        <div class="ship-info">${slot.ship} ${shipHtml}</div>
-                    </div>`;
-                });
-            }
+                        const specHtml = SPEC_ICONS[spec] || '';
+                        const shipHtml = SHIP_ICONS[slot.ship] || '';
+                        
+                        colHtml += `
+                        <div class="squad-view-item">
+                            <div class="spawn-badge" title="Точка высадки">${slot.spawn}</div>
+                            <div class="player-name">${slot.player} ${specHtml}</div>
+                            <div class="ship-info">${slot.ship} ${shipHtml}</div>
+                        </div>`;
+                    });
+                }
+                
+                if(reserves && reserves.length > 0) {
+                    colHtml += `<div style="margin-top: 15px; margin-bottom: 5px; color: #eab308; font-size: 12px; font-family: 'Orbitron', sans-serif; letter-spacing: 2px; text-align:center;">РЕЗЕРВ</div>`;
+                    reserves.forEach(slot => {
+                        let spec = "";
+                        for (let tg in cloudDatabase.metadata) {
+                            if (cloudDatabase.metadata[tg].nick === slot.player) {
+                                spec = cloudDatabase.metadata[tg].specialization || "";
+                                break;
+                            }
+                        }
+                        const specHtml = SPEC_ICONS[spec] || '';
+                        const shipHtml = SHIP_ICONS[slot.ship] || '';
+                        
+                        colHtml += `
+                        <div class="squad-view-item reserve">
+                            <div class="spawn-badge" title="Резерв">${slot.spawn}</div>
+                            <div class="player-name">${slot.player} ${specHtml}</div>
+                            <div class="ship-info">${slot.ship} ${shipHtml}</div>
+                        </div>`;
+                    });
+                }
+                colHtml += '</div>';
+                return colHtml;
+            };
             
+            html += renderColumn("Состав АЛЬФА", squad.alphaSlots || squad.slots, squad.alphaReserves || squad.reserves, "alpha");
+            html += renderColumn("Состав БРАВО", squad.bravoSlots, squad.bravoReserves, "bravo");
+            
+            html += '</div>';
             container.innerHTML = html;
         }
-        // --- КОНЕЦ ЛОГИКИ БОЕВЫХ СОСТАВОВ ---
 
         function getClanPassword(tgLogin) {
             let clean = tgLogin.trim().toLowerCase();
@@ -2036,7 +2098,6 @@
                 initTrainingCountdown();
                 initCwCountdown();
                 
-                // Рендерим и переводим после загрузки базы
                 renderFoundersGrid(); 
                 setLang(currentLang);
             });
