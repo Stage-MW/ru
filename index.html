@@ -622,18 +622,24 @@
         }
 
         @media (max-width: 768px) {
-            .nav-bar { top: auto; bottom: 15px; padding: 8px 15px; gap: 12px; width: 95%; left: 50%; transform: translateX(-50%); overflow-x: auto; justify-content: flex-start; -webkit-overflow-scrolling: touch; }
+            .nav-bar { 
+                top: auto; 
+                bottom: max(25px, env(safe-area-inset-bottom)); 
+                padding: 12px 15px; 
+                gap: 12px; width: 95%; left: 50%; transform: translateX(-50%); 
+                overflow-x: auto; justify-content: flex-start; -webkit-overflow-scrolling: touch; 
+            }
             .nav-bar::-webkit-scrollbar { display: none; }
             .nav-links-left, .nav-links-right { flex-shrink: 0; }
             .nav-links-left { gap: 8px; }
             .nav-links-right { gap: 8px; padding-left: 8px; }
-            .nav-bar a, .nav-bar span.nav-link-btn { font-size: 10px; letter-spacing: 0.5px; padding: 4px 6px; }
-            .btn-nav-login { padding: 4px 10px; font-size: 9px; }
-            #navCabinetBtn { width: 26px; height: 26px; line-height: 22px; flex-shrink: 0; }
-            #navCabinetBtn i { font-size: 11px; }
+            .nav-bar a, .nav-bar span.nav-link-btn { font-size: 10px; letter-spacing: 0.5px; padding: 6px 8px; }
+            .btn-nav-login { padding: 6px 12px; font-size: 9px; }
+            #navCabinetBtn { width: 30px; height: 30px; line-height: 26px; flex-shrink: 0; }
+            #navCabinetBtn i { font-size: 12px; }
 
             .welcome-screen, .roster-screen, .squads-screen, .maps-screen, .board-screen, .channels-screen, .creators-screen, .founders-screen { 
-                padding: 60px 10px 80px !important; background-attachment: scroll !important; background-size: cover !important; background-position: center !important;
+                padding: 60px 10px 110px !important; background-attachment: scroll !important; background-size: cover !important; background-position: center !important;
             }
             .players-grid { display: flex; flex-direction: column; flex-wrap: nowrap; gap: 10px; max-height: 280px; overflow-y: auto; overflow-x: hidden; padding-right: 5px; justify-content: flex-start; }
             .players-grid::-webkit-scrollbar { width: 4px; }
@@ -808,8 +814,7 @@
             <button class="btn-join-neon lang-txt" id="openModalBtn" data-ru='<i class="fa-solid fa-paper-plane"></i> Подать заявку / Верификация' data-en='<i class="fa-solid fa-paper-plane"></i> Apply / Verify' data-zh='<i class="fa-solid fa-paper-plane"></i> 申请 / 验证'><i class="fa-solid fa-paper-plane"></i> Подать заявку / Верификация</button>
         </div>
     </section>
-
-    <!-- СЕКЦИЯ: БОЕВЫЕ СОСТАВЫ (АЛЬФА/БРАВО) -->
+<!-- СЕКЦИЯ: БОЕВЫЕ СОСТАВЫ (АЛЬФА/БРАВО) -->
     <section id="squads" class="squads-screen">
         <h2 class="section-title lang-txt" data-ru="Боевые составы" data-en="Battle Squads" data-zh="战斗阵容">Боевые составы</h2>
         
@@ -961,6 +966,16 @@
                     </select>
                 </div>
                 
+                <!-- Новое поле: Желаемый статус -->
+                <div class="form-group">
+                    <label class="lang-txt" data-ru="Желаемый статус" data-en="Desired Status" data-zh="期望状态">Желаемый статус</label>
+                    <select id="appStatus" required style="width: 100%; background: rgba(2, 5, 10, 0.6); border: 1px solid rgba(0, 242, 254, 0.3); padding: 10px; color: #fff; border-radius: 4px; font-family: 'Oswald', sans-serif;">
+                        <option value="none" class="lang-txt" data-ru="Обычный боец" data-en="Normal Fighter" data-zh="普通战士">Обычный боец</option>
+                        <option value="hero" class="lang-txt" data-ru="Герой" data-en="Hero" data-zh="英雄">Герой</option>
+                        <option value="legend" class="lang-txt" data-ru="Легенда" data-en="Legend" data-zh="传奇">Легенда</option>
+                    </select>
+                </div>
+
                 <div class="form-group"><label class="lang-txt" data-ru="Ваш Telegram Тэг (Логин)" data-en="Your Telegram Tag (Login)" data-zh="您的 Telegram 标签 (用户名)">Ваш Telegram Тэг (Логин)</label><input type="text" id="tgLink" class="lang-txt" data-ru="Например: @vova" data-en="Example: @vova" data-zh="例如: @vova" placeholder="Например: @vova" required></div>
                 
                 <div class="form-group">
@@ -1230,6 +1245,7 @@
                 <div class="terminal-box" id="terminalStatusBox" style="display:none;">
                     <div>📝 <b class="lang-txt" data-ru="Боец:" data-en="Fighter:" data-zh="战士:">Боец:</b> <span id="parsedNickText" style="color:#00f2fe; font-weight:bold;">-</span></div>
                     <div>🚢 <b class="lang-txt" data-ru="Класс:" data-en="Class:">Класс:</b> <span id="parsedShipText" style="color:#22c55e;">-</span></div>
+                    <div>🎖 <b class="lang-txt" data-ru="Статус:" data-en="Status:">Статус:</b> <span id="parsedStatusText" style="color:#ff8c00;">-</span></div>
                     <div>🎮 <b class="lang-txt" data-ru="Игровой ID:" data-en="Game ID:" data-zh="游戏 ID:">Игровой ID:</b> <span id="parsedGameIdText" style="color:#00f2fe;">-</span></div>
                     <div>✈️ <b class="lang-txt" data-ru="Логин ТГ:" data-en="TG Login:" data-zh="TG 账号:">Логин ТГ:</b> <span id="parsedTgText" style="color:#a855f7;">-</span></div>
                     <div>🆔 <b class="lang-txt" data-ru="Цифровой ID:" data-en="Digital ID:" data-zh="数字 ID:">Цифровой ID:</b> <span id="parsedIdText" style="color:#eab308;">-</span></div>
@@ -2395,6 +2411,7 @@
             }
         }
 
+        // --- ИЗМЕНЕННАЯ ФУНКЦИЯ ПАРСИНГА СТАТУСА ---
         rawTelegramInput.addEventListener('input', function() {
             const val = this.value;
             if(!val) { terminalStatusBox.style.display = 'none'; return; }
@@ -2402,6 +2419,7 @@
             const nameMatch = val.match(/(?:Имя:)\s*([^\n]+)/i);
             const nickMatch = val.match(/(?:Ник:)\s*([^\n]+)/i);
             const shipMatch = val.match(/(?:Класс:)\s*([^\n]+)/i);
+            const statusMatch = val.match(/(?:Статус:)\s*([^\n]+)/i); // Ловим статус
             const gameIdMatch = val.match(/(?:ID:)\s*([^\n]+)/i);
             const tgMatch = val.match(/(?:TG:)\s*([^\n]+)/i);
             const idMatch = val.match(/(?:CID:)\s*([^\n]+)/i);
@@ -2412,17 +2430,28 @@
                     gameId: gameIdMatch ? gameIdMatch[1].trim() : "Не указан",
                     tg: tgMatch[1].trim(), 
                     chatId: idMatch[1].trim(),
-                    shipClass: shipMatch ? shipMatch[1].trim() : ""
+                    shipClass: shipMatch ? shipMatch[1].trim() : "",
+                    status: statusMatch ? statusMatch[1].trim() : "none" // Сохраняем статус
                 };
                 parsedNickText.textContent = currentParsedData.nick;
                 parsedGameIdText.textContent = currentParsedData.gameId;
                 parsedTgText.textContent = currentParsedData.tg;
                 parsedIdText.textContent = currentParsedData.chatId;
                 parsedShipText.textContent = currentParsedData.shipClass || "Не указан";
+                
+                // Выводим статус в панель
+                const stText = document.getElementById('parsedStatusText');
+                if(stText) {
+                   if(currentParsedData.status === 'hero') stText.textContent = "Герой";
+                   else if(currentParsedData.status === 'legend') stText.textContent = "Легенда";
+                   else stText.textContent = "Обычный";
+                }
+                
                 terminalStatusBox.style.display = 'block';
             } else { terminalStatusBox.style.display = 'none'; }
         });
 
+        // --- ИЗМЕНЕННАЯ ФУНКЦИЯ ОДОБРЕНИЯ СО СТАТУСОМ ---
         window.executeTerminalApprove = async function() {
             if(!isLeaderMode || !currentParsedData) return;
             const acceptBtn = document.getElementById('terminalAcceptBtn');
@@ -2444,6 +2473,7 @@
                 rank: t("Действующий боец", "Active Fighter", "现役战士"),
                 avatar: "",
                 shipClass: currentParsedData.shipClass,
+                customStatus: currentParsedData.status, // Записываем статус в базу
                 lastActive: Date.now()
             };
             
@@ -3396,6 +3426,7 @@
         closeLawModalBtn.addEventListener('click', closeLawModal); 
         acceptLawBtn.addEventListener('click', closeLawModal);
 
+        // --- ИЗМЕНЕННАЯ ФОРМА ОТПРАВКИ (Добавлен статус) ---
         recruitForm.addEventListener('submit', function(e) {
             e.preventDefault(); submitBtn.textContent = t("Передача...", "Transferring...", "传输中...");
             const realName = document.getElementById('realName').value.trim();
@@ -3403,10 +3434,11 @@
             const gameId = document.getElementById('gameId').value.trim();
             const gameChatId = document.getElementById('gameChatId').value.trim();
             const shipClass = document.getElementById('appShipClass').value;
+            const statusVal = document.getElementById('appStatus').value; // Читаем статус
             let tgLink = document.getElementById('tgLink').value.trim();
             if(!tgLink.startsWith('@')) tgLink = '@' + tgLink;
 
-            const textMessage = `⚓️ <b>Новая заявка STAGE!</b>\n\n👤 <b>Имя:</b> ${realName}\n🎮 <b>Ник:</b> ${gameNick}\n🚢 <b>Класс:</b> ${shipClass}\n🆔 <b>ID:</b> ${gameId}\n✈️ <b>TG:</b> ${tgLink}\n🆔 <b>CID:</b> ${gameChatId}`;
+            const textMessage = `⚓️ <b>Новая заявка STAGE!</b>\n\n👤 <b>Имя:</b> ${realName}\n🎮 <b>Ник:</b> ${gameNick}\n🚢 <b>Класс:</b> ${shipClass}\n🎖 <b>Статус:</b> ${statusVal}\n🆔 <b>ID:</b> ${gameId}\n✈️ <b>TG:</b> ${tgLink}\n🆔 <b>CID:</b> ${gameChatId}`;
             
             fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -3535,6 +3567,40 @@
                 showNotification(t("Система уведомлений еще загружается...", "Notification system is still loading...", "通知系统仍在加载..."), "info");
             }
         });
+
+        // --- PULL-TO-REFRESH ДЛЯ ТЕЛЕФОНОВ (Свайп вниз для обновления) ---
+        let p2rTouchStartY = 0;
+        let p2rTouchEndY = 0;
+        let p2rIsAtTop = false;
+
+        document.addEventListener('touchstart', (e) => {
+            // Проверяем, находится ли пользователь в самом верху страницы
+            if (window.scrollY === 0) {
+                p2rIsAtTop = true;
+                p2rTouchStartY = e.changedTouches[0].screenY;
+            } else {
+                p2rIsAtTop = false;
+            }
+        }, { passive: true });
+
+        document.addEventListener('touchend', (e) => {
+            if (!p2rIsAtTop) return;
+            
+            p2rTouchEndY = e.changedTouches[0].screenY;
+            
+            // Если свайпнули вниз более чем на 150px
+            if (p2rTouchEndY - p2rTouchStartY > 150) {
+                // Легкая вибрация, если поддерживается
+                if (navigator.vibrate) navigator.vibrate(50);
+                
+                showNotification(t("Обновление данных...", "Refreshing...", "刷新中..."), "info");
+                
+                // Перезагрузка страницы с небольшой задержкой
+                setTimeout(() => {
+                    location.reload();
+                }, 500);
+            }
+        }, { passive: true });
     </script>
 </body>
 </html>
