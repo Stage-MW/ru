@@ -1677,63 +1677,29 @@
             container.innerHTML = '';
             
             let squads = cloudDatabase.squads || [];
-            
-            // Надежно получаем ник текущего пользователя напрямую из базы, а не только из кэша
-            let sessionTg = (localStorage.getItem('stage_user_registered_tg') || "").trim().toLowerCase();
-            let myNick = null;
-            if (sessionTg && cloudDatabase.metadata && cloudDatabase.metadata[sessionTg]) {
-                myNick = cloudDatabase.metadata[sessionTg].nick;
-            }
-            if (!myNick) myNick = localStorage.getItem('stage_cached_nick');
+            const myNick = localStorage.getItem('stage_cached_nick');
 
             // Защита доступа: Фильтр отображения карт только для участников составов (если не лидер)
-            if (!isLeaderMode) {
-                if (myNick) {
-                    const safeNick = myNick.trim().toLowerCase(); // Убираем случайные пробелы и регистр
-                    squads = squads.filter(squad => {
-                        const checkPlayer = (slot) => slot && slot.player && slot.player.trim().toLowerCase() === safeNick;
-                        
-                        return (squad.alphaSlots && squad.alphaSlots.some(checkPlayer)) ||
-                               (squad.alphaReserves && squad.alphaReserves.some(checkPlayer)) ||
-                               (squad.bravoSlots && squad.bravoSlots.some(checkPlayer)) ||
-                               (squad.bravoReserves && squad.bravoReserves.some(checkPlayer)) ||
-                               // На случай обратной совместимости старых данных
-                               (squad.slots && squad.slots.some(checkPlayer)) ||
-                               (squad.reserves && squad.reserves.some(checkPlayer));
-                    });
-                } else {
-                    // Если ник вообще не найден (или пользователь не авторизован), прячем всё
-                    squads = [];
-                }
+            if (!isLeaderMode && myNick) {
+                squads = squads.filter(squad => {
+                    const checkPlayer = (slot) => slot && slot.player === myNick;
+                    return (squad.alphaSlots && squad.alphaSlots.some(checkPlayer)) ||
+                           (squad.alphaReserves && squad.alphaReserves.some(checkPlayer)) ||
+                           (squad.bravoSlots && squad.bravoSlots.some(checkPlayer)) ||
+                           (squad.bravoReserves && squad.bravoReserves.some(checkPlayer)) ||
+                           // На случай обратной совместимости старых данных
+                           (squad.slots && squad.slots.some(checkPlayer)) ||
+                           (squad.reserves && squad.reserves.some(checkPlayer));
+                });
+            } else if (!isLeaderMode && !myNick) {
+                // Если не лидер и не авторизован
+                squads = [];
             }
 
             if(squads.length === 0) {
                 container.innerHTML = `<div style="color: #94a3b8; font-size: 14px; grid-column: 1 / -1; text-align: center;">${t("Доступных боевых составов нет или вы не добавлены в них.", "No battle squads available or you are not in them.", "没有可用的战斗阵容或您未加入。")}</div>`;
                 return;
             }
-
-            squads.forEach(squad => {
-                const card = document.createElement('div');
-                card.className = 'squad-card animated-glow-border';
-                card.onclick = () => openSquadModal(squad.id);
-                
-                const bgUrl = squad.mapUrl ? squad.mapUrl : 'maps_bg.png';
-                
-                const aCount = (squad.alphaSlots ? squad.alphaSlots.length : 0) + (squad.alphaReserves ? squad.alphaReserves.length : 0);
-                const bCount = (squad.bravoSlots ? squad.bravoSlots.length : 0) + (squad.bravoReserves ? squad.bravoReserves.length : 0);
-                const oldCount = (squad.slots ? squad.slots.length : 0) + (squad.reserves ? squad.reserves.length : 0);
-                const total = aCount + bCount + oldCount;
-                
-                card.innerHTML = `
-                    <div class="squad-card-bg" style="background-image: url('${bgUrl}');"></div>
-                    <div class="squad-card-content">
-                        <div class="squad-card-title">${squad.mapName || t('Без названия', 'Unnamed', '未命名')}</div>
-                        <div class="squad-card-subtitle lang-txt" data-ru="Бойцов: ${total}" data-en="Fighters: ${total}">Бойцов: ${total}</div>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
 
             squads.forEach(squad => {
                 const card = document.createElement('div');
