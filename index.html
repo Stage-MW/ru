@@ -727,8 +727,7 @@
             <button class="btn-nav-login lang-txt" id="navLoginBtn" data-ru='<i class="fa-solid fa-lock"></i> Вход' data-en='<i class="fa-solid fa-lock"></i> Login' data-zh='<i class="fa-solid fa-lock"></i> 登录'><i class="fa-solid fa-lock"></i> Вход</button>
         </div>
     </nav>
-
-    <section id="welcome" class="welcome-screen">
+<section id="welcome" class="welcome-screen">
         <div class="welcome-text">Welcome to</div>
         <h1>Stage</h1>
         
@@ -1328,6 +1327,43 @@
 
     <div id="toastContainer" class="toast-container"></div>
 <script>
+        // ГЛОБАЛЬНАЯ ФУНКЦИЯ ДЛЯ СИНХРОНИЗАЦИИ ФОНА И АВАТАРА ИЗ ОБЛАКА
+        window.syncLocalPrefsFromCloud = function() {
+            let sessionTg = localStorage.getItem('stage_user_registered_tg') || "";
+            let cleanTg = sessionTg.trim().toLowerCase();
+            if (cleanTg && cloudDatabase.metadata && cloudDatabase.metadata[cleanTg]) {
+                let meta = cloudDatabase.metadata[cleanTg];
+
+                // Синхронизация аватара из облака
+                if (meta.avatar && meta.avatar !== localStorage.getItem('stage_user_avatar')) {
+                    localStorage.setItem('stage_user_avatar', meta.avatar);
+                    refreshMenuCabinetAvatar();
+                    
+                    const mainAva = document.getElementById('cabAvatarMain');
+                    if (mainAva) {
+                        mainAva.style.backgroundImage = `url('${meta.avatar}')`;
+                        const defaultIcon = document.getElementById('cabAvatarIconDefault');
+                        if (defaultIcon) defaultIcon.style.display = 'none';
+                        
+                        document.querySelectorAll('.avatar-picker-item').forEach(item => {
+                            item.classList.remove('selected');
+                            if(item.style.backgroundImage.includes(meta.avatar)) {
+                                item.classList.add('selected');
+                            }
+                        });
+                    }
+                }
+
+                // Синхронизация фона из облака
+                if (meta.cabBg !== undefined && meta.cabBg !== null && meta.cabBg.toString() !== localStorage.getItem('stage_cab_bg')) {
+                    const items = document.querySelectorAll('.bg-picker-item');
+                    if(items[meta.cabBg]) {
+                        setCabinetBg(parseInt(meta.cabBg), items[meta.cabBg], false);
+                    }
+                }
+            }
+        };
+
         const defaultFounders = {
             "Mitso": { role: "Основатель / Глава", avatar: "", year: "2020", wins: "1540", tournaments: "1 место (MW Cup 2023)\nMVP 2023", history: "С 2023 года основал клан STAGE.", status: "legend" },
             "Mr. JOKER": { role: "Основатель", avatar: "", year: "2021", wins: "1200", tournaments: "Топ 10 Global", history: "С 2023 года в STAGE.", status: "hero" },
@@ -2082,7 +2118,7 @@
             generateTacticalMapsGrid();
             initTrainingCountdown(); 
             initCwCountdown();
-            initCabinetBg();
+            initCabinetBg(); // Загрузит локально сохраненный фон до синхронизации
             
             if (localStorage.getItem('stage_team_logged') === 'true' || localStorage.getItem('stage_authorized') === 'true') { 
                 unlockTeamFeatures(); 
@@ -2119,6 +2155,10 @@
                 await saveToCloud();
                 
                 if (checkBanAndLogout()) return;
+                
+                // ПОСЛЕ ЗАГРУЗКИ ИЗ ОБЛАКА ПРИМЕНЯЕМ АВАТАР И ФОН ИЗ ОБЛАКА
+                syncLocalPrefsFromCloud();
+                
                 applyGlobalKickedFilters();
                 renderLocalRecruits();
                 applyLeaderStatusColors();
@@ -2132,6 +2172,10 @@
             setInterval(() => {
                 syncWithCloud().then(() => {
                     if (checkBanAndLogout()) return;
+                    
+                    // ПОДДЕРЖИВАЕМ СИНХРОНИЗАЦИЮ ЕСЛИ ЧЕЛОВЕК ПОМЕНЯЛ ФОН С ДРУГОГО УСТРОЙСТВА
+                    syncLocalPrefsFromCloud();
+                    
                     applyGlobalKickedFilters();
                     renderLocalRecruits();
                     applyLeaderStatusColors();
@@ -2170,11 +2214,11 @@
             const savedIndex = localStorage.getItem('stage_cab_bg') || '0';
             const items = document.querySelectorAll('.bg-picker-item');
             if(items[savedIndex]) {
-                setCabinetBg(parseInt(savedIndex), items[savedIndex], false);
+                setCabinetBg(parseInt(savedIndex), items[savedIndex], false); // false, чтобы не перезаписывать облако при загрузке страницы
             }
         }
 
-        window.setCabinetBg = function(index, element, saveToCloudFlag = true) {
+        window.setCabinetBg = async function(index, element, saveToCloudFlag = true) {
             document.querySelectorAll('.bg-picker-item').forEach(el => el.classList.remove('selected'));
             if(element) element.classList.add('selected');
             
@@ -2190,6 +2234,17 @@
             }
             
             localStorage.setItem('stage_cab_bg', index.toString());
+
+            // СИНХРОНИЗИРУЕМ ФОН С ОБЛАКОМ
+            if (saveToCloudFlag) {
+                let sessionTg = localStorage.getItem('stage_user_registered_tg') || "";
+                let cleanTg = sessionTg.trim().toLowerCase();
+                if (cleanTg && cloudDatabase.metadata && cloudDatabase.metadata[cleanTg]) {
+                    cloudDatabase.metadata[cleanTg].cabBg = index;
+                    await saveToCloud();
+                    showNotification(t("Фон синхронизирован!", "Background synced!", "背景已同步！"), 'success');
+                }
+            }
         };
 
         document.getElementById('openCwProposalBtn').addEventListener('click', () => {
@@ -2282,11 +2337,11 @@
                         cloudDatabase.cwNotified = db.cwNotified || false;
                         cloudDatabase.autoCwEnabled = db.autoCwEnabled || false;
                         cloudDatabase.founders = db.founders || defaultFounders;
-                        cloudDatabase.squads = db.squads || []; // Подгружаем составы
+                        cloudDatabase.squads = db.squads || []; 
                         cloudDatabase.stats = db.stats || { views: 0, uniques: 0, requests: 0, mobile: 0, pc: 0 };
                         
                         renderFoundersGrid();
-                        renderSquadsGallery(); // Отрисовываем галерею составов после загрузки из базы
+                        renderSquadsGallery(); 
                     }
                     isCloudSynced = true; 
                     updateOnlineWidget();
@@ -2352,6 +2407,7 @@
             }
         }
 
+        // ОБНОВЛЕННАЯ ФУНКЦИЯ ДЛЯ ВЫБОРА И СОХРАНЕНИЯ АВАТАРКИ В ОБЛАКО
         window.selectProfileAvatar = async function(avatarUrl, element) {
             document.querySelectorAll('.avatar-picker-item').forEach(item => item.classList.remove('selected'));
             element.classList.add('selected');
@@ -2372,6 +2428,7 @@
             
             refreshMenuCabinetAvatar();
 
+            // СИНХРОНИЗАЦИЯ АВАТАРА С ОБЛАКОМ
             let sessionTg = localStorage.getItem('stage_user_registered_tg') || "";
             let cleanTg = sessionTg.trim().toLowerCase();
             if (cleanTg) {
@@ -2379,7 +2436,7 @@
                 cloudDatabase.metadata[cleanTg].avatar = avatarUrl;
                 renderLocalRecruits(); 
                 await saveToCloud();
-                showNotification(t("Аватар обновлен!", "Avatar updated!", "头像已更新！"), 'success');
+                showNotification(t("Аватар синхронизирован!", "Avatar synced!", "头像已同步！"), 'success');
             }
             renderAttendanceListsOnSite();
         }
@@ -2411,7 +2468,6 @@
             }
         }
 
-        // --- ИЗМЕНЕННАЯ ФУНКЦИЯ ПАРСИНГА СТАТУСА ---
         rawTelegramInput.addEventListener('input', function() {
             const val = this.value;
             if(!val) { terminalStatusBox.style.display = 'none'; return; }
@@ -2419,7 +2475,7 @@
             const nameMatch = val.match(/(?:Имя:)\s*([^\n]+)/i);
             const nickMatch = val.match(/(?:Ник:)\s*([^\n]+)/i);
             const shipMatch = val.match(/(?:Класс:)\s*([^\n]+)/i);
-            const statusMatch = val.match(/(?:Статус:)\s*([^\n]+)/i); // Ловим статус
+            const statusMatch = val.match(/(?:Статус:)\s*([^\n]+)/i); 
             const gameIdMatch = val.match(/(?:ID:)\s*([^\n]+)/i);
             const tgMatch = val.match(/(?:TG:)\s*([^\n]+)/i);
             const idMatch = val.match(/(?:CID:)\s*([^\n]+)/i);
@@ -2431,7 +2487,7 @@
                     tg: tgMatch[1].trim(), 
                     chatId: idMatch[1].trim(),
                     shipClass: shipMatch ? shipMatch[1].trim() : "",
-                    status: statusMatch ? statusMatch[1].trim() : "none" // Сохраняем статус
+                    status: statusMatch ? statusMatch[1].trim() : "none" 
                 };
                 parsedNickText.textContent = currentParsedData.nick;
                 parsedGameIdText.textContent = currentParsedData.gameId;
@@ -2439,7 +2495,6 @@
                 parsedIdText.textContent = currentParsedData.chatId;
                 parsedShipText.textContent = currentParsedData.shipClass || "Не указан";
                 
-                // Выводим статус в панель
                 const stText = document.getElementById('parsedStatusText');
                 if(stText) {
                    if(currentParsedData.status === 'hero') stText.textContent = "Герой";
@@ -2451,7 +2506,6 @@
             } else { terminalStatusBox.style.display = 'none'; }
         });
 
-        // --- ИЗМЕНЕННАЯ ФУНКЦИЯ ОДОБРЕНИЯ СО СТАТУСОМ ---
         window.executeTerminalApprove = async function() {
             if(!isLeaderMode || !currentParsedData) return;
             const acceptBtn = document.getElementById('terminalAcceptBtn');
@@ -2472,8 +2526,9 @@
                 joinDate: registerTimestamp,
                 rank: t("Действующий боец", "Active Fighter", "现役战士"),
                 avatar: "",
+                cabBg: 0, // Устанавливаем дефолтный фон
                 shipClass: currentParsedData.shipClass,
-                customStatus: currentParsedData.status, // Записываем статус в базу
+                customStatus: currentParsedData.status, 
                 lastActive: Date.now()
             };
             
@@ -2514,6 +2569,7 @@
             localStorage.removeItem('stage_leader_session');
             localStorage.removeItem('stage_cached_nick');
             localStorage.removeItem('stage_user_avatar'); 
+            localStorage.removeItem('stage_cab_bg');
             
             if (window.OneSignal) {
                 window.OneSignalDeferred.push(function(OneSignal) {
@@ -3426,7 +3482,6 @@
         closeLawModalBtn.addEventListener('click', closeLawModal); 
         acceptLawBtn.addEventListener('click', closeLawModal);
 
-        // --- ИЗМЕНЕННАЯ ФОРМА ОТПРАВКИ (Добавлен статус) ---
         recruitForm.addEventListener('submit', function(e) {
             e.preventDefault(); submitBtn.textContent = t("Передача...", "Transferring...", "传输中...");
             const realName = document.getElementById('realName').value.trim();
@@ -3434,7 +3489,7 @@
             const gameId = document.getElementById('gameId').value.trim();
             const gameChatId = document.getElementById('gameChatId').value.trim();
             const shipClass = document.getElementById('appShipClass').value;
-            const statusVal = document.getElementById('appStatus').value; // Читаем статус
+            const statusVal = document.getElementById('appStatus').value; 
             let tgLink = document.getElementById('tgLink').value.trim();
             if(!tgLink.startsWith('@')) tgLink = '@' + tgLink;
 
@@ -3574,7 +3629,6 @@
         let p2rIsAtTop = false;
 
         document.addEventListener('touchstart', (e) => {
-            // Проверяем, находится ли пользователь в самом верху страницы
             if (window.scrollY === 0) {
                 p2rIsAtTop = true;
                 p2rTouchStartY = e.changedTouches[0].screenY;
@@ -3588,14 +3642,11 @@
             
             p2rTouchEndY = e.changedTouches[0].screenY;
             
-            // Если свайпнули вниз более чем на 150px
             if (p2rTouchEndY - p2rTouchStartY > 150) {
-                // Легкая вибрация, если поддерживается
                 if (navigator.vibrate) navigator.vibrate(50);
                 
                 showNotification(t("Обновление данных...", "Refreshing...", "刷新中..."), "info");
                 
-                // Перезагрузка страницы с небольшой задержкой
                 setTimeout(() => {
                     location.reload();
                 }, 500);
