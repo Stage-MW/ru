@@ -2773,28 +2773,42 @@
             const messageText = `⚔️ <b>ВНИМАНИЕ! Назначена тренировка! / ATTENTION! Training scheduled!</b>\n\n⚓️ <b>Событие / Event:</b> Тренировка / Training\n📅 <b>Время сбора / Time:</b> ${formattedDate}\n\nВсем участникам быть! Прямая связь в Яндекс Телемост или Discord.\nAll members must attend! Direct comms in Yandex Telemost or Discord. 🚢🔥`;
 
             try {
-                await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        chat_id: TG_CHAT_ID, 
-                        text: messageText, 
-                        parse_mode: 'html'
-                    })
-                });
+    // 1. Отправляем основной текст (как у вас и было)
+    await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+            chat_id: TG_CHAT_ID, 
+            text: messageText, 
+            parse_mode: 'html'
+        })
+    });
 
-                cloudDatabase.trainingTime = targetTimestamp;
-                cloudDatabase.trainingYes = [];
-                cloudDatabase.trainingNo = [];
-                await saveToCloud();
+    // 2. Сразу следом отправляем ПУБЛИЧНЫЙ ОПРОС
+    await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendPoll`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+            chat_id: TG_CHAT_ID,
+            question: `ОТМЕТКА ЯВКИ:\nКто будет на тренировке ${formattedDate}?`,
+            options: ["⚓️ Буду", "❌ Не смогу"],
+            is_anonymous: false // Самое важное! Делает голосование открытым
+        })
+    });
 
-                trainingModalOverlay.classList.remove('active');
-                initTrainingCountdown(); 
-                showNotification(t("Тренировка запланирована!", "Training scheduled!", "训练已安排！"), 'success');
-                
-            } catch (err) {
-                alert("Ошибка связи: " + err.message);
-            } finally {
+    cloudDatabase.trainingTime = targetTimestamp;
+    cloudDatabase.trainingYes = [];
+    cloudDatabase.trainingNo = [];
+    await saveToCloud();
+
+    trainingModalOverlay.classList.remove('active');
+    initTrainingCountdown(); 
+    showNotification(t("Тренировка запланирована!", "Training scheduled!", "训练已安排！"), 'success');
+    
+} catch (err) {
+    alert("Ошибка связи: " + err.message);
+} finally {
+// ... остальной код (btnSubmitTraining.textContent = t("Готово"... и т.д.)
                 btnSubmitTraining.textContent = t("Готово", "Done", "完成");
                 btnSubmitTraining.disabled = false;
             }
