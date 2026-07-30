@@ -817,9 +817,9 @@
             <button class="btn-join-neon lang-txt" id="openModalBtn" data-ru='<i class="fa-solid fa-paper-plane"></i> Подать заявку / Верификация' data-en='<i class="fa-solid fa-paper-plane"></i> Apply / Verify' data-zh='<i class="fa-solid fa-paper-plane"></i> 申请 / 验证'><i class="fa-solid fa-paper-plane"></i> Подать заявку / Верификация</button>
         </div>
     </section>
-<!-- СЕКЦИЯ:СОСТАВЫ (АЛЬФА/БРАВО) -->
+<!-- СЕКЦИЯ: СОСТАВЫ (АЛЬФА/БРАВО) -->
     <section id="squads" class="squads-screen">
-        <h2 class="section-title lang-txt" data-ru="Составы" data-en="Squads" data-zh="战斗阵容">Боевые составы</h2>
+        <h2 class="section-title lang-txt" data-ru="Составы" data-en="Squads" data-zh="战斗阵容">Составы</h2>
         
         <button type="button" id="btnAddSquadMap" class="btn-add-squad lang-txt" data-ru="+ Добавить тактическую карту" data-en="+ Add Tactical Map" data-zh="+ 添加战术地图">+ Добавить тактическую карту</button>
         
@@ -1447,6 +1447,7 @@
         window.saveFounderDossier = async function() {
             if (!isLeaderMode || !currentEditingFounder) return;
             
+            await syncWithCloud();
             if (!cloudDatabase.founders) {
                 cloudDatabase.founders = JSON.parse(JSON.stringify(defaultFounders));
             }
@@ -1949,6 +1950,9 @@
                 if(rB) newSquad.bravoReserves.push({ spawn: document.getElementById(`sq-edit-br-spawn-${i}`).value.trim() || 'РБ'+(i+1), player: rB, ship: document.getElementById(`sq-edit-br-ship-${i}`).value });
             }
             
+            // ИСПРАВЛЕНИЕ: Обязательно скачиваем свежую базу перед пушем состава
+            await syncWithCloud(); 
+            
             if(!cloudDatabase.squads) cloudDatabase.squads = [];
             
             if (currentEditingSquadId) {
@@ -1967,6 +1971,7 @@
         window.deleteCurrentSquad = async function() {
             if (!isLeaderMode || !currentEditingSquadId) return;
             if(confirm(t("Точно удалить эту карту состава?", "Delete this squad map?", "确定删除此阵容地图？"))) {
+                await syncWithCloud();
                 cloudDatabase.squads = cloudDatabase.squads.filter(s => s.id !== currentEditingSquadId);
                 await saveToCloud();
                 document.getElementById('squadModalOverlay').classList.remove('active');
@@ -2188,12 +2193,16 @@
                 });
             }, 30000);
 
+            // ИСПРАВЛЕНИЕ: Защита таймера онлайна от затирания чужих данных
             setInterval(async () => {
                 let myTg = localStorage.getItem('stage_user_registered_tg');
-                if(myTg && cloudDatabase.metadata[myTg]) {
-                    cloudDatabase.metadata[myTg].lastActive = Date.now();
-                    await saveToCloud();
-                    updateOnlineWidget();
+                if (myTg) {
+                    await syncWithCloud(); // Обязательная синхронизация перед сохранением
+                    if (cloudDatabase.metadata[myTg]) {
+                        cloudDatabase.metadata[myTg].lastActive = Date.now();
+                        await saveToCloud();
+                        updateOnlineWidget();
+                    }
                 }
             }, 60000);
             
@@ -2218,7 +2227,7 @@
             const savedIndex = localStorage.getItem('stage_cab_bg') || '0';
             const items = document.querySelectorAll('.bg-picker-item');
             if(items[savedIndex]) {
-                setCabinetBg(parseInt(savedIndex), items[savedIndex], false); // false, чтобы не перезаписывать облако при загрузке страницы
+                setCabinetBg(parseInt(savedIndex), items[savedIndex], false); 
             }
         }
 
@@ -2239,11 +2248,11 @@
             
             localStorage.setItem('stage_cab_bg', index.toString());
 
-            // СИНХРОНИЗИРУЕМ ФОН С ОБЛАКОМ
             if (saveToCloudFlag) {
                 let sessionTg = localStorage.getItem('stage_user_registered_tg') || "";
                 let cleanTg = sessionTg.trim().toLowerCase();
                 if (cleanTg && cloudDatabase.metadata && cloudDatabase.metadata[cleanTg]) {
+                    await syncWithCloud(); // Защита
                     cloudDatabase.metadata[cleanTg].cabBg = index;
                     await saveToCloud();
                     showNotification(t("Фон синхронизирован!", "Background synced!", "背景已同步！"), 'success');
@@ -2411,7 +2420,6 @@
             }
         }
 
-        // ОБНОВЛЕННАЯ ФУНКЦИЯ ДЛЯ ВЫБОРА И СОХРАНЕНИЯ АВАТАРКИ В ОБЛАКО
         window.selectProfileAvatar = async function(avatarUrl, element) {
             document.querySelectorAll('.avatar-picker-item').forEach(item => item.classList.remove('selected'));
             element.classList.add('selected');
@@ -2432,10 +2440,10 @@
             
             refreshMenuCabinetAvatar();
 
-            // СИНХРОНИЗАЦИЯ АВАТАРА С ОБЛАКОМ
             let sessionTg = localStorage.getItem('stage_user_registered_tg') || "";
             let cleanTg = sessionTg.trim().toLowerCase();
             if (cleanTg) {
+                await syncWithCloud(); // Защита перед изменением
                 if (!cloudDatabase.metadata[cleanTg]) { cloudDatabase.metadata[cleanTg] = {}; }
                 cloudDatabase.metadata[cleanTg].avatar = avatarUrl;
                 renderLocalRecruits(); 
@@ -2467,8 +2475,10 @@
             
             let myTg = localStorage.getItem('stage_user_registered_tg');
             if(myTg && cloudDatabase.metadata[myTg]) {
-                cloudDatabase.metadata[myTg].lastActive = Date.now();
-                saveToCloud().then(updateOnlineWidget);
+                syncWithCloud().then(() => {
+                    cloudDatabase.metadata[myTg].lastActive = Date.now();
+                    saveToCloud().then(updateOnlineWidget);
+                });
             }
         }
 
@@ -2522,6 +2532,8 @@
             
             const generatedPassword = getClanPassword(targetTgKey);
             
+            await syncWithCloud(); // Защита
+            
             cloudDatabase.recruits[currentParsedData.nick] = registerTimestamp;
             cloudDatabase.metadata[targetTgKey] = {
                 nick: currentParsedData.nick,
@@ -2530,7 +2542,7 @@
                 joinDate: registerTimestamp,
                 rank: t("Действующий боец", "Active Fighter", "现役战士"),
                 avatar: "",
-                cabBg: 0, // Устанавливаем дефолтный фон
+                cabBg: 0, 
                 shipClass: currentParsedData.shipClass,
                 customStatus: currentParsedData.status, 
                 lastActive: Date.now()
@@ -2610,6 +2622,7 @@
             let sessionTg = localStorage.getItem('stage_user_registered_tg') || "";
             let cleanTg = sessionTg.trim().toLowerCase();
             if (cleanTg && cloudDatabase.metadata[cleanTg]) {
+                await syncWithCloud(); // Защита
                 cloudDatabase.metadata[cleanTg].shipClass = this.value;
                 await saveToCloud();
                 renderLocalRecruits(); 
@@ -2742,6 +2755,7 @@
         });
         closeTrainingModalBtn.addEventListener('click', () => trainingModalOverlay.classList.remove('active'));
 
+        // ИСПРАВЛЕНИЕ: Отправка публичного опроса (Poll) в Telegram
         btnSubmitTraining.addEventListener('click', async () => {
             const dateVal = inputTrainingDate.value;
             const timeVal = inputTrainingTime.value.trim();
@@ -2773,42 +2787,42 @@
             const messageText = `⚔️ <b>ВНИМАНИЕ! Назначена тренировка! / ATTENTION! Training scheduled!</b>\n\n⚓️ <b>Событие / Event:</b> Тренировка / Training\n📅 <b>Время сбора / Time:</b> ${formattedDate}\n\nВсем участникам быть! Прямая связь в Яндекс Телемост или Discord.\nAll members must attend! Direct comms in Yandex Telemost or Discord. 🚢🔥`;
 
             try {
-    // 1. Отправляем основной текст (как у вас и было)
-    await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-            chat_id: TG_CHAT_ID, 
-            text: messageText, 
-            parse_mode: 'html'
-        })
-    });
+                // 1. Отправляем основной текст с оповещением
+                await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        chat_id: TG_CHAT_ID, 
+                        text: messageText, 
+                        parse_mode: 'html'
+                    })
+                });
 
-    // 2. Сразу следом отправляем ПУБЛИЧНЫЙ ОПРОС
-    await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendPoll`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-            chat_id: TG_CHAT_ID,
-            question: `ОТМЕТКА ЯВКИ:\nКто будет на тренировке ${formattedDate}?`,
-            options: ["⚓️ Буду", "❌ Не смогу"],
-            is_anonymous: false // Самое важное! Делает голосование открытым
-        })
-    });
+                // 2. Отправляем ПУБЛИЧНЫЙ ОПРОС следом за текстом
+                await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendPoll`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        chat_id: TG_CHAT_ID,
+                        question: `ОТМЕТКА ЯВКИ:\nКто будет на тренировке ${formattedDate}?`,
+                        options: ["⚓️ Буду", "❌ Не смогу"],
+                        is_anonymous: false // Опрос будет неанонимным, все увидят, кто нажал!
+                    })
+                });
 
-    cloudDatabase.trainingTime = targetTimestamp;
-    cloudDatabase.trainingYes = [];
-    cloudDatabase.trainingNo = [];
-    await saveToCloud();
+                await syncWithCloud(); // Защита перед изменением
+                cloudDatabase.trainingTime = targetTimestamp;
+                cloudDatabase.trainingYes = [];
+                cloudDatabase.trainingNo = [];
+                await saveToCloud();
 
-    trainingModalOverlay.classList.remove('active');
-    initTrainingCountdown(); 
-    showNotification(t("Тренировка запланирована!", "Training scheduled!", "训练已安排！"), 'success');
-    
-} catch (err) {
-    alert("Ошибка связи: " + err.message);
-} finally {
-// ... остальной код (btnSubmitTraining.textContent = t("Готово"... и т.д.)
+                trainingModalOverlay.classList.remove('active');
+                initTrainingCountdown(); 
+                showNotification(t("Тренировка запланирована!", "Training scheduled!", "训练已安排！"), 'success');
+                
+            } catch (err) {
+                alert("Ошибка связи: " + err.message);
+            } finally {
                 btnSubmitTraining.textContent = t("Готово", "Done", "完成");
                 btnSubmitTraining.disabled = false;
             }
@@ -2875,6 +2889,8 @@
 
         btnSubmitCw.addEventListener('click', async () => {
             btnSubmitCw.disabled = true;
+
+            await syncWithCloud(); // Защита
 
             if (cloudDatabase.autoCwEnabled) {
                 cloudDatabase.autoCwEnabled = false;
@@ -2944,6 +2960,7 @@
         window.executeResetCwTimer = async function() {
             if(!isLeaderMode) return;
             if(confirm(t("Вы действительно хотите выключить автоматический таймер Клан Вара?", "Disable Auto Clan War timer?", "禁用自动战队战计时器？"))) {
+                await syncWithCloud();
                 cloudDatabase.autoCwEnabled = false;
                 cloudDatabase.cwNotified = false;
                 await saveToCloud();
@@ -2989,6 +3006,8 @@
                 userNick = cloudDatabase.metadata[cleanTg].nick || userNick;
             }
 
+            await syncWithCloud(); // Защита перед изменением голосов
+
             cloudDatabase.trainingYes = cloudDatabase.trainingYes.filter(n => n !== userNick);
             cloudDatabase.trainingNo = cloudDatabase.trainingNo.filter(n => n !== userNick);
 
@@ -3007,6 +3026,7 @@
         window.executeResetTrainingTimer = async function() {
             if(!isLeaderMode) return;
             if(confirm(t("Вы действительно хотите отменить текущую тренировку и удалить таймер?", "Cancel training and remove timer?", "取消当前训练并移除计时器？"))) {
+                await syncWithCloud();
                 cloudDatabase.trainingTime = null;
                 cloudDatabase.trainingYes = [];
                 cloudDatabase.trainingNo = [];
@@ -3205,6 +3225,7 @@
 
         resetStatsBtn.addEventListener('click', async () => {
             if (confirm(t("Сбросить статистику?", "Reset stats?", "重置统计？"))) {
+                await syncWithCloud(); // Защита
                 cloudDatabase.stats = { views: 1, uniques: 1, requests: 0, mobile: 0, pc: 0 };
                 
                 if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
@@ -3348,11 +3369,19 @@
                     if (isLeaderMode) {
                         rankText.style.display = 'none'; rankInsigniaContainer.style.display = 'none'; rankEditWrapper.style.display = 'block';
                         rankSelect.value = playerMeta.manualRank || "";
-                        rankSelect.onchange = async function() { playerMeta.manualRank = this.value; await saveToCloud(); };
+                        rankSelect.onchange = async function() { 
+                            await syncWithCloud();
+                            playerMeta.manualRank = this.value; 
+                            await saveToCloud(); 
+                        };
 
                         specText.style.display = 'none'; specEditWrapper.style.display = 'block';
                         specSelect.value = playerMeta.specialization || "";
-                        specSelect.onchange = async function() { playerMeta.specialization = this.value; await saveToCloud(); };
+                        specSelect.onchange = async function() { 
+                            await syncWithCloud();
+                            playerMeta.specialization = this.value; 
+                            await saveToCloud(); 
+                        };
                     } else {
                         rankText.style.display = 'block'; rankInsigniaContainer.style.display = 'block'; rankEditWrapper.style.display = 'none';
                         specText.style.display = 'block'; specEditWrapper.style.display = 'none';
@@ -3363,7 +3392,11 @@
             if (isLeaderMode && playerMeta) {
                 idInput.removeAttribute('readonly'); editIcon.style.display = 'block';
                 idInput.style.borderBottom = "1px dashed rgba(0, 242, 254, 0.3)";
-                idInput.onchange = async function() { playerMeta.gameId = this.value.trim(); await saveToCloud(); };
+                idInput.onchange = async function() { 
+                    await syncWithCloud();
+                    playerMeta.gameId = this.value.trim(); 
+                    await saveToCloud(); 
+                };
             } else {
                 idInput.setAttribute('readonly', true); editIcon.style.display = 'none'; idInput.style.borderBottom = "none";
             }
@@ -3382,6 +3415,7 @@
             }
             if (!tgKeyToUpdate) return;
 
+            await syncWithCloud(); // Защита
             if (statusType === 'none') delete cloudDatabase.metadata[tgKeyToUpdate].customStatus;
             else cloudDatabase.metadata[tgKeyToUpdate].customStatus = statusType;
 
@@ -3474,6 +3508,7 @@
         window.kickPlayer = async function(element, nick, isStatic = true) {
             if (!isLeaderMode) return;
             if (confirm(t(`Удалить игрока ${nick} из состава?`, `Remove player ${nick}?`, `确认移除玩家 ${nick}？`))) {
+                await syncWithCloud(); // Защита
                 delete cloudDatabase.recruits[nick];
                 let removedTg = null;
                 for(let key in cloudDatabase.metadata) {
@@ -3515,13 +3550,14 @@
             fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ chat_id: TG_CHAT_ID, message_thread_id: TG_THREAD_ID, text: textMessage, parse_mode: 'html' })
-            }).then(response => {
+            }).then(async response => {
                 if (response.ok) { 
                     recruitForm.style.display = 'none'; document.getElementById('successResult').style.display = 'block'; 
                     
+                    await syncWithCloud();
                     if (!cloudDatabase.stats) cloudDatabase.stats = { views: 0, uniques: 0, requests: 0, mobile: 0, pc: 0 };
                     cloudDatabase.stats.requests++;
-                    saveToCloud();
+                    await saveToCloud();
                 } else { alert(t("Ошибка отправки заявки!", "Error sending application!", "申请发送失败！")); }
                 submitBtn.textContent = t("Отправить заявку", "Submit Application", "提交申请");
             });
@@ -3599,7 +3635,7 @@
             ];
             let textIndex = 0; loaderSubtext.textContent = texts[0];
 
-            const targetString = t("STAGE CLAN READY", "STAGE CLAN READY", "STAGE CLAN READY"); // Оставляем английским как базу хакерского стиля, но можно локализовать
+            const targetString = t("STAGE CLAN READY", "STAGE CLAN READY", "STAGE CLAN READY"); 
             const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
             let iterations = 0;
 
@@ -3624,8 +3660,8 @@
                     
                     clearInterval(interval);
                     clearInterval(matrixInterval);
-                    decoderText.innerText = targetString; // Фиксируем финальный текст
-                    decoderText.classList.add('finished'); // Включаем градиент и свечение из CSS
+                    decoderText.innerText = targetString; 
+                    decoderText.classList.add('finished'); 
                     
                     setTimeout(() => { bootScreen.classList.add('hidden'); playTerminalSound(); }, 1200);
                 }
