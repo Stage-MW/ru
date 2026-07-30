@@ -254,7 +254,7 @@
         }
         .btn-join-neon:hover { background: #0088cc; color: #02050a; box-shadow: 0 0 35px rgba(0, 136, 204, 0.8); transform: scale(1.03); }
 
-        /* --- СОСТАВЫ (АЛЬФА И БРАВО) --- */
+        /* --- БОЕВЫЕ СОСТАВЫ (АЛЬФА И БРАВО) --- */
         .squads-screen { background-image: linear-gradient(rgba(2, 5, 10, 0.75), rgba(2, 5, 10, 0.95)), url('chat_bg.png'); }
         .squads-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; width: 100%; max-width: 1200px; z-index: 2; margin-top: 20px; }
         .squad-card { position: relative; border-radius: 8px; overflow: hidden; border: 1px solid rgba(0, 242, 254, 0.3); cursor: pointer; transition: all 0.3s; min-height: 200px; display: flex; flex-direction: column; justify-content: flex-end; }
@@ -817,9 +817,9 @@
             <button class="btn-join-neon lang-txt" id="openModalBtn" data-ru='<i class="fa-solid fa-paper-plane"></i> Подать заявку / Верификация' data-en='<i class="fa-solid fa-paper-plane"></i> Apply / Verify' data-zh='<i class="fa-solid fa-paper-plane"></i> 申请 / 验证'><i class="fa-solid fa-paper-plane"></i> Подать заявку / Верификация</button>
         </div>
     </section>
-<!-- СЕКЦИЯ: СОСТАВЫ (АЛЬФА/БРАВО) -->
+<!-- СЕКЦИЯ: БОЕВЫЕ СОСТАВЫ (ДИНАМИЧЕСКИЕ) -->
     <section id="squads" class="squads-screen">
-        <h2 class="section-title lang-txt" data-ru="Составы" data-en="Squads" data-zh="战斗阵容">Составы</h2>
+        <h2 class="section-title lang-txt" data-ru="Боевые составы" data-en="Battle Squads" data-zh="战斗阵容">Боевые составы</h2>
         
         <button type="button" id="btnAddSquadMap" class="btn-add-squad lang-txt" data-ru="+ Добавить тактическую карту" data-en="+ Add Tactical Map" data-zh="+ 添加战术地图">+ Добавить тактическую карту</button>
         
@@ -919,7 +919,7 @@
                 <input type="text" id="squadEditMapUrl" placeholder="Ссылка на общую картинку карты (url)" style="width: 100%; margin-bottom: 15px; background: rgba(0,0,0,0.5); color: #fff; border: 1px solid #00f2fe; padding: 10px; border-radius: 4px; font-family: 'Oswald', sans-serif;">
                 
                 <div id="squadEditSlotsContainer">
-                    <!-- JS сгенерирует 2 колонки (Альфа и Браво) сюда -->
+                    <!-- JS сгенерирует колонки сюда -->
                 </div>
                 
                 <div style="display: flex; gap: 10px; margin-top: 25px;">
@@ -931,7 +931,7 @@
             <!-- Блок просмотра (для всех остальных) -->
             <div id="squadViewerArea" style="display: none;">
                 <div class="squad-view-list" id="squadViewListContainer">
-                    <!-- JS сгенерирует 2 колонки сюда -->
+                    <!-- JS сгенерирует колонки сюда -->
                 </div>
             </div>
         </div>
@@ -969,9 +969,9 @@
                     </select>
                 </div>
                 
-                <!-- Новое поле: Статус -->
+                <!-- Новое поле: Желаемый статус -->
                 <div class="form-group">
-                    <label class="lang-txt" data-ru="Статус" data-en="Status" data-zh="期望状态">Желаемый статус</label>
+                    <label class="lang-txt" data-ru="Желаемый статус" data-en="Desired Status" data-zh="期望状态">Желаемый статус</label>
                     <select id="appStatus" required style="width: 100%; background: rgba(2, 5, 10, 0.6); border: 1px solid rgba(0, 242, 254, 0.3); padding: 10px; color: #fff; border-radius: 4px; font-family: 'Oswald', sans-serif;">
                         <option value="none" class="lang-txt" data-ru="Обычный боец" data-en="Normal Fighter" data-zh="普通战士">Обычный боец</option>
                         <option value="hero" class="lang-txt" data-ru="Герой" data-en="Hero" data-zh="英雄">Герой</option>
@@ -1720,22 +1720,43 @@
             trainingTime: null, trainingYes: [], trainingNo: [],
             cwTime: null, cwNotified: false, autoCwEnabled: false,
             founders: {},
-            squads: [], // Массив для карт составов Альфа и Браво
+            squads: [], 
             stats: { views: 0, uniques: 0, requests: 0, mobile: 0, pc: 0 }
         };
         let isCloudSynced = false; 
 
-        // --- ЛОГИКА ДВУХ СОСТАВОВ (АЛЬФА И БРАВО) С ПРОВЕРКОЙ ДОСТУПА ---
+        // --- ЛОГИКА ДИНАМИЧЕСКИХ СОСТАВОВ (ОТ 1 ДО 4) С ПРОВЕРКОЙ ДОСТУПА ---
         let currentEditingSquadId = null;
+        
+        // Конфигурация доступных дивизионов
+        const SQUAD_NAMES = ['АЛЬФА', 'БРАВО', 'ЧАРЛИ', 'ДЕЛЬТА'];
+        const SQUAD_IDS = ['alpha', 'bravo', 'charlie', 'delta'];
+        const SQUAD_COLORS = ['#00f2fe', '#ff0055', '#eab308', '#22c55e']; // Цвета отрядов
+        const SQUAD_PREFIX = ['A', 'B', 'C', 'D']; // Префиксы спавнов
+        const SQUAD_RES_PREFIX = ['РА', 'РБ', 'РЧ', 'РД']; // Префиксы резерва
 
-        function renderSquadsGallery() {
+        // Мигратор: переводит старые данные базы в новый массив teams
+        function getSquadTeams(squad) {
+            if (!squad) return [{ name: 'АЛЬФА', id: 'alpha', slots: [], reserves: [] }];
+            if (squad.teams) return squad.teams;
+            
+            let teams = [];
+            if (squad.alphaSlots || squad.slots) {
+                teams.push({ name: 'АЛЬФА', id: 'alpha', slots: squad.alphaSlots || squad.slots || [], reserves: squad.alphaReserves || squad.reserves || [] });
+            }
+            if ((squad.bravoSlots && squad.bravoSlots.length > 0) || (squad.bravoReserves && squad.bravoReserves.length > 0)) {
+                 teams.push({ name: 'БРАВО', id: 'bravo', slots: squad.bravoSlots || [], reserves: squad.bravoReserves || [] });
+            }
+            if (teams.length === 0) teams.push({ name: 'АЛЬФА', id: 'alpha', slots: [], reserves: [] });
+            return teams;
+        }
+
+        window.renderSquadsGallery = function() {
             const container = document.getElementById('squadsGalleryContainer');
             if (!container) return;
             container.innerHTML = '';
             
             let squads = cloudDatabase.squads || [];
-            
-            // Надежно получаем ник текущего пользователя напрямую из базы, а не только из кэша
             let sessionTg = (localStorage.getItem('stage_user_registered_tg') || "").trim().toLowerCase();
             let myNick = null;
             if (sessionTg && cloudDatabase.metadata && cloudDatabase.metadata[sessionTg]) {
@@ -1743,23 +1764,20 @@
             }
             if (!myNick) myNick = localStorage.getItem('stage_cached_nick');
 
-            // Защита доступа: Фильтр отображения карт только для участников составов (если не лидер)
+            // Фильтр отображения карт только для участников
             if (!isLeaderMode) {
                 if (myNick) {
-                    const safeNick = myNick.trim().toLowerCase(); // Убираем случайные пробелы и регистр
+                    const safeNick = myNick.trim().toLowerCase();
                     squads = squads.filter(squad => {
                         const checkPlayer = (slot) => slot && slot.player && slot.player.trim().toLowerCase() === safeNick;
-                        
-                        return (squad.alphaSlots && squad.alphaSlots.some(checkPlayer)) ||
-                               (squad.alphaReserves && squad.alphaReserves.some(checkPlayer)) ||
-                               (squad.bravoSlots && squad.bravoSlots.some(checkPlayer)) ||
-                               (squad.bravoReserves && squad.bravoReserves.some(checkPlayer)) ||
-                               // На случай обратной совместимости старых данных
-                               (squad.slots && squad.slots.some(checkPlayer)) ||
-                               (squad.reserves && squad.reserves.some(checkPlayer));
+                        let teams = getSquadTeams(squad);
+                        for(let team of teams) {
+                            if (team.slots.some(checkPlayer)) return true;
+                            if (team.reserves.some(checkPlayer)) return true;
+                        }
+                        return false;
                     });
                 } else {
-                    // Если ник вообще не найден (или пользователь не авторизован), прячем всё
                     squads = [];
                 }
             }
@@ -1776,10 +1794,9 @@
                 
                 const bgUrl = squad.mapUrl ? squad.mapUrl : 'maps_bg.png';
                 
-                const aCount = (squad.alphaSlots ? squad.alphaSlots.length : 0) + (squad.alphaReserves ? squad.alphaReserves.length : 0);
-                const bCount = (squad.bravoSlots ? squad.bravoSlots.length : 0) + (squad.bravoReserves ? squad.bravoReserves.length : 0);
-                const oldCount = (squad.slots ? squad.slots.length : 0) + (squad.reserves ? squad.reserves.length : 0);
-                const total = aCount + bCount + oldCount;
+                let total = 0;
+                let teams = getSquadTeams(squad);
+                teams.forEach(t => { total += (t.slots ? t.slots.length : 0) + (t.reserves ? t.reserves.length : 0); });
                 
                 card.innerHTML = `
                     <div class="squad-card-bg" style="background-image: url('${bgUrl}');"></div>
@@ -1793,10 +1810,10 @@
         }
 
         document.getElementById('btnAddSquadMap')?.addEventListener('click', () => {
-            openSquadModal(null); // null = создание новой карты
+            openSquadModal(null);
         });
 
-        function openSquadModal(squadId) {
+        window.openSquadModal = function(squadId) {
             currentEditingSquadId = squadId;
             const modal = document.getElementById('squadModalOverlay');
             const title = document.getElementById('squadModalTitle');
@@ -1808,11 +1825,8 @@
             const squad = squads.find(s => s.id === squadId);
 
             if (isLeaderMode && (!squadId || confirm(t("Открыть режим редактирования состава? (Отмена - режим просмотра)", "Open in edit mode? (Cancel - view mode)", "在编辑模式下打开？（取消 - 查看模式）")))) {
-                // РЕЖИМ РЕДАКТИРОВАНИЯ (Только для Главы)
                 title.textContent = squadId ? t("Редактирование состава", "Edit Squad", "编辑阵容") : t("Новая карта составов", "New Squad Map", "新阵容地图");
-                img.style.display = 'none';
-                viewArea.style.display = 'none';
-                editArea.style.display = 'block';
+                img.style.display = 'none'; viewArea.style.display = 'none'; editArea.style.display = 'block';
                 
                 document.getElementById('squadEditMapName').value = squad ? squad.mapName : '';
                 document.getElementById('squadEditMapUrl').value = squad ? squad.mapUrl : '';
@@ -1822,100 +1836,128 @@
                 
                 renderSquadEditSlots(squad);
             } else {
-                // РЕЖИМ ПРОСМОТРА
                 if (!squad) return;
                 title.textContent = squad.mapName || t("Тактическая карта", "Tactical Map", "战术地图");
+                if (squad.mapUrl) { img.src = squad.mapUrl; img.style.display = 'block'; } else { img.style.display = 'none'; }
                 
-                if (squad.mapUrl) {
-                    img.src = squad.mapUrl;
-                    img.style.display = 'block';
-                } else {
-                    img.style.display = 'none';
-                }
-                
-                editArea.style.display = 'none';
-                viewArea.style.display = 'block';
-                
+                editArea.style.display = 'none'; viewArea.style.display = 'block';
                 renderSquadViewList(squad);
             }
-            
             modal.classList.add('active');
         }
 
         function getPlayerOptionsHtml(selectedNick) {
             const players = [];
-            for (let tg in cloudDatabase.metadata) {
-                if (cloudDatabase.metadata[tg].nick) players.push(cloudDatabase.metadata[tg].nick);
-            }
+            for (let tg in cloudDatabase.metadata) { if (cloudDatabase.metadata[tg].nick) players.push(cloudDatabase.metadata[tg].nick); }
             players.sort();
-            
             let html = `<option value="">-- Боец --</option>`;
-            players.forEach(p => {
-                const sel = (p === selectedNick) ? 'selected' : '';
-                html += `<option value="${p}" ${sel}>${p}</option>`;
-            });
+            players.forEach(p => { html += `<option value="${p}" ${p === selectedNick ? 'selected' : ''}>${p}</option>`; });
             return html;
         }
 
         function getShipOptionsHtml(selectedShip) {
             const classes = ["Фрегат", "Эсминец", "Крейсер", "Линкор", "Хаверкрафт", "Субмарина", "Авианосец", "Экраноплан"];
             let html = `<option value="">-- Класс --</option>`;
-            classes.forEach(c => {
-                const sel = (c === selectedShip) ? 'selected' : '';
-                html += `<option value="${c}" ${sel}>${c}</option>`;
-            });
+            classes.forEach(c => { html += `<option value="${c}" ${c === selectedShip ? 'selected' : ''}>${c}</option>`; });
             return html;
         }
 
-        function renderSquadEditSlots(squad) {
-            const container = document.getElementById('squadEditSlotsContainer');
-            let html = '<div class="squad-columns">';
+        // Динамическая отрисовка слотов (Редактирование) в ДВА ЭТАЖА
+        window.renderSquadEditSlots = function(squad) {
+            let teams = getSquadTeams(squad);
+            window.currentEditSquadCount = Math.max(1, teams.length);
+            drawEditColumns(teams);
+        }
 
-            // КОЛОНКА: АЛЬФА
-            html += '<div class="squad-col-alpha"><div class="squad-col-title">Состав АЛЬФА</div>';
-            for(let i=0; i<5; i++) {
-                const slot = squad && (squad.alphaSlots ? squad.alphaSlots[i] : (squad.slots ? squad.slots[i] : null)) || { spawn: 'A'+(i+1), player: '', ship: '' };
-                html += `
-                <div class="squad-slot-row">
-                    <input type="text" class="spawn-input" id="sq-edit-a-spawn-${i}" value="${slot.spawn}">
-                    <select id="sq-edit-a-player-${i}">${getPlayerOptionsHtml(slot.player)}</select>
-                    <select id="sq-edit-a-ship-${i}">${getShipOptionsHtml(slot.ship)}</select>
-                </div>`;
-            }
-            for(let i=0; i<2; i++) {
-                const slot = squad && (squad.alphaReserves ? squad.alphaReserves[i] : (squad.reserves ? squad.reserves[i] : null)) || { spawn: 'РА'+(i+1), player: '', ship: '' };
-                html += `
-                <div class="squad-slot-row reserve">
-                    <input type="text" class="spawn-input" id="sq-edit-ar-spawn-${i}" value="${slot.spawn}">
-                    <select id="sq-edit-ar-player-${i}">${getPlayerOptionsHtml(slot.player)}</select>
-                    <select id="sq-edit-ar-ship-${i}">${getShipOptionsHtml(slot.ship)}</select>
-                </div>`;
+        window.drawEditColumns = function(teams) {
+            const container = document.getElementById('squadEditSlotsContainer');
+            // Добавляем горизонтальный скролл (overflow-x: auto)
+            let html = '<div class="squad-columns" style="display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px;">';
+
+            for(let c = 0; c < window.currentEditSquadCount; c++) {
+                let team = teams[c] || { slots: [], reserves: [] };
+                let tId = SQUAD_IDS[c]; let tName = SQUAD_NAMES[c];
+                let color = SQUAD_COLORS[c]; let pfx = SQUAD_PREFIX[c]; let rpfx = SQUAD_RES_PREFIX[c];
+
+                // flex: 1 0 220px жестко запрещает колонке сжиматься меньше 220 пикселей
+                html += `<div class="squad-col-dynamic" style="min-width: 220px; flex: 1 0 220px;">
+                            <div class="squad-col-title" style="color: ${color}; text-shadow: 0 0 10px ${color}80;">Состав ${tName}</div>`;
+
+                for(let i=0; i<5; i++) {
+                    let slot = team.slots[i] || { spawn: pfx+(i+1), player: '', ship: '' };
+                    html += `
+                    <div class="squad-slot-row" style="border-left-color: ${color}; flex-direction: column; align-items: stretch; gap: 8px;">
+                        <div style="display: flex; gap: 8px; width: 100%;">
+                            <input type="text" class="spawn-input" id="sq-edit-${tId}-spawn-${i}" value="${slot.spawn}" style="color: ${color}; border-color: ${color}4d; flex: 0 0 45px; margin: 0; padding: 8px 2px;">
+                            <select id="sq-edit-${tId}-ship-${i}" style="flex: 1; min-width: 0; text-overflow: ellipsis; padding: 8px 4px;">${getShipOptionsHtml(slot.ship)}</select>
+                        </div>
+                        <select id="sq-edit-${tId}-player-${i}" style="width: 100%; min-width: 0; text-overflow: ellipsis;">${getPlayerOptionsHtml(slot.player)}</select>
+                    </div>`;
+                }
+                for(let i=0; i<2; i++) {
+                    let slot = team.reserves[i] || { spawn: rpfx+(i+1), player: '', ship: '' };
+                    html += `
+                    <div class="squad-slot-row reserve" style="border-left-color: #eab308 !important; flex-direction: column; align-items: stretch; gap: 8px;">
+                        <div style="display: flex; gap: 8px; width: 100%;">
+                            <input type="text" class="spawn-input" id="sq-edit-${tId}-rspawn-${i}" value="${slot.spawn}" style="flex: 0 0 45px; margin: 0; padding: 8px 2px;">
+                            <select id="sq-edit-${tId}-rship-${i}" style="flex: 1; min-width: 0; text-overflow: ellipsis; padding: 8px 4px;">${getShipOptionsHtml(slot.ship)}</select>
+                        </div>
+                        <select id="sq-edit-${tId}-rplayer-${i}" style="width: 100%; min-width: 0; text-overflow: ellipsis;">${getPlayerOptionsHtml(slot.player)}</select>
+                    </div>`;
+                }
+                html += '</div>';
             }
             html += '</div>';
 
-            // КОЛОНКА: БРАВО
-            html += '<div class="squad-col-bravo"><div class="squad-col-title">Состав БРАВО</div>';
-            for(let i=0; i<5; i++) {
-                const slot = squad && squad.bravoSlots && squad.bravoSlots[i] ? squad.bravoSlots[i] : { spawn: 'B'+(i+1), player: '', ship: '' };
-                html += `
-                <div class="squad-slot-row">
-                    <input type="text" class="spawn-input" id="sq-edit-b-spawn-${i}" value="${slot.spawn}">
-                    <select id="sq-edit-b-player-${i}">${getPlayerOptionsHtml(slot.player)}</select>
-                    <select id="sq-edit-b-ship-${i}">${getShipOptionsHtml(slot.ship)}</select>
-                </div>`;
+            let btnsHtml = '<div style="display: flex; gap: 10px;">';
+            if (window.currentEditSquadCount < 4) {
+                btnsHtml += `<button type="button" class="btn-submit" onclick="addSquadColumn()" style="background: rgba(0, 242, 254, 0.1); border: 1px dashed #00f2fe; color: #00f2fe; margin-top: 15px; flex: 1;">+ Добавить (${SQUAD_NAMES[window.currentEditSquadCount]})</button>`;
             }
-            for(let i=0; i<2; i++) {
-                const slot = squad && squad.bravoReserves && squad.bravoReserves[i] ? squad.bravoReserves[i] : { spawn: 'РБ'+(i+1), player: '', ship: '' };
-                html += `
-                <div class="squad-slot-row reserve">
-                    <input type="text" class="spawn-input" id="sq-edit-br-spawn-${i}" value="${slot.spawn}">
-                    <select id="sq-edit-br-player-${i}">${getPlayerOptionsHtml(slot.player)}</select>
-                    <select id="sq-edit-br-ship-${i}">${getShipOptionsHtml(slot.ship)}</select>
-                </div>`;
+            if (window.currentEditSquadCount > 1) {
+                btnsHtml += `<button type="button" class="btn-submit" onclick="removeSquadColumn()" style="background: rgba(239, 68, 68, 0.1); border: 1px dashed #ef4444; color: #ef4444; margin-top: 15px; flex: 1;">- Убрать (${SQUAD_NAMES[window.currentEditSquadCount-1]})</button>`;
             }
-            html += '</div></div>';
+            btnsHtml += '</div>';
+            
+            container.innerHTML = html + btnsHtml;
+        }
 
-            container.innerHTML = html;
+        window.gatherCurrentEditTeams = function() {
+            let teams = [];
+            for(let c = 0; c < window.currentEditSquadCount; c++) {
+                let tId = SQUAD_IDS[c];
+                let team = { name: SQUAD_NAMES[c], id: tId, slots: [], reserves: [] };
+                for(let i=0; i<5; i++) {
+                    let spawnEl = document.getElementById(`sq-edit-${tId}-spawn-${i}`);
+                    if (spawnEl) {
+                        team.slots.push({ spawn: spawnEl.value.trim(), player: document.getElementById(`sq-edit-${tId}-player-${i}`).value, ship: document.getElementById(`sq-edit-${tId}-ship-${i}`).value });
+                    }
+                }
+                for(let i=0; i<2; i++) {
+                    let rspawnEl = document.getElementById(`sq-edit-${tId}-rspawn-${i}`);
+                    if (rspawnEl) {
+                        team.reserves.push({ spawn: rspawnEl.value.trim(), player: document.getElementById(`sq-edit-${tId}-rplayer-${i}`).value, ship: document.getElementById(`sq-edit-${tId}-rship-${i}`).value });
+                    }
+                }
+                teams.push(team);
+            }
+            return teams;
+        }
+
+        window.addSquadColumn = function() {
+            if (window.currentEditSquadCount >= 4) return;
+            let teams = gatherCurrentEditTeams();
+            window.currentEditSquadCount++;
+            drawEditColumns(teams);
+        }
+
+        window.removeSquadColumn = function() {
+            if (window.currentEditSquadCount <= 1) return;
+            if(confirm('Удалить последнюю колонку? Данные в ней будут потеряны.')) {
+                let teams = gatherCurrentEditTeams();
+                teams.pop();
+                window.currentEditSquadCount--;
+                drawEditColumns(teams);
+            }
         }
 
         window.saveCurrentSquad = async function() {
@@ -1923,36 +1965,26 @@
             
             const mapName = document.getElementById('squadEditMapName').value.trim();
             const mapUrl = document.getElementById('squadEditMapUrl').value.trim();
-            
             if(!mapName) { alert(t("Введите название карты!", "Enter map name!", "请输入地图名称！")); return; }
             
+            let teams = gatherCurrentEditTeams();
+            let newTeams = [];
+            
+            for(let c=0; c < teams.length; c++) {
+                 let cleanTeam = { name: teams[c].name, id: teams[c].id, slots: [], reserves: [] };
+                 for(let i=0; i<5; i++) { if(teams[c].slots[i].player) cleanTeam.slots.push(teams[c].slots[i]); }
+                 for(let i=0; i<2; i++) { if(teams[c].reserves[i].player) cleanTeam.reserves.push(teams[c].reserves[i]); }
+                 newTeams.push(cleanTeam);
+            }
+
             const newSquad = {
                 id: currentEditingSquadId || 'sq_' + Date.now(),
                 mapName: mapName,
                 mapUrl: mapUrl,
-                alphaSlots: [], alphaReserves: [],
-                bravoSlots: [], bravoReserves: []
+                teams: newTeams 
             };
             
-            for(let i=0; i<5; i++) {
-                const pA = document.getElementById(`sq-edit-a-player-${i}`).value;
-                if(pA) newSquad.alphaSlots.push({ spawn: document.getElementById(`sq-edit-a-spawn-${i}`).value.trim() || 'A'+(i+1), player: pA, ship: document.getElementById(`sq-edit-a-ship-${i}`).value });
-                
-                const pB = document.getElementById(`sq-edit-b-player-${i}`).value;
-                if(pB) newSquad.bravoSlots.push({ spawn: document.getElementById(`sq-edit-b-spawn-${i}`).value.trim() || 'B'+(i+1), player: pB, ship: document.getElementById(`sq-edit-b-ship-${i}`).value });
-            }
-            
-            for(let i=0; i<2; i++) {
-                const rA = document.getElementById(`sq-edit-ar-player-${i}`).value;
-                if(rA) newSquad.alphaReserves.push({ spawn: document.getElementById(`sq-edit-ar-spawn-${i}`).value.trim() || 'РА'+(i+1), player: rA, ship: document.getElementById(`sq-edit-ar-ship-${i}`).value });
-                
-                const rB = document.getElementById(`sq-edit-br-player-${i}`).value;
-                if(rB) newSquad.bravoReserves.push({ spawn: document.getElementById(`sq-edit-br-spawn-${i}`).value.trim() || 'РБ'+(i+1), player: rB, ship: document.getElementById(`sq-edit-br-ship-${i}`).value });
-            }
-            
-            // ИСПРАВЛЕНИЕ: Обязательно скачиваем свежую базу перед пушем состава
-            await syncWithCloud(); 
-            
+            await syncWithCloud(); // ЗАЩИТА
             if(!cloudDatabase.squads) cloudDatabase.squads = [];
             
             if (currentEditingSquadId) {
@@ -1971,7 +2003,7 @@
         window.deleteCurrentSquad = async function() {
             if (!isLeaderMode || !currentEditingSquadId) return;
             if(confirm(t("Точно удалить эту карту состава?", "Delete this squad map?", "确定删除此阵容地图？"))) {
-                await syncWithCloud();
+                await syncWithCloud(); // ЗАЩИТА
                 cloudDatabase.squads = cloudDatabase.squads.filter(s => s.id !== currentEditingSquadId);
                 await saveToCloud();
                 document.getElementById('squadModalOverlay').classList.remove('active');
@@ -1980,69 +2012,64 @@
             }
         }
 
-        function renderSquadViewList(squad) {
+        // Динамическая отрисовка слотов (Просмотр)
+        window.renderSquadViewList = function(squad) {
             const container = document.getElementById('squadViewListContainer');
-            let html = '<div class="squad-columns">';
+            // Добавляем скролл и в режим просмотра, чтобы все влезло
+            let html = '<div class="squad-columns" style="display: flex; gap: 20px; overflow-x: auto; padding-bottom: 15px;">';
             
-            const renderColumn = (title, slots, reserves, itemClass) => {
-                let colHtml = `<div class="squad-col-${itemClass}"><div class="squad-col-title">${title}</div>`;
-                
-                if ((!slots || slots.length === 0) && (!reserves || reserves.length === 0)) {
-                    colHtml += `<div style="color: #94a3b8; text-align: center; padding: 20px; font-size: 13px;">${t("Состав пуст", "Squad is empty", "阵容为空")}</div></div>`;
-                    return colHtml;
-                }
-                
-                if(slots) {
-                    slots.forEach(slot => {
-                        let spec = "";
-                        for (let tg in cloudDatabase.metadata) {
-                            if (cloudDatabase.metadata[tg].nick === slot.player) {
-                                spec = cloudDatabase.metadata[tg].specialization || "";
-                                break;
-                            }
-                        }
-                        const specHtml = SPEC_ICONS[spec] || '';
-                        const shipHtml = SHIP_ICONS[slot.ship] || '';
-                        
-                        colHtml += `
-                        <div class="squad-view-item">
-                            <div class="spawn-badge" title="Точка высадки">${slot.spawn}</div>
-                            <div class="player-name">${slot.player} ${specHtml}</div>
-                            <div class="ship-info">${slot.ship} ${shipHtml}</div>
-                        </div>`;
-                    });
-                }
-                
-                if(reserves && reserves.length > 0) {
-                    colHtml += `<div style="margin-top: 15px; margin-bottom: 5px; color: #eab308; font-size: 12px; font-family: 'Orbitron', sans-serif; letter-spacing: 2px; text-align:center;">РЕЗЕРВ</div>`;
-                    reserves.forEach(slot => {
-                        let spec = "";
-                        for (let tg in cloudDatabase.metadata) {
-                            if (cloudDatabase.metadata[tg].nick === slot.player) {
-                                spec = cloudDatabase.metadata[tg].specialization || "";
-                                break;
-                            }
-                        }
-                        const specHtml = SPEC_ICONS[spec] || '';
-                        const shipHtml = SHIP_ICONS[slot.ship] || '';
-                        
-                        colHtml += `
-                        <div class="squad-view-item reserve">
-                            <div class="spawn-badge" title="Резерв">${slot.spawn}</div>
-                            <div class="player-name">${slot.player} ${specHtml}</div>
-                            <div class="ship-info">${slot.ship} ${shipHtml}</div>
-                        </div>`;
-                    });
-                }
-                colHtml += '</div>';
-                return colHtml;
-            };
-            
-            html += renderColumn("Состав АЛЬФА", squad.alphaSlots || squad.slots, squad.alphaReserves || squad.reserves, "alpha");
-            html += renderColumn("Состав БРАВО", squad.bravoSlots, squad.bravoReserves, "bravo");
+            let teams = getSquadTeams(squad);
+            teams.forEach((team, idx) => {
+                let color = SQUAD_COLORS[idx] || '#00f2fe';
+                html += renderColumn(team.name, team.slots, team.reserves, color);
+            });
             
             html += '</div>';
             container.innerHTML = html;
+        }
+
+        function renderColumn(title, slots, reserves, color) {
+            let colHtml = `<div class="squad-col-dynamic" style="min-width: 250px; flex: 1 0 250px;"><div class="squad-col-title" style="color: ${color}; text-shadow: 0 0 10px ${color}80;">Состав ${title}</div>`;
+            
+            if ((!slots || slots.length === 0) && (!reserves || reserves.length === 0)) {
+                colHtml += `<div style="color: #94a3b8; text-align: center; padding: 20px; font-size: 13px;">${t("Состав пуст", "Squad is empty", "阵容为空")}</div></div>`;
+                return colHtml;
+            }
+            
+            if(slots) {
+                slots.forEach(slot => {
+                    let spec = "";
+                    for (let tg in cloudDatabase.metadata) {
+                        if (cloudDatabase.metadata[tg].nick === slot.player) { spec = cloudDatabase.metadata[tg].specialization || ""; break; }
+                    }
+                    const specHtml = SPEC_ICONS[spec] || ''; const shipHtml = SHIP_ICONS[slot.ship] || '';
+                    colHtml += `
+                    <div class="squad-view-item" style="border-left-color: ${color}; flex-wrap: wrap;">
+                        <div class="spawn-badge" style="background: ${color}; box-shadow: 0 0 10px ${color}66;" title="Точка высадки">${slot.spawn}</div>
+                        <div class="player-name" style="flex: 1 1 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${slot.player} ${specHtml}</div>
+                        <div class="ship-info" style="flex: 0 0 auto;">${slot.ship} ${shipHtml}</div>
+                    </div>`;
+                });
+            }
+            
+            if(reserves && reserves.length > 0) {
+                colHtml += `<div style="margin-top: 15px; margin-bottom: 5px; color: #eab308; font-size: 12px; font-family: 'Orbitron', sans-serif; letter-spacing: 2px; text-align:center;">РЕЗЕРВ</div>`;
+                reserves.forEach(slot => {
+                    let spec = "";
+                    for (let tg in cloudDatabase.metadata) {
+                        if (cloudDatabase.metadata[tg].nick === slot.player) { spec = cloudDatabase.metadata[tg].specialization || ""; break; }
+                    }
+                    const specHtml = SPEC_ICONS[spec] || ''; const shipHtml = SHIP_ICONS[slot.ship] || '';
+                    colHtml += `
+                    <div class="squad-view-item reserve" style="flex-wrap: wrap;">
+                        <div class="spawn-badge" title="Резерв">${slot.spawn}</div>
+                        <div class="player-name" style="flex: 1 1 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${slot.player} ${specHtml}</div>
+                        <div class="ship-info" style="flex: 0 0 auto;">${slot.ship} ${shipHtml}</div>
+                    </div>`;
+                });
+            }
+            colHtml += '</div>';
+            return colHtml;
         }
 
         function getClanPassword(tgLogin) {
@@ -2127,7 +2154,7 @@
             generateTacticalMapsGrid();
             initTrainingCountdown(); 
             initCwCountdown();
-            initCabinetBg(); // Загрузит локально сохраненный фон до синхронизации
+            initCabinetBg(); 
             
             if (localStorage.getItem('stage_team_logged') === 'true' || localStorage.getItem('stage_authorized') === 'true') { 
                 unlockTeamFeatures(); 
@@ -2165,7 +2192,6 @@
                 
                 if (checkBanAndLogout()) return;
                 
-                // ПОСЛЕ ЗАГРУЗКИ ИЗ ОБЛАКА ПРИМЕНЯЕМ АВАТАР И ФОН ИЗ ОБЛАКА
                 syncLocalPrefsFromCloud();
                 
                 applyGlobalKickedFilters();
@@ -2181,10 +2207,7 @@
             setInterval(() => {
                 syncWithCloud().then(() => {
                     if (checkBanAndLogout()) return;
-                    
-                    // ПОДДЕРЖИВАЕМ СИНХРОНИЗАЦИЮ ЕСЛИ ЧЕЛОВЕК ПОМЕНЯЛ ФОН С ДРУГОГО УСТРОЙСТВА
                     syncLocalPrefsFromCloud();
-                    
                     applyGlobalKickedFilters();
                     renderLocalRecruits();
                     applyLeaderStatusColors();
@@ -2193,11 +2216,11 @@
                 });
             }, 30000);
 
-            // ИСПРАВЛЕНИЕ: Защита таймера онлайна от затирания чужих данных
+            // ИСПРАВЛЕНИЕ: Защита базы (sync перед save)
             setInterval(async () => {
                 let myTg = localStorage.getItem('stage_user_registered_tg');
                 if (myTg) {
-                    await syncWithCloud(); // Обязательная синхронизация перед сохранением
+                    await syncWithCloud();
                     if (cloudDatabase.metadata[myTg]) {
                         cloudDatabase.metadata[myTg].lastActive = Date.now();
                         await saveToCloud();
@@ -2252,7 +2275,7 @@
                 let sessionTg = localStorage.getItem('stage_user_registered_tg') || "";
                 let cleanTg = sessionTg.trim().toLowerCase();
                 if (cleanTg && cloudDatabase.metadata && cloudDatabase.metadata[cleanTg]) {
-                    await syncWithCloud(); // Защита
+                    await syncWithCloud(); // ЗАЩИТА
                     cloudDatabase.metadata[cleanTg].cabBg = index;
                     await saveToCloud();
                     showNotification(t("Фон синхронизирован!", "Background synced!", "背景已同步！"), 'success');
@@ -2443,7 +2466,7 @@
             let sessionTg = localStorage.getItem('stage_user_registered_tg') || "";
             let cleanTg = sessionTg.trim().toLowerCase();
             if (cleanTg) {
-                await syncWithCloud(); // Защита перед изменением
+                await syncWithCloud(); // ЗАЩИТА
                 if (!cloudDatabase.metadata[cleanTg]) { cloudDatabase.metadata[cleanTg] = {}; }
                 cloudDatabase.metadata[cleanTg].avatar = avatarUrl;
                 renderLocalRecruits(); 
@@ -2532,7 +2555,7 @@
             
             const generatedPassword = getClanPassword(targetTgKey);
             
-            await syncWithCloud(); // Защита
+            await syncWithCloud(); // ЗАЩИТА
             
             cloudDatabase.recruits[currentParsedData.nick] = registerTimestamp;
             cloudDatabase.metadata[targetTgKey] = {
@@ -2622,7 +2645,7 @@
             let sessionTg = localStorage.getItem('stage_user_registered_tg') || "";
             let cleanTg = sessionTg.trim().toLowerCase();
             if (cleanTg && cloudDatabase.metadata[cleanTg]) {
-                await syncWithCloud(); // Защита
+                await syncWithCloud(); // ЗАЩИТА
                 cloudDatabase.metadata[cleanTg].shipClass = this.value;
                 await saveToCloud();
                 renderLocalRecruits(); 
@@ -2810,7 +2833,7 @@
                     })
                 });
 
-                await syncWithCloud(); // Защита перед изменением
+                await syncWithCloud(); // ЗАЩИТА
                 cloudDatabase.trainingTime = targetTimestamp;
                 cloudDatabase.trainingYes = [];
                 cloudDatabase.trainingNo = [];
@@ -2890,7 +2913,7 @@
         btnSubmitCw.addEventListener('click', async () => {
             btnSubmitCw.disabled = true;
 
-            await syncWithCloud(); // Защита
+            await syncWithCloud(); // ЗАЩИТА
 
             if (cloudDatabase.autoCwEnabled) {
                 cloudDatabase.autoCwEnabled = false;
@@ -2960,7 +2983,7 @@
         window.executeResetCwTimer = async function() {
             if(!isLeaderMode) return;
             if(confirm(t("Вы действительно хотите выключить автоматический таймер Клан Вара?", "Disable Auto Clan War timer?", "禁用自动战队战计时器？"))) {
-                await syncWithCloud();
+                await syncWithCloud(); // ЗАЩИТА
                 cloudDatabase.autoCwEnabled = false;
                 cloudDatabase.cwNotified = false;
                 await saveToCloud();
@@ -3006,7 +3029,7 @@
                 userNick = cloudDatabase.metadata[cleanTg].nick || userNick;
             }
 
-            await syncWithCloud(); // Защита перед изменением голосов
+            await syncWithCloud(); // ЗАЩИТА ПЕРЕД ИЗМЕНЕНИЕМ ГОЛОСОВ
 
             cloudDatabase.trainingYes = cloudDatabase.trainingYes.filter(n => n !== userNick);
             cloudDatabase.trainingNo = cloudDatabase.trainingNo.filter(n => n !== userNick);
@@ -3026,7 +3049,7 @@
         window.executeResetTrainingTimer = async function() {
             if(!isLeaderMode) return;
             if(confirm(t("Вы действительно хотите отменить текущую тренировку и удалить таймер?", "Cancel training and remove timer?", "取消当前训练并移除计时器？"))) {
-                await syncWithCloud();
+                await syncWithCloud(); // ЗАЩИТА
                 cloudDatabase.trainingTime = null;
                 cloudDatabase.trainingYes = [];
                 cloudDatabase.trainingNo = [];
@@ -3225,7 +3248,7 @@
 
         resetStatsBtn.addEventListener('click', async () => {
             if (confirm(t("Сбросить статистику?", "Reset stats?", "重置统计？"))) {
-                await syncWithCloud(); // Защита
+                await syncWithCloud(); // ЗАЩИТА
                 cloudDatabase.stats = { views: 1, uniques: 1, requests: 0, mobile: 0, pc: 0 };
                 
                 if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
@@ -3415,7 +3438,7 @@
             }
             if (!tgKeyToUpdate) return;
 
-            await syncWithCloud(); // Защита
+            await syncWithCloud(); // ЗАЩИТА ПЕРЕД ИЗМЕНЕНИЕМ СТАТУСА
             if (statusType === 'none') delete cloudDatabase.metadata[tgKeyToUpdate].customStatus;
             else cloudDatabase.metadata[tgKeyToUpdate].customStatus = statusType;
 
@@ -3508,7 +3531,7 @@
         window.kickPlayer = async function(element, nick, isStatic = true) {
             if (!isLeaderMode) return;
             if (confirm(t(`Удалить игрока ${nick} из состава?`, `Remove player ${nick}?`, `确认移除玩家 ${nick}？`))) {
-                await syncWithCloud(); // Защита
+                await syncWithCloud(); // ЗАЩИТА ПЕРЕД УДАЛЕНИЕМ
                 delete cloudDatabase.recruits[nick];
                 let removedTg = null;
                 for(let key in cloudDatabase.metadata) {
