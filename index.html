@@ -88,8 +88,8 @@
             box-shadow: 0 0 8px #00f2fe; border-radius: 2px;
         }
 
-        #navMapsLink, #navBoardLink { color: #a855f7; }
-        #navMapsLink:hover, #navBoardLink:hover { color: #c084fc; text-shadow: 0 0 10px rgba(168, 85, 247, 0.6); }
+        #navMapsLink, #navBoardLink, #navHallLink { color: #a855f7; }
+        #navMapsLink:hover, #navBoardLink:hover, #navHallLink:hover { color: #c084fc; text-shadow: 0 0 10px rgba(168, 85, 247, 0.6); }
         #navStatsBtn { display: none; color: #eab308; }
 
         #navCabinetBtn { 
@@ -110,17 +110,17 @@
         }
         .btn-nav-login:hover { background: #0088cc; color: #02050a; box-shadow: 0 0 25px rgba(0, 136, 204, 0.8); transform: scale(1.05); }
 
-        .welcome-screen, .roster-screen, .squads-screen, .maps-screen, .board-screen, .channels-screen, .creators-screen, .founders-screen {
+        .welcome-screen, .roster-screen, .squads-screen, .hall-screen, .maps-screen, .board-screen, .channels-screen, .creators-screen, .founders-screen {
             min-height: 100vh; width: 100vw; padding: 120px 20px 60px; position: relative;
             display: flex; flex-direction: column; align-items: center;
             background-position: center; background-size: cover; background-repeat: no-repeat; background-attachment: fixed;
         }
 
-        .welcome-screen > *, .roster-container, .squads-gallery, .social-container, .founders-grid, .section-title, .recruit-box, .secret-tg-box, .sub-section-title, .maps-grid, .board-container, .btn-fullscreen-toggle, .lock-overlay-box {
+        .welcome-screen > *, .roster-container, .squads-gallery, .social-container, .founders-grid, .section-title, .recruit-box, .secret-tg-box, .sub-section-title, .maps-grid, .board-container, .btn-fullscreen-toggle, .lock-overlay-box, .hall-container {
             opacity: 0; transform: translateY(30px); transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        .section-active > *, .section-active .roster-container, .section-active .squads-gallery, .section-active .social-container, .section-active .founders-grid, .section-active .section-title, .section-active .recruit-box, .section-active .secret-tg-box, .section-active .sub-section-title, .section-active .maps-grid, .section-active .board-container, .section-active .btn-fullscreen-toggle, .section-active .lock-overlay-box {
+        .section-active > *, .section-active .roster-container, .section-active .squads-gallery, .section-active .social-container, .section-active .founders-grid, .section-active .section-title, .section-active .recruit-box, .section-active .secret-tg-box, .section-active .sub-section-title, .section-active .maps-grid, .section-active .board-container, .section-active .btn-fullscreen-toggle, .section-active .lock-overlay-box, .section-active .hall-container {
             opacity: 1; transform: translateY(0);
         }
 
@@ -254,7 +254,7 @@
         }
         .btn-join-neon:hover { background: #0088cc; color: #02050a; box-shadow: 0 0 35px rgba(0, 136, 204, 0.8); transform: scale(1.03); }
 
-        /* --- БОЕВЫЕ СОСТАВЫ (АЛЬФА И БРАВО) --- */
+        /* --- БОЕВЫЕ СОСТАВЫ --- */
         .squads-screen { background-image: linear-gradient(rgba(2, 5, 10, 0.75), rgba(2, 5, 10, 0.95)), url('chat_bg.png'); }
         .squads-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; width: 100%; max-width: 1200px; z-index: 2; margin-top: 20px; }
         .squad-card { position: relative; border-radius: 8px; overflow: hidden; border: 1px solid rgba(0, 242, 254, 0.3); cursor: pointer; transition: all 0.3s; min-height: 200px; display: flex; flex-direction: column; justify-content: flex-end; }
@@ -268,43 +268,38 @@
         .btn-add-squad { display: none; background: rgba(0, 242, 254, 0.15); border: 2px dashed #00f2fe; color: #00f2fe; padding: 14px 25px; border-radius: 8px; font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: bold; text-transform: uppercase; cursor: pointer; transition: all 0.3s; margin-bottom: 10px; width: 100%; max-width: 400px; text-align: center; }
         .btn-add-squad:hover { background: #00f2fe; color: #02050a; box-shadow: 0 0 25px rgba(0, 242, 254, 0.6); transform: translateY(-2px); }
         
-        /* Стили колонок и полей составов */
         .squad-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; align-items: start; }
         .squad-col-title { font-family: 'Orbitron', sans-serif; font-size: 16px; text-transform: uppercase; text-align: center; margin-bottom: 12px; font-weight: 900; letter-spacing: 1px; }
-        .squad-col-alpha .squad-col-title { color: #00f2fe; text-shadow: 0 0 10px rgba(0, 242, 254, 0.5); }
-        .squad-col-bravo .squad-col-title { color: #ff0055; text-shadow: 0 0 10px rgba(255, 0, 85, 0.5); }
 
         .squad-slot-row { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; background: rgba(0,0,0,0.4); padding: 10px; border-radius: 4px; border-left: 2px solid #00f2fe; }
-        .squad-col-bravo .squad-slot-row { border-left-color: #ff0055; }
-        
         .squad-slot-row.reserve { opacity: 0.9; margin-top: 20px; position: relative; border-left-color: #eab308 !important; }
         .squad-slot-row.reserve::before { content: 'РЕЗЕРВ'; position: absolute; top: -18px; left: 0; font-size: 10px; color: #eab308; font-family: 'Orbitron', sans-serif; }
         
         .squad-slot-row input.spawn-input { width: 50px; text-align: center; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(0, 242, 254, 0.3); color: #00f2fe; font-family: 'Orbitron', sans-serif; font-weight: bold; font-size: 14px; border-radius: 4px; padding: 8px 5px; outline: none; transition: 0.3s; }
-        .squad-col-bravo .squad-slot-row input.spawn-input { color: #ff0055; border-color: rgba(255,0,85,0.3); }
-        
         .squad-slot-row input.spawn-input:focus { border-color: #00f2fe; box-shadow: 0 0 10px rgba(0,242,254,0.5); }
-        .squad-col-bravo .squad-slot-row input.spawn-input:focus { border-color: #ff0055; box-shadow: 0 0 10px rgba(255,0,85,0.5); }
-        
         .squad-slot-row select { flex: 1; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255,255,255,0.1); color: #fff; border-radius: 4px; padding: 8px; font-family: 'Oswald', sans-serif; outline: none; font-size: 14px; }
-        .squad-slot-row select:focus { border-color: #a855f7; box-shadow: 0 0 10px rgba(168,85,247,0.5); }
         
-        /* Стили просмотра состава (зрительский режим) */
         .squad-view-image { width: 100%; max-height: 300px; object-fit: contain; border-radius: 6px; border: 1px solid rgba(0,242,254,0.3); margin-bottom: 20px; background-color: #02050a; cursor: pointer; }
         .squad-view-item { display: flex; align-items: center; gap: 15px; background: rgba(2, 5, 10, 0.6); padding: 12px 15px; border-radius: 6px; border-left: 3px solid #00f2fe; margin-bottom: 10px; transition: transform 0.2s; }
-        .squad-col-bravo .squad-view-item { border-left-color: #ff0055; }
         .squad-view-item:hover { transform: translateX(5px); background: rgba(15, 23, 42, 0.8); }
         .squad-view-item.reserve { border-left-color: #eab308; }
         
         .squad-view-item .spawn-badge { background: #00f2fe; color: #02050a; font-family: 'Orbitron', sans-serif; font-weight: bold; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 4px; flex-shrink: 0; font-size: 15px; box-shadow: 0 0 10px rgba(0,242,254,0.4); }
-        .squad-col-bravo .squad-view-item .spawn-badge { background: #ff0055; box-shadow: 0 0 10px rgba(255,0,85,0.4); }
         .squad-view-item.reserve .spawn-badge { background: #eab308; box-shadow: 0 0 10px rgba(234,179,8,0.4); }
         
         .squad-view-item .player-name { flex: 1; font-weight: bold; color: #fff; font-size: 16px; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
         .squad-view-item .ship-info { color: #94a3b8; font-size: 14px; display: flex; align-items: center; gap: 8px; font-family: 'Oswald', sans-serif; text-transform: uppercase; }
         .squad-view-item .ship-info i { font-size: 16px; }
 
-        /* Полноэкранный просмотр карты */
+        /* --- ЗАЛ СЛАВЫ (Новые стили) --- */
+        .hall-screen { background-image: linear-gradient(rgba(2, 5, 10, 0.8), rgba(2, 5, 10, 0.95)), url('bg.png'); }
+        .hall-container { display: flex; flex-wrap: wrap; gap: 30px; width: 100%; max-width: 1200px; justify-content: center; align-items: flex-start; z-index: 2; margin-top: 20px;}
+        .top10-box { flex: 1; min-width: 320px; max-width: 700px; padding: 25px; border-radius: 8px; border: 1px solid #00f2fe; box-shadow: 0 0 20px rgba(0, 242, 254, 0.2); }
+        .month-hero-box { flex: 0 0 320px; border-radius: 8px; padding: 25px; text-align: center; border: 1px solid #ff0055; box-shadow: 0 0 20px rgba(255, 0, 85, 0.2); }
+        .month-hero-avatar { width: 100px; height: 100px; border-radius: 50%; border: 2px solid #ff0055; margin: 0 auto 15px; background-size: cover; background-position: center; background-color: #02050a; }
+        .damage-record-row { border-left: 3px solid #00f2fe; padding: 12px; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.5); margin-bottom: 8px; border-radius: 4px; transition: transform 0.2s;}
+        .damage-record-row:hover { transform: translateX(5px); }
+
         #fullscreenMapOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 200; display: none; justify-content: center; align-items: center; flex-direction: column; }
         #fullscreenMapOverlay.active { display: flex; }
         #fullscreenMapImg { max-width: 95vw; max-height: 90vh; border-radius: 8px; border: 2px solid #00f2fe; box-shadow: 0 0 30px rgba(0,242,254,0.3); }
@@ -600,7 +595,7 @@
             font-family: 'Orbitron', monospace;
             font-size: clamp(24px, 6vw, 40px);
             font-weight: 900;
-            color: #00f2fe; /* Неоновый голубой вместо зеленого */
+            color: #00f2fe;
             text-shadow: 0 0 10px rgba(0, 242, 254, 0.6), 0 0 20px rgba(0, 242, 254, 0.4);
             margin-bottom: 25px;
             letter-spacing: 3px;
@@ -614,7 +609,6 @@
             transition: all 0.5s ease;
         }
 
-        /* Финальное состояние текста */
         .matrix-decoder.finished {
             background: linear-gradient(90deg, #00f2fe, #ffffff, #a855f7);
             -webkit-background-clip: text;
@@ -648,7 +642,7 @@
             #navCabinetBtn { width: 30px; height: 30px; line-height: 26px; flex-shrink: 0; }
             #navCabinetBtn i { font-size: 12px; }
 
-            .welcome-screen, .roster-screen, .squads-screen, .maps-screen, .board-screen, .channels-screen, .creators-screen, .founders-screen { 
+            .welcome-screen, .roster-screen, .squads-screen, .hall-screen, .maps-screen, .board-screen, .channels-screen, .creators-screen, .founders-screen { 
                 padding: 60px 10px 110px !important; background-attachment: scroll !important; background-size: cover !important; background-position: center !important;
             }
             .players-grid { display: flex; flex-direction: column; flex-wrap: nowrap; gap: 10px; max-height: 280px; overflow-y: auto; overflow-x: hidden; padding-right: 5px; justify-content: flex-start; }
@@ -714,6 +708,7 @@
             <a href="#welcome" class="lang-txt" data-ru="Главная" data-en="Home" data-zh="首页">Главная</a>
             <a href="#roster" class="lang-txt" data-ru="Состав" data-en="Roster" data-zh="阵容">Состав</a>
             <a href="#squads" class="lang-txt" data-ru="Составы" data-en="Squads" data-zh="阵容">Составы</a>
+            <a href="#hall" id="navHallLink" class="lang-txt" data-ru="Зал славы" data-en="Hall of Fame" data-zh="名人堂">Зал славы</a>
             <a href="#maps" id="navMapsLink" class="lang-txt" data-ru="Карты" data-en="Maps" data-zh="地图">Карты</a>
             <a href="#board" id="navBoardLink" class="lang-txt" data-ru="Доска" data-en="Board" data-zh="黑板">Доска</a>
             <a href="#channels" class="lang-txt" data-ru="Каналы" data-en="Channels" data-zh="频道">Каналы</a>
@@ -828,6 +823,36 @@
         </div>
     </section>
 
+    <!-- СЕКЦИЯ: ЗАЛ СЛАВЫ (НОВАЯ) -->
+    <section id="hall" class="hall-screen">
+        <h2 class="section-title lang-txt" data-ru="Зал Славы" data-en="Hall of Fame" data-zh="名人堂">Зал Славы</h2>
+        <p style="color: #94a3b8; margin-bottom: 30px; text-align: center; font-size: 14px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;" class="lang-txt" data-ru="Сезонный топ-10 сбрасывается каждые 14 дней" data-en="Seasonal Top 10 resets every 14 days" data-zh="赛季前十名每 14 天重置一次">Сезонный топ-10 сбрасывается каждые 14 дней</p>
+
+        <div class="hall-container">
+            <!-- ЛЕВЫЙ БЛОК: ТЕКУЩИЙ ТОП-10 -->
+            <div class="top10-box glassmorphism">
+                <h3 style="font-family: 'Orbitron', sans-serif; color: #00f2fe; text-align: center; margin-bottom: 20px; text-transform: uppercase;" class="lang-txt" data-ru="Текущий сезон (Топ 10)" data-en="Current Season (Top 10)" data-zh="当前赛季 (前十名)">Текущий сезон (Топ 10)</h3>
+                
+                <div id="top10List" style="display: flex; flex-direction: column; gap: 10px;">
+                    <p style="color: #94a3b8; text-align:center; font-size: 13px;" class="lang-txt" data-ru="Сезон только начался. Загрузка данных..." data-en="Season just started. Loading data..." data-zh="赛季刚刚开始。数据加载中...">Сезон только начался. Загрузка данных...</p>
+                </div>
+            </div>
+
+            <!-- ПРАВЫЙ БЛОК: ТОП МЕСЯЦА (АБСОЛЮТНЫЙ РЕКОРД) -->
+            <div class="animated-glow-border month-hero-box-wrapper" style="flex: 0 0 320px; border-radius: 8px;">
+                <div class="month-hero-box glassmorphism" style="border-radius: inherit; height: 100%;">
+                    <i class="fa-solid fa-trophy" style="font-size: 50px; color: #ff0055; margin-bottom: 15px; text-shadow: 0 0 20px #ff0055;"></i>
+                    <h3 style="font-family: 'Orbitron', sans-serif; color: #fff; margin-bottom: 5px; text-transform: uppercase;" class="lang-txt" data-ru="Топ Месяца" data-en="Hero of the Month" data-zh="本月英雄">Топ Месяца</h3>
+                    <p style="color: #94a3b8; font-size: 12px; margin-bottom: 20px; text-transform: uppercase;" class="lang-txt" data-ru="Абсолютный непобитый рекорд" data-en="Absolute unbeaten record" data-zh="绝对不败纪录">Абсолютный непобитый рекорд</p>
+                    
+                    <div id="monthHeroAvatar" class="month-hero-avatar"></div>
+                    <h2 id="monthHeroNick" style="font-family: 'Orbitron', sans-serif; color: #ff0055; font-size: 24px; text-shadow: 0 0 10px rgba(255,0,85,0.5);">-</h2>
+                    <div id="monthHeroDamage" style="font-family: 'Oswald', sans-serif; color: #fff; font-size: 22px; font-weight: bold; margin-top: 10px; background: rgba(255, 0, 85, 0.2); padding: 5px; border-radius: 4px;">0 DMG</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="maps" class="maps-screen">
         <h2 class="section-title lang-txt" data-ru="Карты" data-en="Maps" data-zh="地图">Карты</h2>
         <div class="lock-overlay-box glassmorphism" id="mapsLockBox">
@@ -918,9 +943,7 @@
                 <input type="text" id="squadEditMapName" placeholder="Название карты (например: Арктика)" style="width: 100%; margin-bottom: 10px; background: rgba(0,0,0,0.5); color: #fff; border: 1px solid #00f2fe; padding: 10px; border-radius: 4px; font-family: 'Orbitron', sans-serif;">
                 <input type="text" id="squadEditMapUrl" placeholder="Ссылка на общую картинку карты (url)" style="width: 100%; margin-bottom: 15px; background: rgba(0,0,0,0.5); color: #fff; border: 1px solid #00f2fe; padding: 10px; border-radius: 4px; font-family: 'Oswald', sans-serif;">
                 
-                <div id="squadEditSlotsContainer">
-                    <!-- JS сгенерирует колонки сюда -->
-                </div>
+                <div id="squadEditSlotsContainer"></div>
                 
                 <div style="display: flex; gap: 10px; margin-top: 25px;">
                     <button class="btn-submit" style="background: #22c55e; color: #000; flex: 1;" onclick="saveCurrentSquad()">Сохранить составы</button>
@@ -930,9 +953,7 @@
 
             <!-- Блок просмотра (для всех остальных) -->
             <div id="squadViewerArea" style="display: none;">
-                <div class="squad-view-list" id="squadViewListContainer">
-                    <!-- JS сгенерирует колонки сюда -->
-                </div>
+                <div class="squad-view-list" id="squadViewListContainer"></div>
             </div>
         </div>
     </div>
@@ -1018,6 +1039,7 @@
         </div>
     </div>
 
+    <!-- МОДАЛЬНОЕ ОКНО ПРЕДЛОЖЕНИЯ КВ -->
     <div class="modal-overlay" id="cwProposalModalOverlay" style="z-index: 160;">
         <div class="modal-window glassmorphism" style="max-width: 450px; border-color: #ff8c00; box-shadow: 0 0 40px rgba(255, 140, 0, 0.3);">
             <span class="close-btn" id="closeCwProposalModalBtn" onclick="document.getElementById('cwProposalModalOverlay').classList.remove('active');">&times;</span>
@@ -1046,6 +1068,7 @@
         </div>
     </div>
 
+    <!-- МОДАЛЬНОЕ ОКНО ИНФОРМАЦИИ И УПРАВЛЕНИЯ ИГРОКОМ -->
     <div class="modal-overlay" id="playerInfoModalOverlay" style="z-index: 145;">
         <div class="modal-window glassmorphism" style="max-width: 350px; border-color: #00f2fe; box-shadow: 0 0 40px rgba(0, 242, 254, 0.3); text-align: center; padding: 30px 20px;">
             <span class="close-btn" id="closePlayerInfoBtn">&times;</span>
@@ -1100,6 +1123,7 @@
         </div>
     </div>
 
+    <!-- МОДАЛЬНОЕ ОКНО АВТО-КВ -->
     <div class="modal-overlay" id="cwModalOverlay" style="z-index: 151;">
         <div class="modal-window glassmorphism" style="max-width: 400px; border-color: #ff0055; box-shadow: 0 0 40px rgba(255, 0, 85, 0.4); text-align: center;">
             <span class="close-btn" id="closeCwModalBtn" onclick="document.getElementById('cwModalOverlay').classList.remove('active');">&times;</span>
@@ -1115,6 +1139,7 @@
         </div>
     </div>
 
+    <!-- ТРЕНИРОВКА -->
     <div class="modal-overlay" id="trainingModalOverlay" style="z-index: 150;">
         <div class="modal-window glassmorphism" style="max-width: 400px; border-color: #a855f7; box-shadow: 0 0 40px rgba(168, 85, 247, 0.4);">
             <span class="close-btn" id="closeTrainingModalBtn" onclick="document.getElementById('trainingModalOverlay').classList.remove('active');">&times;</span>
@@ -1191,6 +1216,7 @@
         </div>
     </div>
 
+    <!-- ПОЛЬЗОВАТЕЛЬСКОЕ СОГЛАШЕНИЕ -->
     <div class="modal-overlay" id="lawModalOverlay" style="z-index: 110;">
         <div class="modal-window glassmorphism" style="max-width: 500px;">
             <span class="close-btn" id="closeLawModalBtn">&times;</span>
@@ -1207,6 +1233,7 @@
         </div>
     </div>
 
+    <!-- ОКНО ВХОДА ДЛЯ ЧЛЕНОВ КЛАНА -->
     <div class="modal-overlay" id="loginModalOverlay" style="z-index: 120;">
         <div class="modal-window glassmorphism" style="max-width: 400px;">
             <span class="close-btn" id="closeLoginModalBtn">&times;</span>
@@ -1217,6 +1244,7 @@
         </div>
     </div>
 
+    <!-- АНАЛИТИКА + АДМИН ПАНЕЛЬ + ВВОД УРОНА -->
     <div class="modal-overlay" id="statsModalOverlay" style="z-index: 130;">
         <div class="modal-window glassmorphism" style="max-width: 440px; border-color: #a855f7; box-shadow: 0 0 40px rgba(168, 85, 247, 0.3);">
             <span class="close-btn" id="closeStatsModalBtn">&times;</span>
@@ -1238,6 +1266,7 @@
 
             <button type="button" class="btn-submit lang-txt" id="resetStatsBtn" style="background:#ef4444; color:#fff; margin-top:10px; font-size:11px;" data-ru="Сбросить статистику" data-en="Reset Stats" data-zh="重置统计">Сбросить статистику</button>
 
+            <!-- ОБРАБОТКА ЗАЯВОК -->
             <div style="border-top: 1px solid rgba(168, 85, 247, 0.2); margin-top: 15px; padding-top: 15px;">
                 <div class="rank-title lang-txt" style="color:#00f2fe; font-size:14px; border:none; margin-bottom:5px; text-align:left;" data-ru="Обработка запросов Telegram" data-en="Process Telegram Requests" data-zh="处理 Telegram 请求">Обработка запросов Telegram</div>
                 <div class="form-group">
@@ -1257,6 +1286,22 @@
                         <button type="button" class="btn-terminal-reject lang-txt" onclick="executeTerminalReject()" data-ru="Отклонить" data-en="Reject" data-zh="拒绝">Отклонить</button>
                     </div>
                 </div>
+            </div>
+
+            <!-- НОВЫЙ БЛОК: ЗАЛ СЛАВЫ (ВНЕСЕНИЕ УРОНА) -->
+            <div style="border-top: 1px solid rgba(0, 242, 254, 0.2); margin-top: 15px; padding-top: 15px;">
+                <div class="rank-title lang-txt" style="color:#00f2fe; font-size:14px; border:none; margin-bottom:5px; text-align:left;" data-ru="Управление Залом Славы" data-en="Hall of Fame Admin" data-zh="名人堂管理">Управление Залом Славы</div>
+                <div class="form-group" style="margin-bottom: 10px;">
+                    <label class="lang-txt" data-ru="Выберите никнейм бойца:" data-en="Select Fighter Nickname:" data-zh="选择战士昵称:">Выберите никнейм бойца:</label>
+                    <select id="adminDamageNickSelect" style="width: 100%; font-size:12px; background: rgba(0,0,0,0.5); border-color: rgba(0,242,254,0.3);">
+                        <option value="">-- Загрузка --</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label class="lang-txt" data-ru="Подтвержденный урон (только цифры):" data-en="Confirmed Damage (numbers only):" data-zh="确认伤害（仅限数字）:">Подтвержденный урон (только цифры):</label>
+                    <input type="number" id="adminDamageAmountInput" placeholder="Например: 2450000" style="font-size:12px; background: rgba(0,0,0,0.5); border-color: rgba(0,242,254,0.3);">
+                </div>
+                <button type="button" class="btn-submit lang-txt" id="adminSaveDamageBtn" onclick="executeAdminSaveDamage()" style="background: #00f2fe; color: #02050a; font-size:12px; padding: 10px;" data-ru="Записать рекорд в Зал Славы" data-en="Save Record to Hall of Fame" data-zh="将记录保存到名人堂">Записать рекорд в Зал Славы</button>
             </div>
         </div>
     </div>
@@ -1329,7 +1374,10 @@
         </div>
     </div>
 
+    <!-- КОНТЕЙНЕР ДЛЯ УВЕДОМЛЕНИЙ -->
     <div id="toastContainer" class="toast-container"></div>
+
+    <!-- ТЕГ SCRIPT ОТКРОЕТСЯ В ТРЕТЬЕЙ ЧАСТИ -->
 <script>
         // ГЛОБАЛЬНАЯ ФУНКЦИЯ ДЛЯ СИНХРОНИЗАЦИИ ФОНА И АВАТАРА ИЗ ОБЛАКА
         window.syncLocalPrefsFromCloud = function() {
@@ -1519,7 +1567,8 @@
             if (document.fullscreenElement || document.webkitFullscreenElement) {
                 document.getElementById('fullscreenBtnText').textContent = t("Свернуть доску", "Collapse Board", "收起黑板");
             }
-            renderSquadsGallery(); // Перевод галереи составов
+            renderSquadsGallery();
+            if (cloudDatabase.damageRecords) renderHallOfFame(cloudDatabase.damageRecords);
         }
 
         document.getElementById('navLangBtn').addEventListener('click', () => {
@@ -1548,7 +1597,6 @@
             setTimeout(() => { toast.remove(); }, 4300);
         }
 
-        // КОНФИГУРАЦИЯ БОТА И БД
         const TG_TOKEN = "8640087886:AAGj3tevg54WEW0Qyo-rrtBlT8fRE9RuCDM";
         const TG_CHAT_ID = "-1002619697984"; 
         const TG_THREAD_ID = 5264;          
@@ -1715,27 +1763,27 @@
         let cwCountdownIntervalId = null;
         let currentSelectedPlayerNick = "";
         
+        // --- БАЗА ДАННЫХ (ОБНОВЛЕННАЯ С damageRecords) ---
         let cloudDatabase = { 
             recruits: {}, banned: [], kickedNicks: [], metadata: {}, 
             trainingTime: null, trainingYes: [], trainingNo: [],
             cwTime: null, cwNotified: false, autoCwEnabled: false,
             founders: {},
             squads: [], 
-            stats: { views: 0, uniques: 0, requests: 0, mobile: 0, pc: 0 }
+            stats: { views: 0, uniques: 0, requests: 0, mobile: 0, pc: 0 },
+            damageRecords: [] // Новое поле для Зала Славы
         };
         let isCloudSynced = false; 
 
-        // --- ЛОГИКА ДИНАМИЧЕСКИХ СОСТАВОВ (ОТ 1 ДО 4) С ПРОВЕРКОЙ ДОСТУПА ---
+        // --- ЛОГИКА ДИНАМИЧЕСКИХ СОСТАВОВ ---
         let currentEditingSquadId = null;
         
-        // Конфигурация доступных дивизионов
         const SQUAD_NAMES = ['АЛЬФА', 'БРАВО', 'ЧАРЛИ', 'ДЕЛЬТА'];
         const SQUAD_IDS = ['alpha', 'bravo', 'charlie', 'delta'];
-        const SQUAD_COLORS = ['#00f2fe', '#ff0055', '#eab308', '#22c55e']; // Цвета отрядов
-        const SQUAD_PREFIX = ['A', 'B', 'C', 'D']; // Префиксы спавнов
-        const SQUAD_RES_PREFIX = ['РА', 'РБ', 'РЧ', 'РД']; // Префиксы резерва
+        const SQUAD_COLORS = ['#00f2fe', '#ff0055', '#eab308', '#22c55e']; 
+        const SQUAD_PREFIX = ['A', 'B', 'C', 'D']; 
+        const SQUAD_RES_PREFIX = ['РА', 'РБ', 'РЧ', 'РД']; 
 
-        // Мигратор: переводит старые данные базы в новый массив teams
         function getSquadTeams(squad) {
             if (!squad) return [{ name: 'АЛЬФА', id: 'alpha', slots: [], reserves: [] }];
             if (squad.teams) return squad.teams;
@@ -1764,7 +1812,6 @@
             }
             if (!myNick) myNick = localStorage.getItem('stage_cached_nick');
 
-            // Фильтр отображения карт только для участников
             if (!isLeaderMode) {
                 if (myNick) {
                     const safeNick = myNick.trim().toLowerCase();
@@ -1809,9 +1856,7 @@
             });
         }
 
-        document.getElementById('btnAddSquadMap')?.addEventListener('click', () => {
-            openSquadModal(null);
-        });
+        document.getElementById('btnAddSquadMap')?.addEventListener('click', () => { openSquadModal(null); });
 
         window.openSquadModal = function(squadId) {
             currentEditingSquadId = squadId;
@@ -1862,7 +1907,6 @@
             return html;
         }
 
-        // Динамическая отрисовка слотов (Редактирование) в ДВА ЭТАЖА
         window.renderSquadEditSlots = function(squad) {
             let teams = getSquadTeams(squad);
             window.currentEditSquadCount = Math.max(1, teams.length);
@@ -1871,7 +1915,6 @@
 
         window.drawEditColumns = function(teams) {
             const container = document.getElementById('squadEditSlotsContainer');
-            // Добавляем горизонтальный скролл (overflow-x: auto)
             let html = '<div class="squad-columns" style="display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px;">';
 
             for(let c = 0; c < window.currentEditSquadCount; c++) {
@@ -1879,7 +1922,6 @@
                 let tId = SQUAD_IDS[c]; let tName = SQUAD_NAMES[c];
                 let color = SQUAD_COLORS[c]; let pfx = SQUAD_PREFIX[c]; let rpfx = SQUAD_RES_PREFIX[c];
 
-                // flex: 1 0 220px жестко запрещает колонке сжиматься меньше 220 пикселей
                 html += `<div class="squad-col-dynamic" style="min-width: 220px; flex: 1 0 220px;">
                             <div class="squad-col-title" style="color: ${color}; text-shadow: 0 0 10px ${color}80;">Состав ${tName}</div>`;
 
@@ -2012,10 +2054,8 @@
             }
         }
 
-        // Динамическая отрисовка слотов (Просмотр)
         window.renderSquadViewList = function(squad) {
             const container = document.getElementById('squadViewListContainer');
-            // Добавляем скролл и в режим просмотра, чтобы все влезло
             let html = '<div class="squad-columns" style="display: flex; gap: 20px; overflow-x: auto; padding-bottom: 15px;">';
             
             let teams = getSquadTeams(squad);
@@ -2071,6 +2111,112 @@
             colHtml += '</div>';
             return colHtml;
         }
+
+        // --- ЛОГИКА ЗАЛА СЛАВЫ (Hall of Fame) ---
+        window.renderHallOfFame = function(records) {
+            if (!records) records = [];
+            const now = Date.now();
+            const twoWeeksMs = 14 * 24 * 60 * 60 * 1000;
+            const monthMs = 30 * 24 * 60 * 60 * 1000;
+
+            // 1. Топ месяца
+            const monthRecords = records.filter(r => (now - r.created_at) <= monthMs).sort((a, b) => b.damage - a.damage);
+            const heroNickEl = document.getElementById('monthHeroNick');
+            const heroDmgEl = document.getElementById('monthHeroDamage');
+            const heroAvaEl = document.getElementById('monthHeroAvatar');
+
+            if (monthRecords.length > 0) {
+                const hero = monthRecords[0];
+                heroNickEl.textContent = hero.nick;
+                heroDmgEl.textContent = hero.damage.toLocaleString('ru-RU') + " DMG";
+                let ava = 'none'; 
+                for (let tg in cloudDatabase.metadata) {
+                    if (cloudDatabase.metadata[tg].nick === hero.nick && cloudDatabase.metadata[tg].avatar) {
+                        ava = `url('${cloudDatabase.metadata[tg].avatar}')`; break;
+                    }
+                }
+                heroAvaEl.style.backgroundImage = ava;
+            } else {
+                heroNickEl.textContent = "-";
+                heroDmgEl.textContent = "0 DMG";
+                heroAvaEl.style.backgroundImage = "none";
+            }
+
+            // 2. Топ-10 Сезона (2 недели)
+            const seasonRecords = records.filter(r => (now - r.created_at) <= twoWeeksMs).sort((a, b) => b.damage - a.damage);
+            const top10 = seasonRecords.slice(0, 10);
+            const top10List = document.getElementById('top10List');
+
+            if (top10.length === 0) {
+                top10List.innerHTML = `<p style="color: #94a3b8; text-align:center; font-size: 13px;" class="lang-txt" data-ru="Сезон только начался. Рекордов пока нет." data-en="Season just started. No records yet." data-zh="赛季刚刚开始。还没有记录。">${t("Сезон только начался. Рекордов пока нет.", "Season just started. No records yet.", "赛季刚刚开始。还没有记录。")}</p>`;
+            } else {
+                let html = '';
+                top10.forEach((record, index) => {
+                    let color = '#00f2fe';
+                    if (index === 0) color = '#eab308';
+                    if (index === 1) color = '#94a3b8';
+                    if (index === 2) color = '#b45309';
+
+                    html += `
+                    <div class="damage-record-row" style="border-left-color: ${color};">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <span style="font-family: 'Orbitron', sans-serif; font-size: 20px; color: ${color}; font-weight: 900;">#${index + 1}</span>
+                            <span style="font-family: 'Orbitron', sans-serif; font-size: 16px; color: #fff;">${record.nick}</span>
+                        </div>
+                        <span style="font-family: 'Oswald', sans-serif; color: #a855f7; font-size: 18px; font-weight: bold;">${record.damage.toLocaleString('ru-RU')} <i class="fa-solid fa-fire" style="color: #ff8c00;"></i></span>
+                    </div>`;
+                });
+                top10List.innerHTML = html;
+            }
+        };
+
+        window.populateAdminDamageSelect = function() {
+            const select = document.getElementById('adminDamageNickSelect');
+            if (!select) return;
+            let options = '<option value="">-- Выберите бойца --</option>';
+            let nicks = [];
+            for (let tg in cloudDatabase.metadata) {
+                if (cloudDatabase.metadata[tg].nick) nicks.push(cloudDatabase.metadata[tg].nick);
+            }
+            nicks.sort();
+            nicks.forEach(n => { options += `<option value="${n}">${n}</option>`; });
+            select.innerHTML = options;
+        };
+
+        window.executeAdminSaveDamage = async function() {
+            if (!isLeaderMode) return;
+            const nick = document.getElementById('adminDamageNickSelect').value;
+            const damageStr = document.getElementById('adminDamageAmountInput').value;
+            const damage = parseInt(damageStr, 10);
+
+            if (!nick || isNaN(damage) || damage <= 0) {
+                alert(t("Укажите бойца и корректный урон!", "Select fighter and valid damage!", "请选择战士和有效伤害！"));
+                return;
+            }
+
+            const btn = document.getElementById('adminSaveDamageBtn');
+            btn.disabled = true;
+            btn.textContent = t("Сохранение...", "Saving...", "保存中...");
+
+            await syncWithCloud(); // ЗАЩИТА
+            if (!cloudDatabase.damageRecords) cloudDatabase.damageRecords = [];
+            
+            cloudDatabase.damageRecords.push({
+                nick: nick,
+                damage: damage,
+                created_at: Date.now()
+            });
+
+            await saveToCloud();
+
+            renderHallOfFame(cloudDatabase.damageRecords);
+            
+            showNotification(t(`Рекорд ${damage.toLocaleString('ru-RU')} для ${nick} сохранен!`, `Record ${damage} for ${nick} saved!`, `为 ${nick} 保存的记录 ${damage}！`), 'success');
+            
+            document.getElementById('adminDamageAmountInput').value = '';
+            btn.disabled = false;
+            btn.textContent = t("Записать рекорд в Зал Славы", "Save Record to Hall of Fame", "将记录保存到名人堂");
+        };
 
         function getClanPassword(tgLogin) {
             let clean = tgLogin.trim().toLowerCase();
@@ -2216,7 +2362,6 @@
                 });
             }, 30000);
 
-            // ИСПРАВЛЕНИЕ: Защита базы (sync перед save)
             setInterval(async () => {
                 let myTg = localStorage.getItem('stage_user_registered_tg');
                 if (myTg) {
@@ -2375,9 +2520,11 @@
                         cloudDatabase.founders = db.founders || defaultFounders;
                         cloudDatabase.squads = db.squads || []; 
                         cloudDatabase.stats = db.stats || { views: 0, uniques: 0, requests: 0, mobile: 0, pc: 0 };
+                        cloudDatabase.damageRecords = db.damageRecords || []; // СИНХРОНИЗАЦИЯ РЕКОРДОВ
                         
                         renderFoundersGrid();
                         renderSquadsGallery(); 
+                        renderHallOfFame(cloudDatabase.damageRecords); // ОТРИСОВКА ЗАЛА СЛАВЫ
                     }
                     isCloudSynced = true; 
                     updateOnlineWidget();
@@ -2474,6 +2621,7 @@
                 showNotification(t("Аватар синхронизирован!", "Avatar synced!", "头像已同步！"), 'success');
             }
             renderAttendanceListsOnSite();
+            if(cloudDatabase.damageRecords) renderHallOfFame(cloudDatabase.damageRecords);
         }
 
         function refreshMenuCabinetAvatar() {
@@ -2778,7 +2926,6 @@
         });
         closeTrainingModalBtn.addEventListener('click', () => trainingModalOverlay.classList.remove('active'));
 
-        // ИСПРАВЛЕНИЕ: Отправка публичного опроса (Poll) в Telegram
         btnSubmitTraining.addEventListener('click', async () => {
             const dateVal = inputTrainingDate.value;
             const timeVal = inputTrainingTime.value.trim();
@@ -2810,7 +2957,6 @@
             const messageText = `⚔️ <b>ВНИМАНИЕ! Назначена тренировка! / ATTENTION! Training scheduled!</b>\n\n⚓️ <b>Событие / Event:</b> Тренировка / Training\n📅 <b>Время сбора / Time:</b> ${formattedDate}\n\nВсем участникам быть! Прямая связь в Яндекс Телемост или Discord.\nAll members must attend! Direct comms in Yandex Telemost or Discord. 🚢🔥`;
 
             try {
-                // 1. Отправляем основной текст с оповещением
                 await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -2821,7 +2967,6 @@
                     })
                 });
 
-                // 2. Отправляем ПУБЛИЧНЫЙ ОПРОС следом за текстом
                 await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendPoll`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -2829,7 +2974,7 @@
                         chat_id: TG_CHAT_ID,
                         question: `ОТМЕТКА ЯВКИ:\nКто будет на тренировке ${formattedDate}?`,
                         options: ["⚓️ Буду", "❌ Не смогу"],
-                        is_anonymous: false // Опрос будет неанонимным, все увидят, кто нажал!
+                        is_anonymous: false
                     })
                 });
 
@@ -3241,6 +3386,7 @@
             document.getElementById('statMobile').textContent = mobilePerc + "%";
             document.getElementById('statPC').textContent = pcPerc + "%";
 
+            populateAdminDamageSelect(); // Заполняем список бойцов для Зала Славы
             statsModalOverlay.classList.add('active');
         });
         
