@@ -2113,6 +2113,7 @@
         }
 
         // --- ЛОГИКА ЗАЛА СЛАВЫ (Hall of Fame) ---
+        // --- ЛОГИКА ЗАЛА СЛАВЫ (Hall of Fame) ---
         window.renderHallOfFame = function(records) {
             if (!records) records = [];
             const now = Date.now();
@@ -2127,8 +2128,10 @@
 
             if (monthRecords.length > 0) {
                 const hero = monthRecords[0];
-                heroNickEl.textContent = hero.nick;
+                // Добавляем крестик удаления, если это Лидер
+                heroNickEl.innerHTML = `${hero.nick} ${isLeaderMode ? `<i class="fa-solid fa-xmark" style="color:#ff0055; cursor:pointer; font-size: 18px; margin-left: 10px; text-shadow: none;" onclick="deleteDamageRecord(${hero.created_at})" title="Удалить ошибочный рекорд"></i>` : ''}`;
                 heroDmgEl.textContent = hero.damage.toLocaleString('ru-RU') + " DMG";
+                
                 let ava = 'none'; 
                 for (let tg in cloudDatabase.metadata) {
                     if (cloudDatabase.metadata[tg].nick === hero.nick && cloudDatabase.metadata[tg].avatar) {
@@ -2157,16 +2160,38 @@
                     if (index === 1) color = '#94a3b8';
                     if (index === 2) color = '#b45309';
 
+                    // Кнопка удаления для каждого ряда (только для админа)
+                    const deleteBtnHtml = isLeaderMode ? `<i class="fa-solid fa-xmark" style="color:#ff0055; cursor:pointer; margin-left: 15px;" title="Удалить рекорд" onclick="deleteDamageRecord(${record.created_at})"></i>` : '';
+
                     html += `
                     <div class="damage-record-row" style="border-left-color: ${color};">
                         <div style="display: flex; align-items: center; gap: 15px;">
                             <span style="font-family: 'Orbitron', sans-serif; font-size: 20px; color: ${color}; font-weight: 900;">#${index + 1}</span>
                             <span style="font-family: 'Orbitron', sans-serif; font-size: 16px; color: #fff;">${record.nick}</span>
                         </div>
-                        <span style="font-family: 'Oswald', sans-serif; color: #a855f7; font-size: 18px; font-weight: bold;">${record.damage.toLocaleString('ru-RU')} <i class="fa-solid fa-fire" style="color: #ff8c00;"></i></span>
+                        <div style="display: flex; align-items: center;">
+                            <span style="font-family: 'Oswald', sans-serif; color: #a855f7; font-size: 18px; font-weight: bold;">${record.damage.toLocaleString('ru-RU')} <i class="fa-solid fa-fire" style="color: #ff8c00;"></i></span>
+                            ${deleteBtnHtml}
+                        </div>
                     </div>`;
                 });
                 top10List.innerHTML = html;
+            }
+        };
+
+        // ФУНКЦИЯ УДАЛЕНИЯ РЕКОРДА
+        window.deleteDamageRecord = async function(createdAtTimestamp) {
+            if (!isLeaderMode) return;
+            if (confirm(t("Точно удалить этот рекорд из Зала Славы?", "Delete this record from Hall of Fame?", "从名人堂中删除此记录？"))) {
+                await syncWithCloud(); // ЗАЩИТА: Синхронизируем перед удалением
+                
+                // Фильтруем массив, убирая запись с совпадающим уникальным временем (timestamp)
+                cloudDatabase.damageRecords = cloudDatabase.damageRecords.filter(r => r.created_at !== createdAtTimestamp);
+                
+                await saveToCloud(); // Сохраняем в Supabase
+                
+                renderHallOfFame(cloudDatabase.damageRecords); // Перерисовываем Зал Славы
+                showNotification(t("Ошибочный рекорд удален!", "Record deleted!", "错误记录已删除！"), 'warning');
             }
         };
 
@@ -3366,6 +3391,9 @@
             applyLeaderStatusColors();
             setLang(currentLang);
             if(typeof updateTrainingButtonVisibility === 'function') updateTrainingButtonVisibility();
+
+            // ДОБАВИТЬ ВОТ ЭТУ СТРОЧКУ:
+            if(cloudDatabase.damageRecords) renderHallOfFame(cloudDatabase.damageRecords);
         }
 
         navStatsBtn.addEventListener('click', () => {
