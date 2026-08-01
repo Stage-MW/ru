@@ -880,8 +880,7 @@
             </div>
         </div>
     </section>
-
-    <section id="channels" class="channels-screen">
+<section id="channels" class="channels-screen">
         <h2 class="section-title lang-txt" data-ru="Наши каналы" data-en="Our Channels" data-zh="我们的频道">Наши каналы</h2>
         
         <div class="secret-tg-box glassmorphism" id="secretTgBox">
@@ -1376,8 +1375,6 @@
 
     <!-- КОНТЕЙНЕР ДЛЯ УВЕДОМЛЕНИЙ -->
     <div id="toastContainer" class="toast-container"></div>
-
-    <!-- ТЕГ SCRIPT ОТКРОЕТСЯ В ТРЕТЬЕЙ ЧАСТИ -->
 <script>
         // ГЛОБАЛЬНАЯ ФУНКЦИЯ ДЛЯ СИНХРОНИЗАЦИИ ФОНА И АВАТАРА ИЗ ОБЛАКА
         window.syncLocalPrefsFromCloud = function() {
@@ -1385,6 +1382,14 @@
             let cleanTg = sessionTg.trim().toLowerCase();
             if (cleanTg && cloudDatabase.metadata && cloudDatabase.metadata[cleanTg]) {
                 let meta = cloudDatabase.metadata[cleanTg];
+
+                // --- НОВЫЙ КОД: ПРИСВОЕНИЕ РАНДОМНОЙ АВАТАРКИ ---
+                if (!meta.avatar || meta.avatar.trim() === "") {
+                    const randomAvatarNum = Math.floor(Math.random() * 32) + 1;
+                    meta.avatar = `https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/avatars/avatar${randomAvatarNum}.png?v=2`;
+                    saveToCloud(); // Сразу сохраняем её за пользователем в базе
+                }
+                // ------------------------------------------------
 
                 // Синхронизация аватара из облака
                 if (meta.avatar && meta.avatar !== localStorage.getItem('stage_user_avatar')) {
@@ -2730,6 +2735,10 @@
             
             await syncWithCloud(); // ЗАЩИТА
             
+            // Генерируем случайную аватарку от 1 до 32 для нового бойца
+            const randomAvatarNum = Math.floor(Math.random() * 32) + 1;
+            const randomAvatarUrl = `https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/avatars/avatar${randomAvatarNum}.png?v=2`;
+
             cloudDatabase.recruits[currentParsedData.nick] = registerTimestamp;
             cloudDatabase.metadata[targetTgKey] = {
                 nick: currentParsedData.nick,
@@ -2737,7 +2746,7 @@
                 chatId: currentParsedData.chatId,
                 joinDate: registerTimestamp,
                 rank: t("Действующий боец", "Active Fighter", "现役战士"),
-                avatar: "",
+                avatar: randomAvatarUrl, // Записываем сгенерированную ссылку
                 cabBg: 0, 
                 shipClass: currentParsedData.shipClass,
                 customStatus: currentParsedData.status, 
@@ -3392,7 +3401,6 @@
             setLang(currentLang);
             if(typeof updateTrainingButtonVisibility === 'function') updateTrainingButtonVisibility();
 
-            // ДОБАВИТЬ ВОТ ЭТУ СТРОЧКУ:
             if(cloudDatabase.damageRecords) renderHallOfFame(cloudDatabase.damageRecords);
         }
 
