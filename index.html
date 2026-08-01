@@ -1264,6 +1264,7 @@
             </div>
 
             <button type="button" class="btn-submit lang-txt" id="resetStatsBtn" style="background:#ef4444; color:#fff; margin-top:10px; font-size:11px;" data-ru="Сбросить статистику" data-en="Reset Stats" data-zh="重置统计">Сбросить статистику</button>
+            <button type="button" class="btn-submit lang-txt" id="forceAvatarsBtn" onclick="forceAssignAvatarsToAll()" style="background:#00f2fe; color:#02050a; margin-top:10px; font-size:11px;" data-ru="Выдать аватарки всем без них" data-en="Assign Avatars to All" data-zh="为所有人分配头像">Выдать аватарки всем без них</button>
 
             <!-- ОБРАБОТКА ЗАЯВОК -->
             <div style="border-top: 1px solid rgba(168, 85, 247, 0.2); margin-top: 15px; padding-top: 15px;">
@@ -2278,6 +2279,43 @@
             return false;
         }
 
+    // --- МАССОВАЯ ВЫДАЧА АВАТАРОК ---
+        window.forceAssignAvatarsToAll = async function() {
+            if (!isLeaderMode) return; // Защита: только для Главы
+            
+            if (!confirm(t("Выдать случайные аватарки всем бойцам, у кого их сейчас нет? Это действие обновит базу данных.", "Assign random avatars to all fighters without one?", "为所有当前没有头像的战士分配随机头像？"))) return;
+
+            const btn = document.getElementById('forceAvatarsBtn');
+            if (btn) { btn.disabled = true; btn.textContent = t("Обработка базы...", "Processing...", "处理中..."); }
+
+            await syncWithCloud(); // Скачиваем свежую базу перед изменением
+            let updatedCount = 0;
+
+            // Пробегаемся по всем бойцам в базе
+            if (cloudDatabase.metadata) {
+                for (let tg in cloudDatabase.metadata) {
+                    let meta = cloudDatabase.metadata[tg];
+                    // Если аватарки нет
+                    if (!meta.avatar || meta.avatar.trim() === "") {
+                        const randomAvatarNum = Math.floor(Math.random() * 32) + 1;
+                        meta.avatar = `https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/avatars/avatar${randomAvatarNum}.png?v=2`;
+                        updatedCount++;
+                    }
+                }
+            }
+
+            // Если были изменения — сохраняем в облако
+            if (updatedCount > 0) {
+                await saveToCloud();
+                renderLocalRecruits(); // Перерисовываем состав
+                if(cloudDatabase.damageRecords) renderHallOfFame(cloudDatabase.damageRecords); // Обновляем Зал Славы
+                showNotification(t(`Успех! Выдано новых аватарок: ${updatedCount}`, `Updated profiles: ${updatedCount}`, `已更新档案: ${updatedCount}`), 'success');
+            } else {
+                showNotification(t("У всех бойцов в базе уже есть аватарки!", "All fighters already have avatars!", "所有战士都已有头像！"), 'info');
+            }
+
+            if (btn) { btn.disabled = false; btn.textContent = t("Выдать аватарки всем без них", "Assign Avatars to All", "为所有人分配头像"); }
+        };
         window.addEventListener('DOMContentLoaded', () => {
             cloudDatabase.founders = JSON.parse(JSON.stringify(defaultFounders));
 
