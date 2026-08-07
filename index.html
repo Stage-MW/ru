@@ -1293,7 +1293,7 @@
                 <div class="rank-title lang-txt" style="color:#00f2fe; font-size:14px; border:none; margin-bottom:5px; text-align:left;" data-ru="Управление Залом Славы" data-en="Hall of Fame Admin" data-zh="名人堂管理">Управление Залом Славы</div>
                 <div class="form-group" style="margin-bottom: 10px;">
                     <label class="lang-txt" data-ru="Выберите никнейм бойца:" data-en="Select Fighter Nickname:" data-zh="选择战士昵称:">Выберите никнейм бойца:</label>
-                    <select id="adminDamageNickSelect" style="width: 100%; font-size:12px; background: rgba(0,0,0,0.5); border-color: rgba(0,242,254,0.3);">
+                    <select id="adminDamageNickSelect" style="width: 100%; font-size:12px; background: rgba(0,0,0,0.5); border-color: rgba(0,242,254,0.3);" onchange="loadPlayerCurrentDamage()">
                         <option value="">-- Загрузка --</option>
                     </select>
                 </div>
@@ -1783,8 +1783,7 @@
 
         // --- ЛОГИКА ДИНАМИЧЕСКИХ СОСТАВОВ ---
         let currentEditingSquadId = null;
-        
-        const SQUAD_NAMES = ['АЛЬФА', 'БРАВО', 'ЧАРЛИ', 'ДЕЛЬТА'];
+const SQUAD_NAMES = ['АЛЬФА', 'БРАВО', 'ЧАРЛИ', 'ДЕЛЬТА'];
         const SQUAD_IDS = ['alpha', 'bravo', 'charlie', 'delta'];
         const SQUAD_COLORS = ['#00f2fe', '#ff0055', '#eab308', '#22c55e']; 
         const SQUAD_PREFIX = ['A', 'B', 'C', 'D']; 
@@ -2119,7 +2118,6 @@
         }
 
         // --- ЛОГИКА ЗАЛА СЛАВЫ (Hall of Fame) ---
-        // --- ЛОГИКА ЗАЛА СЛАВЫ (Hall of Fame) ---
         window.renderHallOfFame = function(records) {
             if (!records) records = [];
             const now = Date.now();
@@ -2214,6 +2212,28 @@
             select.innerHTML = options;
         };
 
+        // АВТОПОДСТАНОВКА ТЕКУЩЕГО УРОНА
+        window.loadPlayerCurrentDamage = function() {
+            const nick = document.getElementById('adminDamageNickSelect').value;
+            const input = document.getElementById('adminDamageAmountInput');
+            
+            if (!nick) {
+                input.value = '';
+                return;
+            }
+            
+            // Ищем игрока в текущих рекордах
+            if (cloudDatabase.damageRecords) {
+                const existing = cloudDatabase.damageRecords.find(r => r.nick === nick);
+                if (existing) {
+                    input.value = existing.damage; // Подставляем текущий урон
+                } else {
+                    input.value = ''; // Если рекорда нет, очищаем поле
+                }
+            }
+        };
+
+        // ОБНОВЛЕННАЯ ФУНКЦИЯ СОХРАНЕНИЯ (БЕЗ ДУБЛИКАТОВ)
         window.executeAdminSaveDamage = async function() {
             if (!isLeaderMode) return;
             const nick = document.getElementById('adminDamageNickSelect').value;
@@ -2232,11 +2252,21 @@
             await syncWithCloud(); // ЗАЩИТА
             if (!cloudDatabase.damageRecords) cloudDatabase.damageRecords = [];
             
-            cloudDatabase.damageRecords.push({
-                nick: nick,
-                damage: damage,
-                created_at: Date.now()
-            });
+            // ПРОВЕРКА: Ищем, есть ли уже этот игрок в Зале Славы
+            const existingRecord = cloudDatabase.damageRecords.find(r => r.nick === nick);
+            
+            if (existingRecord) {
+                // Если есть — просто обновляем его урон и таймстамп (чтобы рекорд остался свежим)
+                existingRecord.damage = damage;
+                existingRecord.created_at = Date.now();
+            } else {
+                // Если нет — добавляем как нового
+                cloudDatabase.damageRecords.push({
+                    nick: nick,
+                    damage: damage,
+                    created_at: Date.now()
+                });
+            }
 
             await saveToCloud();
 
@@ -2244,7 +2274,10 @@
             
             showNotification(t(`Рекорд ${damage.toLocaleString('ru-RU')} для ${nick} сохранен!`, `Record ${damage} for ${nick} saved!`, `为 ${nick} 保存的记录 ${damage}！`), 'success');
             
+            // Очищаем форму после успешного сохранения
             document.getElementById('adminDamageAmountInput').value = '';
+            document.getElementById('adminDamageNickSelect').value = ''; 
+            
             btn.disabled = false;
             btn.textContent = t("Записать рекорд в Зал Славы", "Save Record to Hall of Fame", "将记录保存到名人堂");
         };
@@ -2316,6 +2349,7 @@
 
             if (btn) { btn.disabled = false; btn.textContent = t("Выдать аватарки всем без них", "Assign Avatars to All", "为所有人分配头像"); }
         };
+
         window.addEventListener('DOMContentLoaded', () => {
             cloudDatabase.founders = JSON.parse(JSON.stringify(defaultFounders));
 
