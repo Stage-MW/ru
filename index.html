@@ -2117,7 +2117,7 @@ const SQUAD_NAMES = ['АЛЬФА', 'БРАВО', 'ЧАРЛИ', 'ДЕЛЬТА'];
             return colHtml;
         }
 
-        // --- ЛОГИКА ЗАЛА СЛАВЫ (Hall of Fame) ---
+       // --- ЛОГИКА ЗАЛА СЛАВЫ (Hall of Fame) ---
         window.renderHallOfFame = function(records) {
             if (!records) records = [];
             const now = Date.now();
@@ -2132,8 +2132,11 @@ const SQUAD_NAMES = ['АЛЬФА', 'БРАВО', 'ЧАРЛИ', 'ДЕЛЬТА'];
 
             if (monthRecords.length > 0) {
                 const hero = monthRecords[0];
-                // Добавляем крестик удаления, если это Лидер
-                heroNickEl.innerHTML = `${hero.nick} ${isLeaderMode ? `<i class="fa-solid fa-xmark" style="color:#ff0055; cursor:pointer; font-size: 18px; margin-left: 10px; text-shadow: none;" onclick="deleteDamageRecord(${hero.created_at})" title="Удалить ошибочный рекорд"></i>` : ''}`;
+                // Добавляем крестик удаления и кнопку редактирования, если это Лидер
+                heroNickEl.innerHTML = `${hero.nick} ${isLeaderMode ? `
+                    <i class="fa-solid fa-pen" style="color:#00f2fe; cursor:pointer; font-size: 16px; margin-left: 10px; text-shadow: none;" onclick="openEditDamageModal('${hero.nick}', ${hero.damage})" title="Редактировать рекорд"></i>
+                    <i class="fa-solid fa-xmark" style="color:#ff0055; cursor:pointer; font-size: 18px; margin-left: 10px; text-shadow: none;" onclick="deleteDamageRecord(${hero.created_at})" title="Удалить ошибочный рекорд"></i>
+                ` : ''}`;
                 heroDmgEl.textContent = hero.damage.toLocaleString('ru-RU') + " DMG";
                 
                 let ava = 'none'; 
@@ -2164,8 +2167,11 @@ const SQUAD_NAMES = ['АЛЬФА', 'БРАВО', 'ЧАРЛИ', 'ДЕЛЬТА'];
                     if (index === 1) color = '#94a3b8';
                     if (index === 2) color = '#b45309';
 
-                    // Кнопка удаления для каждого ряда (только для админа)
-                    const deleteBtnHtml = isLeaderMode ? `<i class="fa-solid fa-xmark" style="color:#ff0055; cursor:pointer; margin-left: 15px;" title="Удалить рекорд" onclick="deleteDamageRecord(${record.created_at})"></i>` : '';
+                    // Кнопки удаления и редактирования для каждого ряда (только для админа)
+                    const adminActionsHtml = isLeaderMode ? `
+                        <i class="fa-solid fa-pen" style="color:#00f2fe; cursor:pointer; margin-left: 15px; font-size: 14px;" title="Редактировать рекорд" onclick="openEditDamageModal('${record.nick}', ${record.damage})"></i>
+                        <i class="fa-solid fa-xmark" style="color:#ff0055; cursor:pointer; margin-left: 10px; font-size: 16px;" title="Удалить рекорд" onclick="deleteDamageRecord(${record.created_at})"></i>
+                    ` : '';
 
                     html += `
                     <div class="damage-record-row" style="border-left-color: ${color};">
@@ -2175,7 +2181,7 @@ const SQUAD_NAMES = ['АЛЬФА', 'БРАВО', 'ЧАРЛИ', 'ДЕЛЬТА'];
                         </div>
                         <div style="display: flex; align-items: center;">
                             <span style="font-family: 'Oswald', sans-serif; color: #a855f7; font-size: 18px; font-weight: bold;">${record.damage.toLocaleString('ru-RU')} <i class="fa-solid fa-fire" style="color: #ff8c00;"></i></span>
-                            ${deleteBtnHtml}
+                            ${adminActionsHtml}
                         </div>
                     </div>`;
                 });
@@ -2183,34 +2189,43 @@ const SQUAD_NAMES = ['АЛЬФА', 'БРАВО', 'ЧАРЛИ', 'ДЕЛЬТА'];
             }
         };
 
-        // ФУНКЦИЯ УДАЛЕНИЯ РЕКОРДА
-        window.deleteDamageRecord = async function(createdAtTimestamp) {
+        // ФУНКЦИЯ БЫСТРОГО РЕДАКТИРОВАНИЯ УРОНА (ЧЕРЕЗ КАРАНДАШИК)
+        window.openEditDamageModal = function(nick, currentDamage) {
             if (!isLeaderMode) return;
-            if (confirm(t("Точно удалить этот рекорд из Зала Славы?", "Delete this record from Hall of Fame?", "从名人堂中删除此记录？"))) {
-                await syncWithCloud(); // ЗАЩИТА: Синхронизируем перед удалением
-                
-                // Фильтруем массив, убирая запись с совпадающим уникальным временем (timestamp)
-                cloudDatabase.damageRecords = cloudDatabase.damageRecords.filter(r => r.created_at !== createdAtTimestamp);
-                
-                await saveToCloud(); // Сохраняем в Supabase
-                
-                renderHallOfFame(cloudDatabase.damageRecords); // Перерисовываем Зал Славы
-                showNotification(t("Ошибочный рекорд удален!", "Record deleted!", "错误记录已删除！"), 'warning');
+            const newDamage = prompt(`Введите новый подтвержденный урон для бойца ${nick}:`, currentDamage);
+            
+            if (newDamage !== null && newDamage.trim() !== "") {
+                // Убираем случайные пробелы, если ввели цифры вроде "2 500 000"
+                const parsedDamage = parseInt(newDamage.replace(/\D/g, ''), 10); 
+                if (!isNaN(parsedDamage) && parsedDamage > 0) {
+                    forceSaveDamageDirectly(nick, parsedDamage);
+                } else {
+                    alert(t("Некорректное значение урона!", "Invalid damage value!", "无效的伤害值！"));
+                }
             }
         };
 
-        window.populateAdminDamageSelect = function() {
-            const select = document.getElementById('adminDamageNickSelect');
-            if (!select) return;
-            let options = '<option value="">-- Выберите бойца --</option>';
-            let nicks = [];
-            for (let tg in cloudDatabase.metadata) {
-                if (cloudDatabase.metadata[tg].nick) nicks.push(cloudDatabase.metadata[tg].nick);
+        window.forceSaveDamageDirectly = async function(nick, damage) {
+            showNotification(t("Обновление урона...", "Updating damage...", "更新伤害中..."), "info");
+            await syncWithCloud(); // Скачиваем свежие данные перед записью
+            
+            if (!cloudDatabase.damageRecords) cloudDatabase.damageRecords = [];
+            
+            const existingRecord = cloudDatabase.damageRecords.find(r => r.nick === nick);
+            if (existingRecord) {
+                existingRecord.damage = damage;
+                existingRecord.created_at = Date.now(); // Обновляем таймстамп
+            } else {
+                cloudDatabase.damageRecords.push({ nick: nick, damage: damage, created_at: Date.now() });
             }
-            nicks.sort();
-            nicks.forEach(n => { options += `<option value="${n}">${n}</option>`; });
-            select.innerHTML = options;
+            
+            await saveToCloud(); // Сохраняем в Supabase
+            renderHallOfFame(cloudDatabase.damageRecords); // Перерисовываем список
+            
+            showNotification(t(`Урон бойца ${nick} обновлен на ${damage.toLocaleString('ru-RU')}!`, `Damage for ${nick} updated!`, `伤害已更新！`), 'success');
         };
+
+        // ФУНКЦИЯ УДАЛЕНИЯ РЕКОРДА
 
         // АВТОПОДСТАНОВКА ТЕКУЩЕГО УРОНА
         window.loadPlayerCurrentDamage = function() {
