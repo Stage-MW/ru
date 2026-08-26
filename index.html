@@ -876,7 +876,7 @@
                 <i class="fa-solid fa-expand"></i> <span id="fullscreenBtnText" class="lang-txt" data-ru="Развернуть во весь экран" data-en="Expand Fullscreen" data-zh="全屏展开">Развернуть во весь экран</span>
             </button>
             <div class="board-container" id="boardContainer">
-                <iframe data-src="https://excalidraw.com/" src="about:blank" class="board-frame" id="excalidrawFrame" allowfullscreen></iframe>
+                <iframe data-src="tactical_canvas.html" src="about:blank" class="board-frame" id="excalidrawFrame" allowfullscreen></iframe>
             </div>
         </div>
     </section>
@@ -989,13 +989,26 @@
                     </select>
                 </div>
                 
-                <!-- Новое поле: Желаемый статус -->
+                <!-- Желаемый статус -->
                 <div class="form-group">
                     <label class="lang-txt" data-ru="Желаемый статус" data-en="Desired Status" data-zh="期望状态">Желаемый статус</label>
                     <select id="appStatus" required style="width: 100%; background: rgba(2, 5, 10, 0.6); border: 1px solid rgba(0, 242, 254, 0.3); padding: 10px; color: #fff; border-radius: 4px; font-family: 'Oswald', sans-serif;">
                         <option value="none" class="lang-txt" data-ru="Обычный боец" data-en="Normal Fighter" data-zh="普通战士">Обычный боец</option>
                         <option value="hero" class="lang-txt" data-ru="Герой" data-en="Hero" data-zh="英雄">Герой</option>
                         <option value="legend" class="lang-txt" data-ru="Легенда" data-en="Legend" data-zh="传奇">Легенда</option>
+                    </select>
+                </div>
+
+                <!-- Новое поле: Родной язык -->
+                <div class="form-group">
+                    <label class="lang-txt" data-ru="Родной язык" data-en="Native Language" data-zh="母语">Родной язык</label>
+                    <select id="appNativeLang" required style="width: 100%; background: rgba(2, 5, 10, 0.6); border: 1px solid rgba(0, 242, 254, 0.3); padding: 10px; color: #fff; border-radius: 4px; font-family: 'Oswald', sans-serif;">
+                        <option value="🇷🇺" selected>🇷🇺 Русский</option>
+                        <option value="🇬🇧">🇬🇧 English</option>
+                        <option value="🇨🇳">🇨🇳 中文</option>
+                        <option value="🇪🇸">🇪🇸 Español</option>
+                        <option value="🇺🇦">🇺🇦 Українська</option>
+                        <option value="🇩🇪">🇩🇪 Deutsch</option>
                     </select>
                 </div>
 
@@ -1196,6 +1209,19 @@
                             <option value="Экраноплан">Экраноплан</option>
                         </select>
                     </div>
+
+                    <!-- Новое поле: Родной язык в Личном Кабинете -->
+                    <div class="cabinet-info-item" style="flex-direction: column; align-items: flex-start; gap: 5px;">
+                        <span class="lbl lang-txt" data-ru="Родной язык:" data-en="Native Lang:" data-zh="母语:">Родной язык:</span>
+                        <select id="cabNativeLangSelect" style="background: rgba(2,5,10,0.8); color: #00f2fe; border: 1px dashed #00f2fe; border-radius: 4px; padding: 4px; font-family: 'Oswald', sans-serif; font-size: 13px; width: 100%; outline: none;">
+                            <option value="🇷🇺">🇷🇺 Русский</option>
+                            <option value="🇬🇧">🇬🇧 English</option>
+                            <option value="🇨🇳">🇨🇳 中文</option>
+                            <option value="🇪🇸">🇪🇸 Español</option>
+                            <option value="🇺🇦">🇺🇦 Українська</option>
+                            <option value="🇩🇪">🇩🇪 Deutsch</option>
+                        </select>
+                    </div>
                     
                     <div class="cabinet-info-item" style="align-items: center; border: none;">
                         <span class="lbl lang-txt" data-ru="Морское Звание:" data-en="Naval Rank:" data-zh="海军军衔:">Морское Звание:</span>
@@ -1281,6 +1307,7 @@
                     <div>🎮 <b class="lang-txt" data-ru="Игровой ID:" data-en="Game ID:" data-zh="游戏 ID:">Игровой ID:</b> <span id="parsedGameIdText" style="color:#00f2fe;">-</span></div>
                     <div>✈️ <b class="lang-txt" data-ru="Логин ТГ:" data-en="TG Login:" data-zh="TG 账号:">Логин ТГ:</b> <span id="parsedTgText" style="color:#a855f7;">-</span></div>
                     <div>🆔 <b class="lang-txt" data-ru="Цифровой ID:" data-en="Digital ID:" data-zh="数字 ID:">Цифровой ID:</b> <span id="parsedIdText" style="color:#eab308;">-</span></div>
+                    <div>🗣 <b class="lang-txt" data-ru="Язык:" data-en="Language:" data-zh="语言:">Язык:</b> <span id="parsedLangText" style="color:#fff;">-</span></div>
                     <div class="terminal-actions">
                         <button type="button" class="btn-terminal-accept lang-txt" id="terminalAcceptBtn" onclick="executeTerminalApprove()" data-ru="Принять" data-en="Accept" data-zh="接受">Принять</button>
                         <button type="button" class="btn-terminal-reject lang-txt" onclick="executeTerminalReject()" data-ru="Отклонить" data-en="Reject" data-zh="拒绝">Отклонить</button>
@@ -2119,7 +2146,6 @@
         }
 
         // --- ЛОГИКА ЗАЛА СЛАВЫ (Hall of Fame) ---
-        // --- ЛОГИКА ЗАЛА СЛАВЫ (Hall of Fame) ---
         window.renderHallOfFame = function(records) {
             if (!records) records = [];
             const now = Date.now();
@@ -2316,6 +2342,7 @@
 
             if (btn) { btn.disabled = false; btn.textContent = t("Выдать аватарки всем без них", "Assign Avatars to All", "为所有人分配头像"); }
         };
+
         window.addEventListener('DOMContentLoaded', () => {
             cloudDatabase.founders = JSON.parse(JSON.stringify(defaultFounders));
 
@@ -2732,6 +2759,7 @@
             const gameIdMatch = val.match(/(?:ID:)\s*([^\n]+)/i);
             const tgMatch = val.match(/(?:TG:)\s*([^\n]+)/i);
             const idMatch = val.match(/(?:CID:)\s*([^\n]+)/i);
+            const langMatch = val.match(/(?:Язык:)\s*([^\n]+)/i);
 
             if (nickMatch && tgMatch && idMatch) {
                 currentParsedData = { 
@@ -2740,7 +2768,8 @@
                     tg: tgMatch[1].trim(), 
                     chatId: idMatch[1].trim(),
                     shipClass: shipMatch ? shipMatch[1].trim() : "",
-                    status: statusMatch ? statusMatch[1].trim() : "none" 
+                    status: statusMatch ? statusMatch[1].trim() : "none",
+                    nativeLang: langMatch ? langMatch[1].trim() : "🇷🇺" 
                 };
                 parsedNickText.textContent = currentParsedData.nick;
                 parsedGameIdText.textContent = currentParsedData.gameId;
@@ -2753,6 +2782,11 @@
                    if(currentParsedData.status === 'hero') stText.textContent = "Герой";
                    else if(currentParsedData.status === 'legend') stText.textContent = "Легенда";
                    else stText.textContent = "Обычный";
+                }
+                
+                const langText = document.getElementById('parsedLangText');
+                if (langText) {
+                    langText.textContent = currentParsedData.nativeLang;
                 }
                 
                 terminalStatusBox.style.display = 'block';
@@ -2787,7 +2821,8 @@
                 avatar: randomAvatarUrl, // Записываем сгенерированную ссылку
                 cabBg: 0, 
                 shipClass: currentParsedData.shipClass,
-                customStatus: currentParsedData.status, 
+                customStatus: currentParsedData.status,
+                nativeLang: currentParsedData.nativeLang,
                 lastActive: Date.now()
             };
             
@@ -2873,6 +2908,18 @@
             }
         });
 
+        document.getElementById('cabNativeLangSelect').addEventListener('change', async function() {
+            let sessionTg = localStorage.getItem('stage_user_registered_tg') || "";
+            let cleanTg = sessionTg.trim().toLowerCase();
+            if (cleanTg && cloudDatabase.metadata[cleanTg]) {
+                await syncWithCloud(); // ЗАЩИТА
+                cloudDatabase.metadata[cleanTg].nativeLang = this.value;
+                await saveToCloud();
+                renderLocalRecruits(); 
+                showNotification(t("Родной язык обновлен!", "Native language updated!", "母语已更新！"), 'success');
+            }
+        });
+
         navCabinetBtn.addEventListener('click', () => {
             let sessionTg = localStorage.getItem('stage_user_registered_tg') || "";
             let cleanTg = sessionTg.trim().toLowerCase();
@@ -2884,6 +2931,7 @@
             let rank = t("Участник клана", "Clan Member", "战队成员");
             let roleTitle = "Юнга"; 
             let specialization = t("Не назначена", "Not assigned", "未分配");
+            let userLang = "🇷🇺";
             let diffMonths = 0;
             
             if (isLeaderMode || cleanTg === "@bymitso" || cleanTg.includes("admin")) {
@@ -2902,6 +2950,8 @@
                 rank = meta.rank || rank;
                 specialization = meta.specialization || specialization;
                 cabShipClassSelect.value = meta.shipClass || "";
+                userLang = meta.nativeLang || "🇷🇺";
+
                 if (meta.joinDate) {
                     let d = new Date(meta.joinDate);
                     if (d < FOUNDATION_DATE) d = FOUNDATION_DATE;
@@ -2930,6 +2980,7 @@
             document.getElementById('cabDate').textContent = joinDateStr;
             document.getElementById('cabSpec').textContent = specialization;
             document.getElementById('cabRole').textContent = roleTitle;
+            document.getElementById('cabNativeLangSelect').value = userLang;
 
             document.getElementById('cabRankInsigniaContainer').innerHTML = getRankInsigniaHTML(diffMonths);
             
@@ -3703,6 +3754,7 @@
 
                 let avatarStyle = ""; let isMe = false; let customStatusClass = ""; let userSpec = "Не назначена";
                 let userShipClass = ""; 
+                let userLang = "🇷🇺";
                 
                 for (let tgKey in cloudDatabase.metadata) {
                     if (cloudDatabase.metadata[tgKey].nick === nick) {
@@ -3711,6 +3763,7 @@
                         if (cloudDatabase.metadata[tgKey].customStatus === 'hero') customStatusClass = "status-hero";
                         userSpec = cloudDatabase.metadata[tgKey].specialization || "Не назначена";
                         userShipClass = cloudDatabase.metadata[tgKey].shipClass || "";
+                        userLang = cloudDatabase.metadata[tgKey].nativeLang || "🇷🇺";
                     }
                 }
 
@@ -3730,7 +3783,7 @@
                 card.innerHTML = `
                     <div class="name-wrapper">
                         <div class="roster-avatar" ${avatarStyle}></div>
-                        <span>${nick}${specIconHtml}${shipIconHtml}</span>
+                        <span><span style="font-size: 14px; margin-right: 4px;" title="Родной язык / Native language">${userLang}</span>${nick}${specIconHtml}${shipIconHtml}</span>
                     </div>
                     ${tagHtml}
                     <i class="fa-solid fa-xmark kick-btn" onclick="kickPlayer(this, '${nick}', false)"></i>
@@ -3740,7 +3793,7 @@
                 playersGrid.appendChild(card);
 
                 setTimeout(() => {
-                    const nameSpan = card.querySelector('.name-wrapper span');
+                    const nameSpan = card.querySelector('.name-wrapper span:last-child'); // Выбираем span с именем
                     const wrapper = card.querySelector('.name-wrapper');
                     if (nameSpan && wrapper && nameSpan.scrollWidth > wrapper.clientWidth + 2) nameSpan.classList.add('marquee-anim');
                 }, 50);
@@ -3785,10 +3838,11 @@
             const gameChatId = document.getElementById('gameChatId').value.trim();
             const shipClass = document.getElementById('appShipClass').value;
             const statusVal = document.getElementById('appStatus').value; 
+            const nativeLang = document.getElementById('appNativeLang').value;
             let tgLink = document.getElementById('tgLink').value.trim();
             if(!tgLink.startsWith('@')) tgLink = '@' + tgLink;
 
-            const textMessage = `⚓️ <b>Новая заявка STAGE!</b>\n\n👤 <b>Имя:</b> ${realName}\n🎮 <b>Ник:</b> ${gameNick}\n🚢 <b>Класс:</b> ${shipClass}\n🎖 <b>Статус:</b> ${statusVal}\n🆔 <b>ID:</b> ${gameId}\n✈️ <b>TG:</b> ${tgLink}\n🆔 <b>CID:</b> ${gameChatId}`;
+            const textMessage = `⚓️ <b>Новая заявка STAGE!</b>\n\n👤 <b>Имя:</b> ${realName}\n🎮 <b>Ник:</b> ${gameNick}\n🚢 <b>Класс:</b> ${shipClass}\n🎖 <b>Статус:</b> ${statusVal}\n🆔 <b>ID:</b> ${gameId}\n✈️ <b>TG:</b> ${tgLink}\n🆔 <b>CID:</b> ${gameChatId}\n🗣 <b>Язык:</b> ${nativeLang}`;
             
             fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
