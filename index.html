@@ -863,8 +863,7 @@
         <div class="maps-grid collapsed" id="mapsActualGrid" style="display: none; width: 100%;"></div>
         <button type="button" class="toggle-roster-btn lang-txt" id="toggleMapsBtn" data-ru="Показать все карты" data-en="Show all maps" data-zh="显示所有地图" style="display: none; margin-top: 20px;">Показать все карты</button>
     </section>
-
-    <section id="board" class="board-screen">
+<section id="board" class="board-screen">
         <h2 class="section-title lang-txt" data-ru="Доска" data-en="Board" data-zh="黑板">Доска</h2>
         <div class="lock-overlay-box glassmorphism" id="boardLockBox">
             <i class="fa-solid fa-user-lock"></i>
@@ -880,7 +879,8 @@
             </div>
         </div>
     </section>
-<section id="channels" class="channels-screen">
+
+    <section id="channels" class="channels-screen">
         <h2 class="section-title lang-txt" data-ru="Наши каналы" data-en="Our Channels" data-zh="我们的频道">Наши каналы</h2>
         
         <div class="secret-tg-box glassmorphism" id="secretTgBox">
@@ -1108,6 +1108,23 @@
                         <option value="Авиковод">Авиковод</option>
                         <option value="Техник">Техник</option>
                         <option value="Поддержка">Поддержка</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down" style="position: absolute; right: 10px; top: 10px; color: #00f2fe; pointer-events: none; font-size: 12px;"></i>
+                </div>
+
+                <!-- Вывод родного языка -->
+                <div style="color: #00f2fe; font-size: 12px; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px;" class="lang-txt" data-ru="Родной язык:" data-en="Native Lang:" data-zh="母语:">Родной язык:</div>
+                <div id="infoLangText" style="font-family: 'Oswald', sans-serif; font-size: 15px; color: #fff; margin-bottom: 15px;">-</div>
+
+                <!-- Редактирование родного языка (для Главы) -->
+                <div id="infoLangEditWrapper" style="display: none; margin-bottom: 15px; position: relative;">
+                    <select id="infoLangSelect" style="background: rgba(2,5,10,0.8); color: #00f2fe; border: 1px dashed #00f2fe; border-radius: 4px; padding: 5px; font-family: 'Oswald', sans-serif; font-size: 14px; width: 100%; outline: none; text-align: center; appearance: none; cursor: pointer;">
+                        <option value="🇷🇺">🇷🇺 Русский</option>
+                        <option value="🇬🇧">🇬🇧 English</option>
+                        <option value="🇨🇳">🇨🇳 中文</option>
+                        <option value="🇪🇸">🇪🇸 Español</option>
+                        <option value="🇺🇦">🇺🇦 Українська</option>
+                        <option value="🇩🇪">🇩🇪 Deutsch</option>
                     </select>
                     <i class="fa-solid fa-chevron-down" style="position: absolute; right: 10px; top: 10px; color: #00f2fe; pointer-events: none; font-size: 12px;"></i>
                 </div>
@@ -3616,6 +3633,10 @@
             const editIcon = document.getElementById('editIdIcon');
             const infoAvatar = document.getElementById('infoAvatar');
             
+            const langText = document.getElementById('infoLangText');
+            const langEditWrapper = document.getElementById('infoLangEditWrapper');
+            const langSelect = document.getElementById('infoLangSelect');
+            
             let playerMeta = null;
             for (let tg in cloudDatabase.metadata) {
                 if (cloudDatabase.metadata[tg].nick === nick) { playerMeta = cloudDatabase.metadata[tg]; break; }
@@ -3651,6 +3672,9 @@
                 rankText.style.display = 'block'; rankInsigniaContainer.style.display = 'block'; rankEditWrapper.style.display = 'none';
                 specText.textContent = t("Тактик", "Tactician", "战术家");
                 specText.style.display = 'block'; specEditWrapper.style.display = 'none';
+                
+                langText.textContent = "🇷🇺";
+                langText.style.display = 'block'; langEditWrapper.style.display = 'none';
             } else {
                 if (playerMeta) {
                     idInput.value = playerMeta.gameId || t("Не указан", "Not specified", "未指定");
@@ -3659,6 +3683,9 @@
                     let currentRankIdx = playerMeta.manualRank ? NAVAL_RANKS.indexOf(playerMeta.manualRank) : diffMonths;
                     rankInsigniaContainer.innerHTML = getRankInsigniaHTML(currentRankIdx);
                     specText.textContent = playerMeta.specialization || t("Не назначена", "Not assigned", "未分配");
+                    
+                    let currentLang = playerMeta.nativeLang || "🇷🇺";
+                    langText.textContent = currentLang;
 
                     if (isLeaderMode) {
                         rankText.style.display = 'none'; rankInsigniaContainer.style.display = 'none'; rankEditWrapper.style.display = 'block';
@@ -3676,9 +3703,19 @@
                             playerMeta.specialization = this.value; 
                             await saveToCloud(); 
                         };
+                        
+                        langText.style.display = 'none'; langEditWrapper.style.display = 'block';
+                        langSelect.value = currentLang;
+                        langSelect.onchange = async function() { 
+                            await syncWithCloud();
+                            playerMeta.nativeLang = this.value; 
+                            await saveToCloud(); 
+                            renderLocalRecruits();
+                        };
                     } else {
                         rankText.style.display = 'block'; rankInsigniaContainer.style.display = 'block'; rankEditWrapper.style.display = 'none';
                         specText.style.display = 'block'; specEditWrapper.style.display = 'none';
+                        langText.style.display = 'block'; langEditWrapper.style.display = 'none';
                     }
                 }
             }
@@ -3793,7 +3830,7 @@
                 playersGrid.appendChild(card);
 
                 setTimeout(() => {
-                    const nameSpan = card.querySelector('.name-wrapper span:last-child'); // Выбираем span с именем
+                    const nameSpan = card.querySelector('.name-wrapper span:last-child');
                     const wrapper = card.querySelector('.name-wrapper');
                     if (nameSpan && wrapper && nameSpan.scrollWidth > wrapper.clientWidth + 2) nameSpan.classList.add('marquee-anim');
                 }, 50);
