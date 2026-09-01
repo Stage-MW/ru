@@ -372,7 +372,7 @@
         .founder-tile.status-hero { box-shadow: 0 0 25px rgba(255, 140, 0, 0.6); border-color: #ff8c00; background: rgba(255, 140, 0, 0.1); }
         .founder-tile.status-hero h3 { color: #ff8c00; text-shadow: 0 0 10px rgba(255, 140, 0, 0.8); }
 
-        /* СТИЛИ ЛИЧНОГО КАБИНЕТА */
+        /* СТИЛИ ЛИЧНОГО КАБИНЕТА И НОВЫХ ПОЛЕЙ ТУРНИРНЫХ ДАННЫХ */
         .cabinet-profile-box { display: flex; flex-direction: column; align-items: center; gap: 20px; margin-top: 10px; }
         .cabinet-avatar-container { position: relative; width: 110px; height: 110px; border-radius: 50%; border: 3px solid #a855f7; background: #02050a; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 25px rgba(168, 85, 247, 0.4); overflow: hidden; background-size: cover; background-position: center; cursor: pointer; transition: all 0.3s ease; }
         .cabinet-avatar-container:hover { transform: scale(1.05); border-color: #00f2fe; box-shadow: 0 0 35px rgba(0, 242, 254, 0.6); }
@@ -396,6 +396,15 @@
         .cabinet-info-item .val { font-weight: bold; color: #fff; font-family: 'Orbitron', sans-serif; font-size: 13px; }
         .cabinet-info-item .val.rank-highlight { color: #00f2fe; text-shadow: 0 0 10px rgba(0, 242, 254, 0.4); font-size: 14px; font-family: 'Oswald', sans-serif; font-weight: normal; letter-spacing: 1px; }
 
+        /* Турнирный блок стилей */
+        .tourney-box { background: rgba(2, 5, 10, 0.7); padding: 15px; border-radius: 6px; border: 1px dashed #ff8c00; margin-top: 10px; width: 100%; }
+        .tourney-title { color: #ff8c00; font-size: 13px; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 1.5px; font-weight: bold; text-align: center; text-shadow: 0 0 10px rgba(255, 140, 0, 0.4); }
+        .tourney-row { display: flex; flex-direction: column; margin-bottom: 10px; }
+        .tourney-row label { font-size: 11px; color: #94a3b8; text-transform: uppercase; margin-bottom: 4px; }
+        .tourney-row input { width: 100%; background: rgba(0,0,0,0.6); border: 1px solid rgba(255, 140, 0, 0.3); padding: 8px; color: #fff; border-radius: 4px; font-family: 'Oswald', sans-serif; font-size: 13px; outline: none; transition: 0.3s; }
+        .tourney-row input:focus { border-color: #ff8c00; box-shadow: 0 0 8px rgba(255, 140, 0, 0.5); }
+        .tourney-text { font-family: 'Oswald', sans-serif; font-size: 14px; color: #fff; font-weight: bold; }
+
         .rank-insignia { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 35px; width: 45px; background: rgba(0, 242, 254, 0.05); border-radius: 4px; border: 1px solid rgba(0, 242, 254, 0.3); color: #00f2fe; text-shadow: 0 0 5px rgba(0,242,254,0.5); font-size: 12px; transition: all 0.3s ease; }
         .rank-insignia i.fa-star { font-size: 10px; }
         .rank-insignia i.fa-minus { font-size: 8px; margin-top: -2px; }
@@ -412,82 +421,26 @@
 
         /* ИНДИКАТОР ОНЛАЙН (БОКОВАЯ ШТОРКА) */
         .online-widget { 
-            position: fixed; 
-            top: 50%; 
-            right: -220px; 
-            transform: translateY(-50%);
-            width: 220px;
-            background: rgba(5, 10, 20, 0.85); 
-            border: 1px solid rgba(34, 197, 94, 0.4); 
-            border-right: none;
-            border-radius: 12px 0 0 12px; 
-            z-index: 10000; 
-            display: none; 
-            flex-direction: column; 
-            padding: 20px 15px;
-            backdrop-filter: blur(8px); 
-            box-shadow: -5px 0 25px rgba(34, 197, 94, 0.15); 
-            font-family: 'Orbitron', sans-serif; 
+            position: fixed; top: 50%; right: -220px; transform: translateY(-50%); width: 220px;
+            background: rgba(5, 10, 20, 0.85); border: 1px solid rgba(34, 197, 94, 0.4); border-right: none;
+            border-radius: 12px 0 0 12px; z-index: 10000; display: none; flex-direction: column; padding: 20px 15px;
+            backdrop-filter: blur(8px); box-shadow: -5px 0 25px rgba(34, 197, 94, 0.15); font-family: 'Orbitron', sans-serif; 
             transition: right 0.4s cubic-bezier(0.25, 1, 0.5, 1); 
         }
         
-        .online-widget.active {
-            right: 0;
-            box-shadow: -5px 0 35px rgba(34, 197, 94, 0.3);
-        }
-
-        .online-toggle-btn {
-            position: absolute;
-            left: -48px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 48px;
-            height: 48px;
-            background: rgba(5, 10, 20, 0.85);
-            border: 1px solid rgba(34, 197, 94, 0.4);
-            border-right: none;
-            border-radius: 12px 0 0 12px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            backdrop-filter: blur(5px);
-            transition: all 0.3s ease;
-        }
-
+        .online-widget.active { right: 0; box-shadow: -5px 0 35px rgba(34, 197, 94, 0.3); }
+        .online-toggle-btn { position: absolute; left: -48px; top: 50%; transform: translateY(-50%); width: 48px; height: 48px; background: rgba(5, 10, 20, 0.85); border: 1px solid rgba(34, 197, 94, 0.4); border-right: none; border-radius: 12px 0 0 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; backdrop-filter: blur(5px); transition: all 0.3s ease; }
         .online-toggle-btn:hover { background: rgba(34, 197, 94, 0.15); }
         .online-toggle-btn i { font-size: 16px; margin-bottom: 2px; }
-
         .online-count { font-size: 11px; color: #fff; font-weight: bold; }
         
-        .online-dot { 
-            position: absolute; 
-            top: 6px; 
-            right: 6px; 
-            width: 8px; 
-            height: 8px; 
-            background: #22c55e; 
-            border-radius: 50%; 
-            box-shadow: 0 0 8px #22c55e; 
-            animation: pulseDot 2s infinite; 
-        }
-
+        .online-dot { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; background: #22c55e; border-radius: 50%; box-shadow: 0 0 8px #22c55e; animation: pulseDot 2s infinite; }
         .online-panel-content { width: 100%; max-height: 50vh; overflow-y: auto; }
         .online-panel-content::-webkit-scrollbar { width: 4px; }
         .online-panel-content::-webkit-scrollbar-thumb { background: #22c55e; border-radius: 4px; }
 
         .online-users-container { display: flex; flex-direction: column; gap: 8px; }
-        .online-user-item { 
-            display: flex; 
-            align-items: center; 
-            gap: 10px; 
-            background: rgba(0,0,0,0.5); 
-            padding: 6px 10px; 
-            border-radius: 6px; 
-            border: 1px solid rgba(34, 197, 94, 0.2); 
-            transition: all 0.2s;
-        }
+        .online-user-item { display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.5); padding: 6px 10px; border-radius: 6px; border: 1px solid rgba(34, 197, 94, 0.2); transition: all 0.2s; }
         .online-user-item:hover { border-color: #22c55e; background: rgba(34, 197, 94, 0.1); }
         
         .online-avatar { width: 24px; height: 24px; border-radius: 50%; border: 1px solid #22c55e; background-size: cover; background-position: center; background-color: #050b14; flex-shrink: 0; }
@@ -496,29 +449,8 @@
         @keyframes pulseDot { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.3); } 100% { opacity: 1; transform: scale(1); } }
 
         /* --- СИСТЕМА УВЕДОМЛЕНИЙ --- */
-        .toast-container {
-            position: fixed;
-            bottom: 90px;
-            right: 20px;
-            z-index: 100000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            pointer-events: none;
-        }
-        .toast-msg {
-            background: rgba(15, 23, 42, 0.9);
-            border-left: 4px solid #00f2fe;
-            color: #fff;
-            padding: 12px 20px;
-            border-radius: 4px;
-            font-family: 'Oswald', sans-serif;
-            font-size: 14px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            backdrop-filter: blur(5px);
-            pointer-events: auto;
-            animation: slideInRight 0.3s forwards, fadeOut 0.3s forwards 4s;
-        }
+        .toast-container { position: fixed; bottom: 90px; right: 20px; z-index: 100000; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+        .toast-msg { background: rgba(15, 23, 42, 0.9); border-left: 4px solid #00f2fe; color: #fff; padding: 12px 20px; border-radius: 4px; font-family: 'Oswald', sans-serif; font-size: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); backdrop-filter: blur(5px); pointer-events: auto; animation: slideInRight 0.3s forwards, fadeOut 0.3s forwards 4s; }
         @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; transform: translateY(-10px); } }
 
@@ -526,10 +458,7 @@
         .modal-overlay { position: fixed; inset: 0; background: rgba(1, 4, 10, 0.85); z-index: 100; display: none; justify-content: center; align-items: center; backdrop-filter: blur(8px); padding: 15px; }
         .modal-overlay.active { display: flex; }
         
-        .modal-window { 
-            width: 100%; max-width: 450px; padding: 25px; border-radius: 8px; 
-            position: relative; max-height: 90vh; overflow-y: auto; transition: background 0.3s;
-        }
+        .modal-window { width: 100%; max-width: 450px; padding: 25px; border-radius: 8px; position: relative; max-height: 90vh; overflow-y: auto; transition: background 0.3s; }
         .modal-window::-webkit-scrollbar { width: 6px; }
         .modal-window::-webkit-scrollbar-track { background: rgba(2, 5, 10, 0.5); border-radius: 4px; }
         .modal-window::-webkit-scrollbar-thumb { background: #00f2fe; border-radius: 4px; }
@@ -537,13 +466,7 @@
 
         .modal-title { font-family: 'Orbitron', sans-serif; font-size: 22px; color: #00f2fe; text-transform: uppercase; text-align: center; border-bottom: 1px solid rgba(0, 242, 254, 0.2); padding-bottom: 10px; margin-bottom: 20px; }
         
-        .close-btn { 
-            position: absolute !important; top: 12px !important; right: 12px !important; color: rgba(255,255,255,0.6) !important; 
-            font-size: 22px !important; cursor: pointer !important; transition: all 0.2s !important; z-index: 50 !important; 
-            background: rgba(11, 18, 31, 0.8) !important; width: 32px !important; height: 32px !important; 
-            display: flex !important; align-items: center !important; justify-content: center !important; 
-            border-radius: 50% !important; border: 1px solid rgba(0, 242, 254, 0.3) !important;
-        }
+        .close-btn { position: absolute !important; top: 12px !important; right: 12px !important; color: rgba(255,255,255,0.6) !important; font-size: 22px !important; cursor: pointer !important; transition: all 0.2s !important; z-index: 50 !important; background: rgba(11, 18, 31, 0.8) !important; width: 32px !important; height: 32px !important; display: flex !important; align-items: center !important; justify-content: center !important; border-radius: 50% !important; border: 1px solid rgba(0, 242, 254, 0.3) !important; }
         .close-btn:hover { color: #ff0055 !important; border-color: #ff0055 !important; box-shadow: 0 0 10px rgba(255, 0, 85, 0.4) !important; }
         
         .form-group { margin-bottom: 15px; }
@@ -551,11 +474,7 @@
         .form-group input, .form-group textarea, .form-group select { width: 100%; background: rgba(2, 5, 10, 0.6); border: 1px solid rgba(0, 242, 254, 0.3); padding: 10px; color: #fff; border-radius: 4px; font-family: 'Oswald', sans-serif; }
         .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: #00f2fe; outline: none; box-shadow: 0 0 8px rgba(0, 242, 254, 0.3); }
         
-        .editable-id-input {
-            font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 900; color: #fff;
-            background: transparent !important; border: none !important; text-align: center; width: 100%;
-            text-shadow: 0 0 10px rgba(0,242,254,0.5); outline: none; padding: 5px;
-        }
+        .editable-id-input { font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 900; color: #fff; background: transparent !important; border: none !important; text-align: center; width: 100%; text-shadow: 0 0 10px rgba(0,242,254,0.5); outline: none; padding: 5px; }
         .editable-id-input:focus { border-bottom: 1px dashed #00f2fe !important; box-shadow: none !important;}
 
         .law-box { background: rgba(2, 5, 10, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); padding: 10px; border-radius: 4px; margin-bottom: 15px; display: flex; gap: 10px; align-items: flex-start; }
@@ -581,58 +500,23 @@
 
         #sparksCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 5; }
 
-        #bootScreen {
-            position: fixed; inset: 0; background-color: #02050a; z-index: 99999;
-            display: flex; justify-content: center; align-items: center; flex-direction: column;
-            transition: opacity 0.5s ease, visibility 0.5s;
-        }
+        #bootScreen { position: fixed; inset: 0; background-color: #02050a; z-index: 99999; display: flex; justify-content: center; align-items: center; flex-direction: column; transition: opacity 0.5s ease, visibility 0.5s; }
         #bootScreen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
         
         .cyber-loader-box { width: 100%; max-width: 380px; text-align: center; padding: 20px; }
 
         /* НОВЫЕ СТИЛИ ДЛЯ MATRIX ДЕКОДЕРА */
-        .matrix-decoder {
-            font-family: 'Orbitron', monospace;
-            font-size: clamp(24px, 6vw, 40px);
-            font-weight: 900;
-            color: #00f2fe;
-            text-shadow: 0 0 10px rgba(0, 242, 254, 0.6), 0 0 20px rgba(0, 242, 254, 0.4);
-            margin-bottom: 25px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            text-align: center;
-            min-height: 48px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            word-break: break-word;
-            transition: all 0.5s ease;
-        }
-
-        .matrix-decoder.finished {
-            background: linear-gradient(90deg, #00f2fe, #ffffff, #a855f7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 25px rgba(0, 242, 254, 0.8), 0 0 40px rgba(168, 85, 247, 0.6);
-            transform: scale(1.05);
-        }
+        .matrix-decoder { font-family: 'Orbitron', monospace; font-size: clamp(24px, 6vw, 40px); font-weight: 900; color: #00f2fe; text-shadow: 0 0 10px rgba(0, 242, 254, 0.6), 0 0 20px rgba(0, 242, 254, 0.4); margin-bottom: 25px; letter-spacing: 3px; text-transform: uppercase; text-align: center; min-height: 48px; display: flex; justify-content: center; align-items: center; word-break: break-word; transition: all 0.5s ease; }
+        .matrix-decoder.finished { background: linear-gradient(90deg, #00f2fe, #ffffff, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 25px rgba(0, 242, 254, 0.8), 0 0 40px rgba(168, 85, 247, 0.6); transform: scale(1.05); }
 
         .loader-subtext { font-family: 'Orbitron', sans-serif; font-size: 13px; color: #00f2fe; margin-bottom: 15px; letter-spacing: 2px; height: 20px; text-transform: uppercase; }
         .loader-progress-wrap { width: 100%; height: 4px; background: rgba(15, 23, 42, 0.8); border-radius: 2px; overflow: hidden; position: relative; box-shadow: inset 0 0 5px rgba(0,0,0,0.5); border: 1px solid rgba(0, 242, 254, 0.2); }
         .loader-progress-bar { height: 100%; background: linear-gradient(90deg, #00f2fe, #a855f7); width: 0%; box-shadow: 0 0 15px #00f2fe, 0 0 25px #a855f7; transition: width 0.15s ease-out; }
 
-        @media (max-width: 900px) {
-            .squads-gallery { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 900px) { .squads-gallery { grid-template-columns: 1fr; } }
 
         @media (max-width: 768px) {
-            .nav-bar { 
-                top: auto; 
-                bottom: max(25px, env(safe-area-inset-bottom)); 
-                padding: 12px 15px; 
-                gap: 12px; width: 95%; left: 50%; transform: translateX(-50%); 
-                overflow-x: auto; justify-content: flex-start; -webkit-overflow-scrolling: touch; 
-            }
+            .nav-bar { top: auto; bottom: max(25px, env(safe-area-inset-bottom)); padding: 12px 15px; gap: 12px; width: 95%; left: 50%; transform: translateX(-50%); overflow-x: auto; justify-content: flex-start; -webkit-overflow-scrolling: touch; }
             .nav-bar::-webkit-scrollbar { display: none; }
             .nav-links-left, .nav-links-right { flex-shrink: 0; }
             .nav-links-left { gap: 8px; }
@@ -642,9 +526,7 @@
             #navCabinetBtn { width: 30px; height: 30px; line-height: 26px; flex-shrink: 0; }
             #navCabinetBtn i { font-size: 12px; }
 
-            .welcome-screen, .roster-screen, .squads-screen, .hall-screen, .maps-screen, .board-screen, .channels-screen, .creators-screen, .founders-screen { 
-                padding: 60px 10px 110px !important; background-attachment: scroll !important; background-size: cover !important; background-position: center !important;
-            }
+            .welcome-screen, .roster-screen, .squads-screen, .hall-screen, .maps-screen, .board-screen, .channels-screen, .creators-screen, .founders-screen { padding: 60px 10px 110px !important; background-attachment: scroll !important; background-size: cover !important; background-position: center !important; }
             .players-grid { display: flex; flex-direction: column; flex-wrap: nowrap; gap: 10px; max-height: 280px; overflow-y: auto; overflow-x: hidden; padding-right: 5px; justify-content: flex-start; }
             .players-grid::-webkit-scrollbar { width: 4px; }
             .players-grid::-webkit-scrollbar-track { background: rgba(2, 5, 10, 0.5); border-radius: 4px; }
@@ -689,7 +571,6 @@
         </div>
     </div>
 
-    <!-- БОКОВАЯ ШТОРКА ОНЛАЙНА -->
     <div class="online-widget glassmorphism" id="onlineWidget">
         <div class="online-toggle-btn" id="onlineToggleBtn" title="Бойцы в сети">
             <i class="fa-solid fa-users" style="color: #22c55e;"></i>
@@ -726,7 +607,7 @@
             <button class="btn-nav-login lang-txt" id="navLoginBtn" data-ru='<i class="fa-solid fa-lock"></i> Вход' data-en='<i class="fa-solid fa-lock"></i> Login' data-zh='<i class="fa-solid fa-lock"></i> 登录'><i class="fa-solid fa-lock"></i> Вход</button>
         </div>
     </nav>
-<section id="welcome" class="welcome-screen">
+    <section id="welcome" class="welcome-screen">
         <div class="welcome-text">Welcome to</div>
         <h1>Stage</h1>
         
@@ -823,22 +704,19 @@
         </div>
     </section>
 
-    <!-- СЕКЦИЯ: ЗАЛ СЛАВЫ (НОВАЯ) -->
+    <!-- СЕКЦИЯ: ЗАЛ СЛАВЫ -->
     <section id="hall" class="hall-screen">
         <h2 class="section-title lang-txt" data-ru="Зал Славы" data-en="Hall of Fame" data-zh="名人堂">Зал Славы</h2>
         <p style="color: #94a3b8; margin-bottom: 30px; text-align: center; font-size: 14px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;" class="lang-txt" data-ru="Сезонный топ-10 сбрасывается каждые 14 дней" data-en="Seasonal Top 10 resets every 14 days" data-zh="赛季前十名每 14 天重置一次">Сезонный топ-10 сбрасывается каждые 14 дней</p>
 
         <div class="hall-container">
-            <!-- ЛЕВЫЙ БЛОК: ТЕКУЩИЙ ТОП-10 -->
             <div class="top10-box glassmorphism">
                 <h3 style="font-family: 'Orbitron', sans-serif; color: #00f2fe; text-align: center; margin-bottom: 20px; text-transform: uppercase;" class="lang-txt" data-ru="Текущий сезон (Топ 10)" data-en="Current Season (Top 10)" data-zh="当前赛季 (前十名)">Текущий сезон (Топ 10)</h3>
-                
                 <div id="top10List" style="display: flex; flex-direction: column; gap: 10px;">
                     <p style="color: #94a3b8; text-align:center; font-size: 13px;" class="lang-txt" data-ru="Сезон только начался. Загрузка данных..." data-en="Season just started. Loading data..." data-zh="赛季刚刚开始。数据加载中...">Сезон только начался. Загрузка данных...</p>
                 </div>
             </div>
 
-            <!-- ПРАВЫЙ БЛОК: ТОП МЕСЯЦА (АБСОЛЮТНЫЙ РЕКОРД) -->
             <div class="animated-glow-border month-hero-box-wrapper" style="flex: 0 0 320px; border-radius: 8px;">
                 <div class="month-hero-box glassmorphism" style="border-radius: inherit; height: 100%;">
                     <i class="fa-solid fa-trophy" style="font-size: 50px; color: #ff0055; margin-bottom: 15px; text-shadow: 0 0 20px #ff0055;"></i>
@@ -853,6 +731,7 @@
         </div>
     </section>
 
+    <!-- СЕКЦИЯ: КАРТЫ -->
     <section id="maps" class="maps-screen">
         <h2 class="section-title lang-txt" data-ru="Карты" data-en="Maps" data-zh="地图">Карты</h2>
         <div class="lock-overlay-box glassmorphism" id="mapsLockBox">
@@ -863,7 +742,9 @@
         <div class="maps-grid collapsed" id="mapsActualGrid" style="display: none; width: 100%;"></div>
         <button type="button" class="toggle-roster-btn lang-txt" id="toggleMapsBtn" data-ru="Показать все карты" data-en="Show all maps" data-zh="显示所有地图" style="display: none; margin-top: 20px;">Показать все карты</button>
     </section>
-<section id="board" class="board-screen">
+
+    <!-- СЕКЦИЯ: ДОСКА -->
+    <section id="board" class="board-screen">
         <h2 class="section-title lang-txt" data-ru="Доска" data-en="Board" data-zh="黑板">Доска</h2>
         <div class="lock-overlay-box glassmorphism" id="boardLockBox">
             <i class="fa-solid fa-user-lock"></i>
@@ -937,7 +818,6 @@
             
             <img src="" id="squadModalImg" class="squad-view-image" alt="Map" style="display: none;" onclick="document.getElementById('fullscreenMapOverlay').classList.add('active'); document.getElementById('fullscreenMapImg').src = this.src;">
             
-            <!-- Блок редактирования (только для Главы) -->
             <div id="squadLeaderEditArea" style="display: none;">
                 <input type="text" id="squadEditMapName" placeholder="Название карты (например: Арктика)" style="width: 100%; margin-bottom: 10px; background: rgba(0,0,0,0.5); color: #fff; border: 1px solid #00f2fe; padding: 10px; border-radius: 4px; font-family: 'Orbitron', sans-serif;">
                 <input type="text" id="squadEditMapUrl" placeholder="Ссылка на общую картинку карты (url)" style="width: 100%; margin-bottom: 15px; background: rgba(0,0,0,0.5); color: #fff; border: 1px solid #00f2fe; padding: 10px; border-radius: 4px; font-family: 'Oswald', sans-serif;">
@@ -950,7 +830,6 @@
                 </div>
             </div>
 
-            <!-- Блок просмотра (для всех остальных) -->
             <div id="squadViewerArea" style="display: none;">
                 <div class="squad-view-list" id="squadViewListContainer"></div>
             </div>
@@ -973,7 +852,6 @@
                 <div class="form-group"><label class="lang-txt" data-ru="Игровой ID" data-en="Game ID" data-zh="游戏 ID">Игровой ID</label><input type="text" id="gameId" class="lang-txt" data-ru="Например: 49284729" data-en="Example: 49284729" data-zh="例如: 49284729" placeholder="Например: 49284729" required></div>
                 <div class="form-group"><label class="lang-txt" data-ru="Никнейм в игре" data-en="In-game Nickname" data-zh="游戏内昵称">Никнейм в игре</label><input type="text" id="gameNick" class="lang-txt" data-ru="Твой ник" data-en="Your nick" data-zh="你的昵称" placeholder="Твой ник" required></div>
                 
-                <!-- Предпочитаемый класс корабля -->
                 <div class="form-group">
                     <label class="lang-txt" data-ru="Предпочитаемый класс корабля" data-en="Preferred Ship Class" data-zh="首选船级">Предпочитаемый класс корабля</label>
                     <select id="appShipClass" required style="width: 100%; background: rgba(2, 5, 10, 0.6); border: 1px solid rgba(0, 242, 254, 0.3); padding: 10px; color: #fff; border-radius: 4px; font-family: 'Oswald', sans-serif;">
@@ -989,7 +867,6 @@
                     </select>
                 </div>
                 
-                <!-- Желаемый статус -->
                 <div class="form-group">
                     <label class="lang-txt" data-ru="Желаемый статус" data-en="Desired Status" data-zh="期望状态">Желаемый статус</label>
                     <select id="appStatus" required style="width: 100%; background: rgba(2, 5, 10, 0.6); border: 1px solid rgba(0, 242, 254, 0.3); padding: 10px; color: #fff; border-radius: 4px; font-family: 'Oswald', sans-serif;">
@@ -999,7 +876,6 @@
                     </select>
                 </div>
 
-                <!-- Новое поле: Родной язык -->
                 <div class="form-group">
                     <label class="lang-txt" data-ru="Родной язык" data-en="Native Language" data-zh="母语">Родной язык</label>
                     <select id="appNativeLang" required style="width: 100%; background: rgba(2, 5, 10, 0.6); border: 1px solid rgba(0, 242, 254, 0.3); padding: 10px; color: #fff; border-radius: 4px; font-family: 'Oswald', sans-serif;">
@@ -1080,27 +956,28 @@
         </div>
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО ИНФОРМАЦИИ И УПРАВЛЕНИЯ ИГРОКОМ -->
+    <!-- МОДАЛЬНОЕ ОКНО ИНФОРМАЦИИ И УПРАВЛЕНИЯ ИГРОКОМ (НОВЫЙ "ЛИЧНЫЙ КАБИНЕТ" КАРТОЧКИ) -->
     <div class="modal-overlay" id="playerInfoModalOverlay" style="z-index: 145;">
-        <div class="modal-window glassmorphism" style="max-width: 350px; border-color: #00f2fe; box-shadow: 0 0 40px rgba(0, 242, 254, 0.3); text-align: center; padding: 30px 20px;">
+        <div class="modal-window glassmorphism" style="max-width: 420px; border-color: #00f2fe; box-shadow: 0 0 40px rgba(0, 242, 254, 0.3); text-align: left; padding: 25px;">
             <span class="close-btn" id="closePlayerInfoBtn">&times;</span>
-            <div class="cabinet-avatar-container" id="infoAvatar" style="margin: 0 auto 15px; width: 80px; height: 80px; border-color: #00f2fe;"></div>
+            <div class="cabinet-avatar-container" id="infoAvatar" style="margin: 0 auto 15px; width: 90px; height: 90px; border-color: #00f2fe; background-color: #02050a;"></div>
             
-            <div style="background: rgba(2, 5, 10, 0.4); padding: 15px; border-radius: 6px; border: 1px dashed rgba(0, 242, 254, 0.3); margin-top: 15px;">
-                <div style="color: #00f2fe; font-size: 12px; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px;" class="lang-txt" data-ru="Никнейм:" data-en="Nickname:" data-zh="昵称:">Никнейм:</div>
-                <div id="infoNick" style="font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 900; color: #fff; margin-bottom: 15px; text-shadow: 0 0 10px rgba(0,242,254,0.5);">-</div>
+            <div style="background: rgba(2, 5, 10, 0.5); padding: 15px; border-radius: 6px; border: 1px dashed rgba(0, 242, 254, 0.3); margin-top: 10px;">
+                <h4 style="color: #00f2fe; text-align: center; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; font-family: 'Orbitron', sans-serif;">Основная информация</h4>
                 
-                <div style="color: #00f2fe; font-size: 12px; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px;" class="lang-txt" data-ru="Игровой ID:" data-en="Game ID:" data-zh="游戏 ID:">Игровой ID:</div>
-                <div style="position: relative; width: 100%; margin-bottom: 15px;">
-                    <input type="text" id="infoGameIdInput" class="editable-id-input" value="-" readonly>
-                    <i class="fa-solid fa-pen" id="editIdIcon" style="display: none; position: absolute; right: 10px; top: 5px; color: #a855f7; font-size: 12px; cursor: pointer;"></i>
+                <div class="tourney-row">
+                    <label class="lang-txt" data-ru="Никнейм:" data-en="Nickname:">Никнейм:</label>
+                    <input type="text" id="infoNickInput" readonly style="font-family: 'Orbitron', sans-serif; font-weight: 900; color: #00f2fe; text-align: center; font-size: 16px;">
                 </div>
                 
-                <div style="color: #00f2fe; font-size: 12px; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px;" class="lang-txt" data-ru="Специализация:" data-en="Specialization:" data-zh="专业:">Специализация:</div>
-                <div id="infoSpecText" style="font-family: 'Oswald', sans-serif; font-size: 15px; color: #fff; margin-bottom: 15px;">-</div>
+                <div class="tourney-row">
+                    <label class="lang-txt" data-ru="Игровой ID:" data-en="Game ID:">Игровой ID:</label>
+                    <input type="text" id="infoGameIdInput" readonly>
+                </div>
                 
-                <div id="infoSpecEditWrapper" style="display: none; margin-bottom: 15px; position: relative;">
-                    <select id="infoSpecSelect" style="background: rgba(2,5,10,0.8); color: #00f2fe; border: 1px dashed #00f2fe; border-radius: 4px; padding: 5px; font-family: 'Oswald', sans-serif; font-size: 14px; width: 100%; outline: none; text-align: center; appearance: none; cursor: pointer;">
+                <div class="tourney-row" id="infoSpecRow">
+                    <label class="lang-txt" data-ru="Специализация:" data-en="Specialization:">Специализация:</label>
+                    <select id="infoSpecSelect" disabled style="background: rgba(0,0,0,0.6); color: #fff; border: 1px solid rgba(0, 242, 254, 0.3); padding: 8px; border-radius: 4px; outline: none; width: 100%; appearance: none; font-family: 'Oswald', sans-serif;">
                         <option value="">Не назначена</option>
                         <option value="Универсальный">Универсальный</option>
                         <option value="Дуэлянт">Дуэлянт</option>
@@ -1109,79 +986,93 @@
                         <option value="Техник">Техник</option>
                         <option value="Поддержка">Поддержка</option>
                     </select>
-                    <i class="fa-solid fa-chevron-down" style="position: absolute; right: 10px; top: 10px; color: #00f2fe; pointer-events: none; font-size: 12px;"></i>
                 </div>
 
-                <!-- Вывод родного языка -->
-                <div style="color: #00f2fe; font-size: 12px; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px;" class="lang-txt" data-ru="Родной язык:" data-en="Native Lang:" data-zh="母语:">Родной язык:</div>
-                <div id="infoLangText" style="font-family: 'Oswald', sans-serif; font-size: 15px; color: #fff; margin-bottom: 15px;">-</div>
-
-                <!-- Редактирование родного языка (для Главы) -->
-                <div id="infoLangEditWrapper" style="display: none; margin-bottom: 15px; position: relative;">
-                    <select id="infoLangSelect" style="background: rgba(2,5,10,0.8); color: #00f2fe; border: 1px dashed #00f2fe; border-radius: 4px; padding: 5px; font-family: 'Oswald', sans-serif; font-size: 14px; width: 100%; outline: none; text-align: center; appearance: none; cursor: pointer;">
+                <div class="tourney-row" id="infoLangRow">
+                    <label class="lang-txt" data-ru="Родной язык:" data-en="Native Lang:">Родной язык:</label>
+                    <select id="infoLangSelect" disabled style="background: rgba(0,0,0,0.6); color: #fff; border: 1px solid rgba(0, 242, 254, 0.3); padding: 8px; border-radius: 4px; outline: none; width: 100%; appearance: none; font-family: 'Oswald', sans-serif;">
                         <option value="🇷🇺">🇷🇺 Русский</option>
-<option value="🇬🇧">🇬🇧 English</option>
-<option value="🇨🇳">🇨🇳 中文</option>
-<option value="🇪🇸">🇪🇸 Español</option>
-<option value="🇺🇦">🇺🇦 Українська</option>
-<option value="🇧🇾">🇧🇾 Беларуская</option>
-<option value="🇰🇿">🇰🇿 Қазақша</option>
-<option value="🇺🇿">🇺🇿 Oʻzbekcha</option>
-<option value="🇦🇿">🇦🇿 Azərbaycan</option>
-<option value="🇦🇲">🇦🇲 Հայերեն</option>
-<option value="🇬🇪">🇬🇪 ქართული</option>
-<option value="🇩🇪">🇩🇪 Deutsch</option>
-<option value="🇫🇷">🇫🇷 Français</option>
-<option value="🇮🇹">🇮🇹 Italiano</option>
-<option value="🇵🇹">🇵🇹 Português</option>
-<option value="🇵🇱">🇵🇱 Polski</option>
-<option value="🇹🇷">🇹🇷 Türkçe</option>
-<option value="🇳🇱">🇳🇱 Nederlands</option>
-<option value="🇸🇪">🇸🇪 Svenska</option>
-<option value="🇳🇴">🇳🇴 Norsk</option>
-<option value="🇩🇰">🇩🇰 Dansk</option>
-<option value="🇫🇮">🇫🇮 Suomi</option>
-<option value="🇨🇿">🇨🇿 Čeština</option>
-<option value="🇸🇰">🇸🇰 Slovenčina</option>
-<option value="🇷🇸">🇷🇸 Српски</option>
-<option value="🇧🇬">🇧🇬 Български</option>
-<option value="🇷🇴">🇷🇴 Română</option>
-<option value="🇬🇷">🇬🇷 Ελληνικά</option>
-<option value="🇭🇺">🇭🇺 Magyar</option>
-<option value="🇯🇵">🇯🇵 日本語</option>
-<option value="🇰🇷">🇰🇷 한국어</option>
-<option value="🇮🇳">🇮🇳 हिन्दी</option>
-<option value="🇮🇩">🇮🇩 Bahasa Indonesia</option>
-<option value="🇲🇾">🇲🇾 Bahasa Melayu</option>
-<option value="🇹🇭">🇹🇭 ไทย</option>
-<option value="🇻🇳">🇻🇳 Tiếng Việt</option>
-<option value="🇵🇭">🇵🇭 Tagalog</option>
-<option value="🇮🇷">🇮🇷 فارسی</option>
-<option value="🇸🇦">🇸🇦 العربية</option>
-<option value="🇮🇱">🇮🇱 עברית</option>
+                        <option value="🇬🇧">🇬🇧 English</option>
+                        <option value="🇨🇳">🇨🇳 中文</option>
+                        <option value="🇪🇸">🇪🇸 Español</option>
+                        <option value="🇺🇦">🇺🇦 Українська</option>
+                        <option value="🇧🇾">🇧🇾 Беларуская</option>
+                        <option value="🇰🇿">🇰🇿 Қазақша</option>
+                        <option value="🇺🇿">🇺🇿 Oʻzbekcha</option>
+                        <option value="🇦🇿">🇦🇿 Azərbaycan</option>
+                        <option value="🇦🇲">🇦🇲 Հայերեն</option>
+                        <option value="🇬🇪">🇬🇪 ქართული</option>
+                        <option value="🇩🇪">🇩🇪 Deutsch</option>
+                        <option value="🇫🇷">🇫🇷 Français</option>
+                        <option value="🇮🇹">🇮🇹 Italiano</option>
+                        <option value="🇵🇹">🇵🇹 Português</option>
+                        <option value="🇵🇱">🇵🇱 Polski</option>
+                        <option value="🇹🇷">🇹🇷 Türkçe</option>
+                        <option value="🇳🇱">🇳🇱 Nederlands</option>
+                        <option value="🇸🇪">🇸🇪 Svenska</option>
+                        <option value="🇳🇴">🇳🇴 Norsk</option>
+                        <option value="🇩🇰">🇩🇰 Dansk</option>
+                        <option value="🇫🇮">🇫🇮 Suomi</option>
+                        <option value="🇨🇿">🇨🇿 Čeština</option>
+                        <option value="🇸🇰">🇸🇰 Slovenčina</option>
+                        <option value="🇷🇸">🇷🇸 Српски</option>
+                        <option value="🇧🇬">🇧🇬 Български</option>
+                        <option value="🇷🇴">🇷🇴 Română</option>
+                        <option value="🇬🇷">🇬🇷 Ελληνικά</option>
+                        <option value="🇭🇺">🇭🇺 Magyar</option>
+                        <option value="🇯🇵">🇯🇵 日本語</option>
+                        <option value="🇰🇷">🇰🇷 한국어</option>
+                        <option value="🇮🇳">🇮🇳 हिन्दी</option>
+                        <option value="🇮🇩">🇮🇩 Bahasa Indonesia</option>
+                        <option value="🇲🇾">🇲🇾 Bahasa Melayu</option>
+                        <option value="🇹🇭">🇹🇭 ไทย</option>
+                        <option value="🇻🇳">🇻🇳 Tiếng Việt</option>
+                        <option value="🇵🇭">🇵🇭 Tagalog</option>
+                        <option value="🇮🇷">🇮🇷 فارسی</option>
+                        <option value="🇸🇦">🇸🇦 العربية</option>
+                        <option value="🇮🇱">🇮🇱 עברית</option>
                     </select>
-                    <i class="fa-solid fa-chevron-down" style="position: absolute; right: 10px; top: 10px; color: #00f2fe; pointer-events: none; font-size: 12px;"></i>
                 </div>
 
-                <div style="color: #a855f7; font-size: 12px; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px;" class="lang-txt" data-ru="Морское Звание:" data-en="Naval Rank:" data-zh="海军军衔:">Морское Звание:</div>
-                
-                <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px;">
-                    <div id="infoRankText" style="font-family: 'Oswald', sans-serif; font-size: 15px; color: #fff;">-</div>
-                    <div id="infoRankInsigniaContainer"></div>
-                </div>
-                
-                <div id="infoRankEditWrapper" style="display: none; margin-bottom: 15px; position: relative;">
-                    <select id="infoRankSelect" style="background: rgba(2,5,10,0.8); color: #00f2fe; border: 1px dashed #00f2fe; border-radius: 4px; padding: 5px; font-family: 'Oswald', sans-serif; font-size: 14px; width: 100%; outline: none; text-align: center; appearance: none; cursor: pointer;">
-                        <option value="" class="lang-txt" data-ru="Автоматически (по выслуге)" data-en="Auto (by service)" data-zh="自动 (按服役时间)">Автоматически (по выслуге)</option>
-                    </select>
-                    <i class="fa-solid fa-chevron-down" style="position: absolute; right: 10px; top: 10px; color: #00f2fe; pointer-events: none; font-size: 12px;"></i>
+                <div class="tourney-row" id="infoRankRow">
+                    <label class="lang-txt" data-ru="Морское Звание:" data-en="Naval Rank:">Морское Звание:</label>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <select id="infoRankSelect" disabled style="background: rgba(0,0,0,0.6); color: #fff; border: 1px solid rgba(0, 242, 254, 0.3); padding: 8px; border-radius: 4px; outline: none; flex-grow: 1; appearance: none; font-family: 'Oswald', sans-serif;">
+                            <option value="" class="lang-txt" data-ru="Автоматически (по выслуге)" data-en="Auto (by service)">Автоматически (по выслуге)</option>
+                        </select>
+                        <div id="infoRankInsigniaContainer" style="flex-shrink: 0;"></div>
+                    </div>
                 </div>
 
-                <div class="status-btn-group" id="adminStatusButtons">
-                    <button type="button" class="btn-status legend lang-txt" onclick="assignPlayerStatus('legend')" data-ru="Легенда" data-en="Legend" data-zh="传奇">Легенда</button>
-                    <button type="button" class="btn-status hero lang-txt" onclick="assignPlayerStatus('hero')" data-ru="Герой" data-en="Hero" data-zh="英雄">Герой</button>
-                    <button type="button" class="btn-status reset lang-txt" onclick="assignPlayerStatus('none')" data-ru="Снять" data-en="Remove" data-zh="移除">Снять</button>
+                <h4 style="color: #ff8c00; text-align: center; margin: 25px 0 15px; text-transform: uppercase; letter-spacing: 1px; font-family: 'Orbitron', sans-serif;">Турнирные данные</h4>
+
+                <div class="tourney-row">
+                    <label>Никнейм Discord:</label>
+                    <input type="text" id="infoDiscordNickInput" readonly placeholder="Не указан" style="border-color: rgba(255, 140, 0, 0.3);">
                 </div>
+
+                <div class="tourney-row">
+                    <label>ID Discord:</label>
+                    <input type="text" id="infoDiscordIdInput" readonly placeholder="Не указан" style="border-color: rgba(255, 140, 0, 0.3);">
+                </div>
+
+                <div class="tourney-row">
+                    <label>Статус (турнирный):</label>
+                    <input type="text" id="infoTourneyStatusInput" readonly placeholder="Не указан" style="border-color: rgba(255, 140, 0, 0.3);">
+                </div>
+                
+                <div class="status-btn-group" id="adminStatusButtons" style="display: none; flex-direction: column; gap: 10px; margin-top: 25px; border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 15px;">
+                    <label style="color: #a855f7; font-size: 11px; text-align: center; text-transform: uppercase;">Оформление карточки</label>
+                    <div style="display: flex; gap: 8px;">
+                        <button type="button" class="btn-status legend lang-txt" onclick="assignPlayerStatus('legend')" data-ru="Легенда" data-en="Legend">Легенда</button>
+                        <button type="button" class="btn-status hero lang-txt" onclick="assignPlayerStatus('hero')" data-ru="Герой" data-en="Hero">Герой</button>
+                        <button type="button" class="btn-status reset lang-txt" onclick="assignPlayerStatus('none')" data-ru="Снять" data-en="Remove">Снять</button>
+                    </div>
+                    <button type="button" class="btn-submit" id="btnSavePlayerInfo" style="background: #22c55e; color: #000; font-size: 14px; padding: 12px; margin-top: 10px; font-weight: 900;">
+                        <i class="fa-solid fa-floppy-disk"></i> Сохранить изменения
+                    </button>
+                </div>
+
             </div>
         </div>
     </div>
@@ -1219,7 +1110,7 @@
         </div>
     </div>
 
-    <!-- ЛИЧНЫЙ КАБИНЕТ -->
+    <!-- ЛИЧНЫЙ КАБИНЕТ (Ваш собственный) -->
     <div class="modal-overlay" id="cabinetModalOverlay" style="z-index: 140;">
         <div class="modal-window glassmorphism" id="cabinetModalWindow" style="max-width: 420px; border-color: #a855f7; box-shadow: 0 0 40px rgba(168, 85, 247, 0.35);">
             <span class="close-btn" id="closeCabinetModalBtn">&times;</span>
@@ -1261,7 +1152,6 @@
                         </select>
                     </div>
 
-                    <!-- Новое поле: Родной язык в Личном Кабинете -->
                     <div class="cabinet-info-item" style="flex-direction: column; align-items: flex-start; gap: 5px;">
                         <span class="lbl lang-txt" data-ru="Родной язык:" data-en="Native Lang:" data-zh="母语:">Родной язык:</span>
                         <select id="cabNativeLangSelect" style="background: rgba(2,5,10,0.8); color: #00f2fe; border: 1px dashed #00f2fe; border-radius: 4px; padding: 4px; font-family: 'Oswald', sans-serif; font-size: 13px; width: 100%; outline: none;">
@@ -1366,7 +1256,7 @@
                 </div>
             </div>
 
-            <!-- НОВЫЙ БЛОК: ЗАЛ СЛАВЫ (ВНЕСЕНИЕ УРОНА) -->
+            <!-- ЗАЛ СЛАВЫ (ВНЕСЕНИЕ УРОНА) -->
             <div style="border-top: 1px solid rgba(0, 242, 254, 0.2); margin-top: 15px; padding-top: 15px;">
                 <div class="rank-title lang-txt" style="color:#00f2fe; font-size:14px; border:none; margin-bottom:5px; text-align:left;" data-ru="Управление Залом Славы" data-en="Hall of Fame Admin" data-zh="名人堂管理">Управление Залом Славы</div>
                 <div class="form-group" style="margin-bottom: 10px;">
@@ -1462,15 +1352,12 @@
             if (cleanTg && cloudDatabase.metadata && cloudDatabase.metadata[cleanTg]) {
                 let meta = cloudDatabase.metadata[cleanTg];
 
-                // --- НОВЫЙ КОД: ПРИСВОЕНИЕ РАНДОМНОЙ АВАТАРКИ ---
                 if (!meta.avatar || meta.avatar.trim() === "") {
                     const randomAvatarNum = Math.floor(Math.random() * 32) + 1;
                     meta.avatar = `https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/avatars/avatar${randomAvatarNum}.png?v=2`;
-                    saveToCloud(); // Сразу сохраняем её за пользователем в базе
+                    saveToCloud(); 
                 }
-                // ------------------------------------------------
 
-                // Синхронизация аватара из облака
                 if (meta.avatar && meta.avatar !== localStorage.getItem('stage_user_avatar')) {
                     localStorage.setItem('stage_user_avatar', meta.avatar);
                     refreshMenuCabinetAvatar();
@@ -1490,7 +1377,6 @@
                     }
                 }
 
-                // Синхронизация фона из облака
                 if (meta.cabBg !== undefined && meta.cabBg !== null && meta.cabBg.toString() !== localStorage.getItem('stage_cab_bg')) {
                     const items = document.querySelectorAll('.bg-picker-item');
                     if(items[meta.cabBg]) {
@@ -1847,7 +1733,6 @@
         let cwCountdownIntervalId = null;
         let currentSelectedPlayerNick = "";
         
-        // --- БАЗА ДАННЫХ (ОБНОВЛЕННАЯ С damageRecords) ---
         let cloudDatabase = { 
             recruits: {}, banned: [], kickedNicks: [], metadata: {}, 
             trainingTime: null, trainingYes: [], trainingNo: [],
@@ -1855,7 +1740,7 @@
             founders: {},
             squads: [], 
             stats: { views: 0, uniques: 0, requests: 0, mobile: 0, pc: 0 },
-            damageRecords: [] // Новое поле для Зала Славы
+            damageRecords: []
         };
         let isCloudSynced = false; 
 
@@ -2196,14 +2081,13 @@
             return colHtml;
         }
 
-        // --- ЛОГИКА ЗАЛА СЛАВЫ (Hall of Fame) ---
+        // --- ЛОГИКА ЗАЛА СЛАВЫ ---
         window.renderHallOfFame = function(records) {
             if (!records) records = [];
             const now = Date.now();
             const twoWeeksMs = 14 * 24 * 60 * 60 * 1000;
             const monthMs = 30 * 24 * 60 * 60 * 1000;
 
-            // 1. Топ месяца
             const monthRecords = records.filter(r => (now - r.created_at) <= monthMs).sort((a, b) => b.damage - a.damage);
             const heroNickEl = document.getElementById('monthHeroNick');
             const heroDmgEl = document.getElementById('monthHeroDamage');
@@ -2211,7 +2095,6 @@
 
             if (monthRecords.length > 0) {
                 const hero = monthRecords[0];
-                // Добавляем крестик удаления, если это Лидер
                 heroNickEl.innerHTML = `${hero.nick} ${isLeaderMode ? `<i class="fa-solid fa-xmark" style="color:#ff0055; cursor:pointer; font-size: 18px; margin-left: 10px; text-shadow: none;" onclick="deleteDamageRecord(${hero.created_at})" title="Удалить ошибочный рекорд"></i>` : ''}`;
                 heroDmgEl.textContent = hero.damage.toLocaleString('ru-RU') + " DMG";
                 
@@ -2228,7 +2111,6 @@
                 heroAvaEl.style.backgroundImage = "none";
             }
 
-            // 2. Топ-10 Сезона (2 недели)
             const seasonRecords = records.filter(r => (now - r.created_at) <= twoWeeksMs).sort((a, b) => b.damage - a.damage);
             const top10 = seasonRecords.slice(0, 10);
             const top10List = document.getElementById('top10List');
@@ -2243,7 +2125,6 @@
                     if (index === 1) color = '#94a3b8';
                     if (index === 2) color = '#b45309';
 
-                    // Кнопка удаления для каждого ряда (только для админа)
                     const deleteBtnHtml = isLeaderMode ? `<i class="fa-solid fa-xmark" style="color:#ff0055; cursor:pointer; margin-left: 15px;" title="Удалить рекорд" onclick="deleteDamageRecord(${record.created_at})"></i>` : '';
 
                     html += `
@@ -2262,18 +2143,13 @@
             }
         };
 
-        // ФУНКЦИЯ УДАЛЕНИЯ РЕКОРДА
         window.deleteDamageRecord = async function(createdAtTimestamp) {
             if (!isLeaderMode) return;
             if (confirm(t("Точно удалить этот рекорд из Зала Славы?", "Delete this record from Hall of Fame?", "从名人堂中删除此记录？"))) {
-                await syncWithCloud(); // ЗАЩИТА: Синхронизируем перед удалением
-                
-                // Фильтруем массив, убирая запись с совпадающим уникальным временем (timestamp)
+                await syncWithCloud(); 
                 cloudDatabase.damageRecords = cloudDatabase.damageRecords.filter(r => r.created_at !== createdAtTimestamp);
-                
-                await saveToCloud(); // Сохраняем в Supabase
-                
-                renderHallOfFame(cloudDatabase.damageRecords); // Перерисовываем Зал Славы
+                await saveToCloud(); 
+                renderHallOfFame(cloudDatabase.damageRecords);
                 showNotification(t("Ошибочный рекорд удален!", "Record deleted!", "错误记录已删除！"), 'warning');
             }
         };
@@ -2306,19 +2182,13 @@
             btn.disabled = true;
             btn.textContent = t("Сохранение...", "Saving...", "保存中...");
 
-            await syncWithCloud(); // ЗАЩИТА
+            await syncWithCloud(); 
             if (!cloudDatabase.damageRecords) cloudDatabase.damageRecords = [];
             
-            cloudDatabase.damageRecords.push({
-                nick: nick,
-                damage: damage,
-                created_at: Date.now()
-            });
+            cloudDatabase.damageRecords.push({ nick: nick, damage: damage, created_at: Date.now() });
 
             await saveToCloud();
-
             renderHallOfFame(cloudDatabase.damageRecords);
-            
             showNotification(t(`Рекорд ${damage.toLocaleString('ru-RU')} для ${nick} сохранен!`, `Record ${damage} for ${nick} saved!`, `为 ${nick} 保存的记录 ${damage}！`), 'success');
             
             document.getElementById('adminDamageAmountInput').value = '';
@@ -2356,23 +2226,20 @@
             return false;
         }
 
-    // --- МАССОВАЯ ВЫДАЧА АВАТАРОК ---
         window.forceAssignAvatarsToAll = async function() {
-            if (!isLeaderMode) return; // Защита: только для Главы
+            if (!isLeaderMode) return; 
             
             if (!confirm(t("Выдать случайные аватарки всем бойцам, у кого их сейчас нет? Это действие обновит базу данных.", "Assign random avatars to all fighters without one?", "为所有当前没有头像的战士分配随机头像？"))) return;
 
             const btn = document.getElementById('forceAvatarsBtn');
             if (btn) { btn.disabled = true; btn.textContent = t("Обработка базы...", "Processing...", "处理中..."); }
 
-            await syncWithCloud(); // Скачиваем свежую базу перед изменением
+            await syncWithCloud(); 
             let updatedCount = 0;
 
-            // Пробегаемся по всем бойцам в базе
             if (cloudDatabase.metadata) {
                 for (let tg in cloudDatabase.metadata) {
                     let meta = cloudDatabase.metadata[tg];
-                    // Если аватарки нет
                     if (!meta.avatar || meta.avatar.trim() === "") {
                         const randomAvatarNum = Math.floor(Math.random() * 32) + 1;
                         meta.avatar = `https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/avatars/avatar${randomAvatarNum}.png?v=2`;
@@ -2381,11 +2248,10 @@
                 }
             }
 
-            // Если были изменения — сохраняем в облако
             if (updatedCount > 0) {
                 await saveToCloud();
-                renderLocalRecruits(); // Перерисовываем состав
-                if(cloudDatabase.damageRecords) renderHallOfFame(cloudDatabase.damageRecords); // Обновляем Зал Славы
+                renderLocalRecruits(); 
+                if(cloudDatabase.damageRecords) renderHallOfFame(cloudDatabase.damageRecords); 
                 showNotification(t(`Успех! Выдано новых аватарок: ${updatedCount}`, `Updated profiles: ${updatedCount}`, `已更新档案: ${updatedCount}`), 'success');
             } else {
                 showNotification(t("У всех бойцов в базе уже есть аватарки!", "All fighters already have avatars!", "所有战士都已有头像！"), 'info');
@@ -2466,32 +2332,21 @@
 
             syncWithCloud().then(async () => {
                 if (!cloudDatabase.stats) cloudDatabase.stats = { views: 0, uniques: 0, requests: 0, mobile: 0, pc: 0 };
-                
                 cloudDatabase.stats.views++;
-                
                 if (!localStorage.getItem('stage_unique_user')) {
                     localStorage.setItem('stage_unique_user', 'true');
                     cloudDatabase.stats.uniques++;
-                    
-                    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                        cloudDatabase.stats.mobile++;
-                    } else {
-                        cloudDatabase.stats.pc++;
-                    }
+                    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) { cloudDatabase.stats.mobile++; } else { cloudDatabase.stats.pc++; }
                 }
-                
                 await saveToCloud();
                 
                 if (checkBanAndLogout()) return;
-                
                 syncLocalPrefsFromCloud();
-                
                 applyGlobalKickedFilters();
                 renderLocalRecruits();
                 applyLeaderStatusColors();
                 initTrainingCountdown();
                 initCwCountdown();
-                
                 renderFoundersGrid(); 
                 setLang(currentLang);
             });
@@ -2666,11 +2521,11 @@
                         cloudDatabase.founders = db.founders || defaultFounders;
                         cloudDatabase.squads = db.squads || []; 
                         cloudDatabase.stats = db.stats || { views: 0, uniques: 0, requests: 0, mobile: 0, pc: 0 };
-                        cloudDatabase.damageRecords = db.damageRecords || []; // СИНХРОНИЗАЦИЯ РЕКОРДОВ
+                        cloudDatabase.damageRecords = db.damageRecords || []; 
                         
                         renderFoundersGrid();
                         renderSquadsGallery(); 
-                        renderHallOfFame(cloudDatabase.damageRecords); // ОТРИСОВКА ЗАЛА СЛАВЫ
+                        renderHallOfFame(cloudDatabase.damageRecords); 
                     }
                     isCloudSynced = true; 
                     updateOnlineWidget();
@@ -2858,7 +2713,6 @@
             
             await syncWithCloud(); // ЗАЩИТА
             
-            // Генерируем случайную аватарку от 1 до 32 для нового бойца
             const randomAvatarNum = Math.floor(Math.random() * 32) + 1;
             const randomAvatarUrl = `https://noxmicgoosxoqderhgdp.supabase.co/storage/v1/object/public/avatars/avatar${randomAvatarNum}.png?v=2`;
 
@@ -2869,7 +2723,7 @@
                 chatId: currentParsedData.chatId,
                 joinDate: registerTimestamp,
                 rank: t("Действующий боец", "Active Fighter", "现役战士"),
-                avatar: randomAvatarUrl, // Записываем сгенерированную ссылку
+                avatar: randomAvatarUrl, 
                 cabBg: 0, 
                 shipClass: currentParsedData.shipClass,
                 customStatus: currentParsedData.status,
@@ -3562,7 +3416,7 @@
             document.getElementById('statMobile').textContent = mobilePerc + "%";
             document.getElementById('statPC').textContent = pcPerc + "%";
 
-            populateAdminDamageSelect(); // Заполняем список бойцов для Зала Славы
+            populateAdminDamageSelect(); 
             statsModalOverlay.classList.add('active');
         });
         
@@ -3661,21 +3515,30 @@
             showNotification(t("Допуск подтвержден!", "Access granted!", "访问权限已确认！"), 'success');
         });
 
+        // ==============================================================================
+        // ОБНОВЛЕННАЯ ФУНКЦИЯ КАРТОЧКИ ИГРОКА С ТУРНИРНЫМИ ДАННЫМИ И РЕДАКТИРОВАНИЕМ
+        // ==============================================================================
         window.showPlayerInfo = function(nick) {
             currentSelectedPlayerNick = nick;
-            const idInput = document.getElementById('infoGameIdInput');
-            const editIcon = document.getElementById('editIdIcon');
+            
             const infoAvatar = document.getElementById('infoAvatar');
-            
-            const langText = document.getElementById('infoLangText');
-            const langEditWrapper = document.getElementById('infoLangEditWrapper');
+            const nickInput = document.getElementById('infoNickInput');
+            const gameIdInput = document.getElementById('infoGameIdInput');
+            const specSelect = document.getElementById('infoSpecSelect');
             const langSelect = document.getElementById('infoLangSelect');
+            const rankSelect = document.getElementById('infoRankSelect');
+            const rankInsigniaContainer = document.getElementById('infoRankInsigniaContainer');
             
+            const discordNickInput = document.getElementById('infoDiscordNickInput');
+            const discordIdInput = document.getElementById('infoDiscordIdInput');
+            const tourneyStatusInput = document.getElementById('infoTourneyStatusInput');
+
             let playerMeta = null;
             for (let tg in cloudDatabase.metadata) {
                 if (cloudDatabase.metadata[tg].nick === nick) { playerMeta = cloudDatabase.metadata[tg]; break; }
             }
 
+            // Установка Аватара
             if (playerMeta && playerMeta.avatar) {
                 infoAvatar.style.backgroundImage = `url('${playerMeta.avatar}')`;
             } else if (nick === 'Mitso' && cloudDatabase.metadata['@bymitso'] && cloudDatabase.metadata['@bymitso'].avatar) {
@@ -3684,91 +3547,118 @@
                 infoAvatar.style.backgroundImage = 'none';
             }
             
-            document.getElementById('infoNick').textContent = nick;
+            // Базовые данные
+            nickInput.value = nick;
+            
             let joinDateMs = (playerMeta && playerMeta.joinDate) ? playerMeta.joinDate : FOUNDATION_DATE.getTime();
             let diffMs = Date.now() - joinDateMs;
             let diffMonths = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 30.4375));
             if (diffMonths < 0) diffMonths = 0;
             if (diffMonths >= NAVAL_RANKS.length) diffMonths = NAVAL_RANKS.length - 1;
-            
-            const rankText = document.getElementById('infoRankText');
-            const rankInsigniaContainer = document.getElementById('infoRankInsigniaContainer');
-            const rankEditWrapper = document.getElementById('infoRankEditWrapper');
-            const rankSelect = document.getElementById('infoRankSelect');
-            const specText = document.getElementById('infoSpecText');
-            const specEditWrapper = document.getElementById('infoSpecEditWrapper');
-            const specSelect = document.getElementById('infoSpecSelect');
 
             if (nick === 'Mitso') {
-                idInput.value = "22E9E4E8CABB7FCF";
-                rankText.textContent = t("Адмирал флота (Глава)", "Fleet Admiral (Leader)", "舰队上将 (队长)");
-                rankInsigniaContainer.innerHTML = getRankInsigniaHTML(19);
-                rankText.style.display = 'block'; rankInsigniaContainer.style.display = 'block'; rankEditWrapper.style.display = 'none';
-                specText.textContent = t("Тактик", "Tactician", "战术家");
-                specText.style.display = 'block'; specEditWrapper.style.display = 'none';
+                gameIdInput.value = "22E9E4E8CABB7FCF";
+                specSelect.value = "Тактик";
+                langSelect.value = "🇷🇺";
                 
-                langText.textContent = "🇷🇺";
-                langText.style.display = 'block'; langEditWrapper.style.display = 'none';
+                let opt = Array.from(rankSelect.options).find(o => o.value === "Адмирал флота");
+                if(opt) rankSelect.value = "Адмирал флота";
+                rankInsigniaContainer.innerHTML = getRankInsigniaHTML(19);
+
+                discordNickInput.value = playerMeta && playerMeta.discordNick ? playerMeta.discordNick : "Mitso_MW";
+                discordIdInput.value = playerMeta && playerMeta.discordId ? playerMeta.discordId : "Mitso#1234";
+                tourneyStatusInput.value = playerMeta && playerMeta.tourneyStatus ? playerMeta.tourneyStatus : "Организатор";
             } else {
                 if (playerMeta) {
-                    idInput.value = playerMeta.gameId || t("Не указан", "Not specified", "未指定");
-                    let currentRank = playerMeta.manualRank || NAVAL_RANKS[diffMonths];
-                    rankText.textContent = currentRank;
-                    let currentRankIdx = playerMeta.manualRank ? NAVAL_RANKS.indexOf(playerMeta.manualRank) : diffMonths;
-                    rankInsigniaContainer.innerHTML = getRankInsigniaHTML(currentRankIdx);
-                    specText.textContent = playerMeta.specialization || t("Не назначена", "Not assigned", "未分配");
+                    gameIdInput.value = playerMeta.gameId || "";
+                    specSelect.value = playerMeta.specialization || "";
+                    langSelect.value = playerMeta.nativeLang || "🇷🇺";
                     
-                    let currentLang = playerMeta.nativeLang || "🇷🇺";
-                    langText.textContent = currentLang;
+                    rankSelect.value = playerMeta.manualRank || "";
+                    let currentRankIdx = playerMeta.manualRank ? NAVAL_RANKS.indexOf(playerMeta.manualRank) : diffMonths;
+                    if(currentRankIdx === -1) currentRankIdx = diffMonths;
+                    rankInsigniaContainer.innerHTML = getRankInsigniaHTML(currentRankIdx);
 
-                    if (isLeaderMode) {
-                        rankText.style.display = 'none'; rankInsigniaContainer.style.display = 'none'; rankEditWrapper.style.display = 'block';
-                        rankSelect.value = playerMeta.manualRank || "";
-                        rankSelect.onchange = async function() { 
-                            await syncWithCloud();
-                            playerMeta.manualRank = this.value; 
-                            await saveToCloud(); 
-                        };
-
-                        specText.style.display = 'none'; specEditWrapper.style.display = 'block';
-                        specSelect.value = playerMeta.specialization || "";
-                        specSelect.onchange = async function() { 
-                            await syncWithCloud();
-                            playerMeta.specialization = this.value; 
-                            await saveToCloud(); 
-                        };
-                        
-                        langText.style.display = 'none'; langEditWrapper.style.display = 'block';
-                        langSelect.value = currentLang;
-                        langSelect.onchange = async function() { 
-                            await syncWithCloud();
-                            playerMeta.nativeLang = this.value; 
-                            await saveToCloud(); 
-                            renderLocalRecruits();
-                        };
-                    } else {
-                        rankText.style.display = 'block'; rankInsigniaContainer.style.display = 'block'; rankEditWrapper.style.display = 'none';
-                        specText.style.display = 'block'; specEditWrapper.style.display = 'none';
-                        langText.style.display = 'block'; langEditWrapper.style.display = 'none';
-                    }
+                    discordNickInput.value = playerMeta.discordNick || "";
+                    discordIdInput.value = playerMeta.discordId || "";
+                    tourneyStatusInput.value = playerMeta.tourneyStatus || "";
+                } else {
+                    gameIdInput.value = ""; specSelect.value = ""; langSelect.value = "🇷🇺"; rankSelect.value = "";
+                    discordNickInput.value = ""; discordIdInput.value = ""; tourneyStatusInput.value = "";
+                    rankInsigniaContainer.innerHTML = getRankInsigniaHTML(0);
                 }
             }
 
-            if (isLeaderMode && playerMeta) {
-                idInput.removeAttribute('readonly'); editIcon.style.display = 'block';
-                idInput.style.borderBottom = "1px dashed rgba(0, 242, 254, 0.3)";
-                idInput.onchange = async function() { 
-                    await syncWithCloud();
-                    playerMeta.gameId = this.value.trim(); 
-                    await saveToCloud(); 
-                };
+            // Права доступа (Глава может редактировать)
+            if (isLeaderMode && playerMeta) { 
+                gameIdInput.removeAttribute('readonly');
+                discordNickInput.removeAttribute('readonly');
+                discordIdInput.removeAttribute('readonly');
+                tourneyStatusInput.removeAttribute('readonly');
+                
+                specSelect.disabled = false;
+                langSelect.disabled = false;
+                rankSelect.disabled = false;
+                
+                document.getElementById('adminStatusButtons').style.display = 'flex';
             } else {
-                idInput.setAttribute('readonly', true); editIcon.style.display = 'none'; idInput.style.borderBottom = "none";
+                gameIdInput.setAttribute('readonly', true);
+                discordNickInput.setAttribute('readonly', true);
+                discordIdInput.setAttribute('readonly', true);
+                tourneyStatusInput.setAttribute('readonly', true);
+                
+                specSelect.disabled = true;
+                langSelect.disabled = true;
+                rankSelect.disabled = true;
+                
+                document.getElementById('adminStatusButtons').style.display = 'none';
             }
 
-            document.getElementById('adminStatusButtons').style.display = isLeaderMode ? 'flex' : 'none';
             playerInfoModalOverlay.classList.add('active');
         }
+
+        // ==============================================================================
+        // ФУНКЦИЯ СОХРАНЕНИЯ ДАННЫХ ИЗ КАРТОЧКИ НА СЕРВЕР (ТОЛЬКО ДЛЯ ГЛАВЫ)
+        // ==============================================================================
+        document.getElementById('btnSavePlayerInfo').addEventListener('click', async () => {
+            if (!isLeaderMode || !currentSelectedPlayerNick) return;
+            
+            let tgKeyToUpdate = currentSelectedPlayerNick === 'Mitso' ? '@bymitso' : null;
+            if(!tgKeyToUpdate) {
+                for (let tg in cloudDatabase.metadata) {
+                    if (cloudDatabase.metadata[tg].nick === currentSelectedPlayerNick) { tgKeyToUpdate = tg; break; }
+                }
+            }
+            if (!tgKeyToUpdate) return;
+
+            const btn = document.getElementById('btnSavePlayerInfo');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Сохранение...';
+            btn.disabled = true;
+
+            await syncWithCloud(); // ЗАЩИТА: скачиваем свежую базу перед записью
+            
+            let meta = cloudDatabase.metadata[tgKeyToUpdate];
+            if(meta) {
+                meta.gameId = document.getElementById('infoGameIdInput').value.trim();
+                meta.specialization = document.getElementById('infoSpecSelect').value;
+                meta.nativeLang = document.getElementById('infoLangSelect').value;
+                meta.manualRank = document.getElementById('infoRankSelect').value;
+                
+                meta.discordNick = document.getElementById('infoDiscordNickInput').value.trim();
+                meta.discordId = document.getElementById('infoDiscordIdInput').value.trim();
+                meta.tourneyStatus = document.getElementById('infoTourneyStatusInput').value.trim();
+            }
+
+            await saveToCloud(); // ОТПРАВЛЯЕМ В ОБЛАКО
+            
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            
+            renderLocalRecruits();
+            showNotification(t("Данные бойца успешно сохранены на сервере!", "Player data successfully saved to server!", "玩家数据已成功保存到服务器！"), 'success');
+            document.getElementById('playerInfoModalOverlay').classList.remove('active');
+        });
 
         window.assignPlayerStatus = async function(statusType) {
             if (!isLeaderMode || !currentSelectedPlayerNick) return;
@@ -3785,7 +3675,7 @@
             else cloudDatabase.metadata[tgKeyToUpdate].customStatus = statusType;
 
             await saveToCloud();
-            playerInfoModalOverlay.classList.remove('active');
+            document.getElementById('playerInfoModalOverlay').classList.remove('active');
             renderLocalRecruits();
             applyLeaderStatusColors();
         }
