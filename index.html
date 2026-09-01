@@ -571,6 +571,7 @@
         </div>
     </div>
 
+    <!-- БОКОВАЯ ШТОРКА ОНЛАЙНА -->
     <div class="online-widget glassmorphism" id="onlineWidget">
         <div class="online-toggle-btn" id="onlineToggleBtn" title="Бойцы в сети">
             <i class="fa-solid fa-users" style="color: #22c55e;"></i>
@@ -956,7 +957,7 @@
         </div>
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО ИНФОРМАЦИИ И УПРАВЛЕНИЯ ИГРОКОМ (НОВЫЙ "ЛИЧНЫЙ КАБИНЕТ" КАРТОЧКИ) -->
+    <!-- МОДАЛЬНОЕ ОКНО ИНФОРМАЦИИ И УПРАВЛЕНИЯ ИГРОКОМ (КАРТОЧКА С ТУРНИРНЫМИ ДАННЫМИ) -->
     <div class="modal-overlay" id="playerInfoModalOverlay" style="z-index: 145;">
         <div class="modal-window glassmorphism" style="max-width: 420px; border-color: #00f2fe; box-shadow: 0 0 40px rgba(0, 242, 254, 0.3); text-align: left; padding: 25px;">
             <span class="close-btn" id="closePlayerInfoBtn">&times;</span>
@@ -1058,7 +1059,11 @@
 
                 <div class="tourney-row">
                     <label>Статус (турнирный):</label>
-                    <input type="text" id="infoTourneyStatusInput" readonly placeholder="Не указан" style="border-color: rgba(255, 140, 0, 0.3);">
+                    <select id="infoTourneyStatusInput" disabled style="background: rgba(0,0,0,0.6); color: #fff; border: 1px solid rgba(255, 140, 0, 0.3); padding: 8px; border-radius: 4px; outline: none; transition: 0.3s; width: 100%; font-family: 'Oswald', sans-serif; appearance: none;">
+                        <option value="">Нету</option>
+                        <option value="Легенда">Легенда</option>
+                        <option value="Герой">Герой</option>
+                    </select>
                 </div>
                 
                 <div class="status-btn-group" id="adminStatusButtons" style="display: none; flex-direction: column; gap: 10px; margin-top: 25px; border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 15px;">
@@ -1110,7 +1115,7 @@
         </div>
     </div>
 
-    <!-- ЛИЧНЫЙ КАБИНЕТ (Ваш собственный) -->
+    <!-- ЛИЧНЫЙ КАБИНЕТ (С ТУРНИРНЫМИ ДАННЫМИ) -->
     <div class="modal-overlay" id="cabinetModalOverlay" style="z-index: 140;">
         <div class="modal-window glassmorphism" id="cabinetModalWindow" style="max-width: 420px; border-color: #a855f7; box-shadow: 0 0 40px rgba(168, 85, 247, 0.35);">
             <span class="close-btn" id="closeCabinetModalBtn">&times;</span>
@@ -1171,6 +1176,29 @@
                             <div id="cabRankInsigniaContainer"></div>
                         </div>
                     </div>
+                </div>
+
+                <div class="tourney-box" style="margin-top: 15px;">
+                    <div class="tourney-title">Турнирные данные</div>
+                    <div class="tourney-row">
+                        <label>Никнейм Discord:</label>
+                        <input type="text" id="cabDiscordNickInput" placeholder="Например: Mitso_MW">
+                    </div>
+                    <div class="tourney-row">
+                        <label>ID Discord:</label>
+                        <input type="text" id="cabDiscordIdInput" placeholder="Например: Mitso#1234">
+                    </div>
+                    <div class="tourney-row">
+                        <label>Турнирный Статус:</label>
+                        <select id="cabTourneyStatusInput" style="background: rgba(0,0,0,0.6); color: #fff; border: 1px solid rgba(255, 140, 0, 0.3); padding: 8px; border-radius: 4px; outline: none; transition: 0.3s; font-family: 'Oswald', sans-serif;">
+                            <option value="">Нету</option>
+                            <option value="Легенда">Легенда</option>
+                            <option value="Герой">Герой</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn-submit" id="btnSaveCabinetTourney" style="background: #ff8c00; color: #000; font-size: 13px; padding: 10px; margin-top: 10px; font-weight: 900;">
+                        <i class="fa-solid fa-floppy-disk"></i> Сохранить данные
+                    </button>
                 </div>
                 
                 <button type="button" class="btn-submit" id="enablePushBtn" style="background: #22c55e; color: #000; margin-top:10px; font-size:12px; padding:10px;">
@@ -1744,15 +1772,6 @@
         };
         let isCloudSynced = false; 
 
-        // --- ЛОГИКА ДИНАМИЧЕСКИХ СОСТАВОВ ---
-        let currentEditingSquadId = null;
-        
-        const SQUAD_NAMES = ['АЛЬФА', 'БРАВО', 'ЧАРЛИ', 'ДЕЛЬТА'];
-        const SQUAD_IDS = ['alpha', 'bravo', 'charlie', 'delta'];
-        const SQUAD_COLORS = ['#00f2fe', '#ff0055', '#eab308', '#22c55e']; 
-        const SQUAD_PREFIX = ['A', 'B', 'C', 'D']; 
-        const SQUAD_RES_PREFIX = ['РА', 'РБ', 'РЧ', 'РД']; 
-
         function getSquadTeams(squad) {
             if (!squad) return [{ name: 'АЛЬФА', id: 'alpha', slots: [], reserves: [] }];
             if (squad.teams) return squad.teams;
@@ -1884,6 +1903,12 @@
 
         window.drawEditColumns = function(teams) {
             const container = document.getElementById('squadEditSlotsContainer');
+            const SQUAD_NAMES = ['АЛЬФА', 'БРАВО', 'ЧАРЛИ', 'ДЕЛЬТА'];
+            const SQUAD_IDS = ['alpha', 'bravo', 'charlie', 'delta'];
+            const SQUAD_COLORS = ['#00f2fe', '#ff0055', '#eab308', '#22c55e']; 
+            const SQUAD_PREFIX = ['A', 'B', 'C', 'D']; 
+            const SQUAD_RES_PREFIX = ['РА', 'РБ', 'РЧ', 'РД']; 
+            
             let html = '<div class="squad-columns" style="display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px;">';
 
             for(let c = 0; c < window.currentEditSquadCount; c++) {
@@ -1934,6 +1959,8 @@
 
         window.gatherCurrentEditTeams = function() {
             let teams = [];
+            const SQUAD_NAMES = ['АЛЬФА', 'БРАВО', 'ЧАРЛИ', 'ДЕЛЬТА'];
+            const SQUAD_IDS = ['alpha', 'bravo', 'charlie', 'delta'];
             for(let c = 0; c < window.currentEditSquadCount; c++) {
                 let tId = SQUAD_IDS[c];
                 let team = { name: SQUAD_NAMES[c], id: tId, slots: [], reserves: [] };
@@ -2026,6 +2053,7 @@
         window.renderSquadViewList = function(squad) {
             const container = document.getElementById('squadViewListContainer');
             let html = '<div class="squad-columns" style="display: flex; gap: 20px; overflow-x: auto; padding-bottom: 15px;">';
+            const SQUAD_COLORS = ['#00f2fe', '#ff0055', '#eab308', '#22c55e']; 
             
             let teams = getSquadTeams(squad);
             teams.forEach((team, idx) => {
@@ -2825,6 +2853,9 @@
             }
         });
 
+        // ==============================================================================
+        // ОТКРЫТИЕ ЛИЧНОГО КАБИНЕТА САМИМ ИГРОКОМ
+        // ==============================================================================
         navCabinetBtn.addEventListener('click', () => {
             let sessionTg = localStorage.getItem('stage_user_registered_tg') || "";
             let cleanTg = sessionTg.trim().toLowerCase();
@@ -2847,6 +2878,10 @@
                 joinDateStr = t("С 26.05.2026 г.", "Since 26.05.2026", "自 2026.05.26");
                 gameId = "22E9E4E8CABB7FCF";
                 diffMonths = 19;
+                
+                document.getElementById('cabDiscordNickInput').value = "Mitso_MW";
+                document.getElementById('cabDiscordIdInput').value = "Mitso#1234";
+                document.getElementById('cabTourneyStatusInput').value = "Организатор";
             } else if (cleanTg && cloudDatabase.metadata[cleanTg]) {
                 let meta = cloudDatabase.metadata[cleanTg];
                 nick = meta.nick || nick;
@@ -2875,6 +2910,10 @@
                     diffMonths = NAVAL_RANKS.indexOf(meta.manualRank);
                     if(diffMonths === -1) diffMonths = 0;
                 }
+
+                document.getElementById('cabDiscordNickInput').value = meta.discordNick || "";
+                document.getElementById('cabDiscordIdInput').value = meta.discordId || "";
+                document.getElementById('cabTourneyStatusInput').value = meta.tourneyStatus || "";
             }
 
             document.getElementById('cabNick').textContent = nick;
@@ -2915,7 +2954,34 @@
 
             cabinetModalOverlay.classList.add('active');
         });
+        
         closeCabinetModalBtn.addEventListener('click', () => cabinetModalOverlay.classList.remove('active'));
+
+        document.getElementById('btnSaveCabinetTourney').addEventListener('click', async () => {
+            let sessionTg = localStorage.getItem('stage_user_registered_tg') || "";
+            let cleanTg = sessionTg.trim().toLowerCase();
+            
+            if (cleanTg && cloudDatabase.metadata && cloudDatabase.metadata[cleanTg]) {
+                const btn = document.getElementById('btnSaveCabinetTourney');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Сохранение...';
+                btn.disabled = true;
+
+                await syncWithCloud(); // ЗАЩИТА: скачиваем свежую базу перед записью
+                
+                cloudDatabase.metadata[cleanTg].discordNick = document.getElementById('cabDiscordNickInput').value.trim();
+                cloudDatabase.metadata[cleanTg].discordId = document.getElementById('cabDiscordIdInput').value.trim();
+                // Игрок теперь сам может выбрать статус (выпадающий список)
+                cloudDatabase.metadata[cleanTg].tourneyStatus = document.getElementById('cabTourneyStatusInput').value;
+
+                await saveToCloud();
+                
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+
+                showNotification(t("Турнирные данные сохранены!", "Tournament data saved!", "锦标赛数据已保存！"), 'success');
+            }
+        });
 
         function updateTrainingButtonVisibility() {
             const btn = document.getElementById('btnTrainingTrigger');
@@ -2982,7 +3048,7 @@
                 day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
             });
 
-            const messageText = `⚔️ <b>ВНИМАНИЕ! Назначена тренировка! / ATTENTION! Training scheduled!</b>\n\n⚓️ <b>Событие / Event:</b> Тренировка / Training\n📅 <b>Время сбора / Time:</b> ${formattedDate}\n\nВсем участникам быть! Прямая связь в Яндекс Телемост или Discord.\nAll members must attend! Direct comms in Yandex Telemost or Discord. 🚢🔥`;
+            const messageText = `⚔️ <b>ВНИМАНИЕ! Назначена тренировка! / ATTENTION! Training scheduled!</b>\n\n⚓️ <b>Событие / Event:</b> Тренировка / Training\n📅 <b>Время сбора / Time:</b> ${formattedDate}\n\nВсем участникам быть! Прямая связь в Яндекс Телемост или Discord.\nAll members must attend! Direct comms in Yandex Telemost или Discord. 🚢🔥`;
 
             try {
                 await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
@@ -3516,7 +3582,7 @@
         });
 
         // ==============================================================================
-        // ОБНОВЛЕННАЯ ФУНКЦИЯ КАРТОЧКИ ИГРОКА С ТУРНИРНЫМИ ДАННЫМИ И РЕДАКТИРОВАНИЕМ
+        // ОТКРЫТИЕ КАРТОЧКИ ИГРОКА С ТУРНИРНЫМИ ДАННЫМИ (ВКЛЮЧАЯ СТАТУС-ВЫПАДАЮЩИЙ СПИСОК)
         // ==============================================================================
         window.showPlayerInfo = function(nick) {
             currentSelectedPlayerNick = nick;
@@ -3538,7 +3604,6 @@
                 if (cloudDatabase.metadata[tg].nick === nick) { playerMeta = cloudDatabase.metadata[tg]; break; }
             }
 
-            // Установка Аватара
             if (playerMeta && playerMeta.avatar) {
                 infoAvatar.style.backgroundImage = `url('${playerMeta.avatar}')`;
             } else if (nick === 'Mitso' && cloudDatabase.metadata['@bymitso'] && cloudDatabase.metadata['@bymitso'].avatar) {
@@ -3547,7 +3612,6 @@
                 infoAvatar.style.backgroundImage = 'none';
             }
             
-            // Базовые данные
             nickInput.value = nick;
             
             let joinDateMs = (playerMeta && playerMeta.joinDate) ? playerMeta.joinDate : FOUNDATION_DATE.getTime();
@@ -3567,7 +3631,7 @@
 
                 discordNickInput.value = playerMeta && playerMeta.discordNick ? playerMeta.discordNick : "Mitso_MW";
                 discordIdInput.value = playerMeta && playerMeta.discordId ? playerMeta.discordId : "Mitso#1234";
-                tourneyStatusInput.value = playerMeta && playerMeta.tourneyStatus ? playerMeta.tourneyStatus : "Организатор";
+                tourneyStatusInput.value = playerMeta && playerMeta.tourneyStatus ? playerMeta.tourneyStatus : "Легенда";
             } else {
                 if (playerMeta) {
                     gameIdInput.value = playerMeta.gameId || "";
@@ -3589,12 +3653,12 @@
                 }
             }
 
-            // Права доступа (Глава может редактировать)
+            // Права доступа (Глава может редактировать, включая статус турниров)
             if (isLeaderMode && playerMeta) { 
                 gameIdInput.removeAttribute('readonly');
                 discordNickInput.removeAttribute('readonly');
                 discordIdInput.removeAttribute('readonly');
-                tourneyStatusInput.removeAttribute('readonly');
+                tourneyStatusInput.disabled = false;
                 
                 specSelect.disabled = false;
                 langSelect.disabled = false;
@@ -3605,7 +3669,7 @@
                 gameIdInput.setAttribute('readonly', true);
                 discordNickInput.setAttribute('readonly', true);
                 discordIdInput.setAttribute('readonly', true);
-                tourneyStatusInput.setAttribute('readonly', true);
+                tourneyStatusInput.disabled = true;
                 
                 specSelect.disabled = true;
                 langSelect.disabled = true;
@@ -3647,7 +3711,7 @@
                 
                 meta.discordNick = document.getElementById('infoDiscordNickInput').value.trim();
                 meta.discordId = document.getElementById('infoDiscordIdInput').value.trim();
-                meta.tourneyStatus = document.getElementById('infoTourneyStatusInput').value.trim();
+                meta.tourneyStatus = document.getElementById('infoTourneyStatusInput').value; // Теперь select
             }
 
             await saveToCloud(); // ОТПРАВЛЯЕМ В ОБЛАКО
